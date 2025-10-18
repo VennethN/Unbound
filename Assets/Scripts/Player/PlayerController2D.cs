@@ -35,6 +35,7 @@ namespace Unbound.Player
         private Vector2 _currentVelocity;
         private float _currentSpeedMultiplier = 1f;
         private Vector2 _animationDirection;
+        private Vector3 _initialLocalScale;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -45,6 +46,7 @@ namespace Unbound.Player
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
+            _initialLocalScale = transform.localScale;
 
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
@@ -130,7 +132,9 @@ namespace Unbound.Player
             if (faceMovementDirection && newVelocity.sqrMagnitude > 0.0001f)
             {
                 Vector3 localScale = transform.localScale;
-                localScale.x = newVelocity.x >= 0f ? Mathf.Abs(localScale.x) : -Mathf.Abs(localScale.x);
+                float baseMagnitude = _initialLocalScale.x;
+
+                localScale.x = newVelocity.x >= 0f ? baseMagnitude : -baseMagnitude;
                 transform.localScale = localScale;
             }
         }
