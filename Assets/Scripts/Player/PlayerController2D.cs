@@ -41,6 +41,9 @@ namespace Unbound.Player
         private PlayerInput _playerInput;
         private InputAction _moveAction;
         private InputAction _sprintAction;
+        private InputAction _interactAction;
+        private InputAction _jumpAction;
+        private InputAction _crouchAction;
 #endif
 
         private void Awake()
@@ -65,6 +68,9 @@ namespace Unbound.Player
             }
 
             _sprintAction = _playerInput.actions?.FindAction("Sprint", false);
+            _interactAction = _playerInput.actions?.FindAction("Interact", false);
+            _jumpAction = _playerInput.actions?.FindAction("Jump", false);
+            _crouchAction = _playerInput.actions?.FindAction("Crouch", false);
 #endif
         }
 
@@ -73,6 +79,9 @@ namespace Unbound.Player
 #if ENABLE_INPUT_SYSTEM
             _moveAction?.Enable();
             _sprintAction?.Enable();
+            _interactAction?.Enable();
+            _jumpAction?.Enable();
+            _crouchAction?.Enable();
 #endif
         }
 
@@ -81,6 +90,9 @@ namespace Unbound.Player
 #if ENABLE_INPUT_SYSTEM
             _moveAction?.Disable();
             _sprintAction?.Disable();
+            _interactAction?.Disable();
+            _jumpAction?.Disable();
+            _crouchAction?.Disable();
 #endif
         }
 
