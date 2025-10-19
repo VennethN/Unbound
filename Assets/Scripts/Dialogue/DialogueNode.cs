@@ -16,6 +16,7 @@ namespace Unbound.Dialogue
 
         [Header("Visual Settings")]
         public Sprite portraitSprite;
+        public GifAsset portraitGif;
         public string animationTrigger;
 
         [Header("Flow Control")]
@@ -109,6 +110,38 @@ namespace Unbound.Dialogue
             {
                 effect.Execute(executor);
             }
+        }
+
+        /// <summary>
+        /// Checks if this node has a GIF portrait configured
+        /// </summary>
+        public bool IsGifPortrait()
+        {
+            return portraitGif != null;
+        }
+
+        /// <summary>
+        /// Checks if this node has a regular sprite portrait configured
+        /// </summary>
+        public bool IsSpritePortrait()
+        {
+            return portraitSprite != null;
+        }
+
+        /// <summary>
+        /// Gets the appropriate portrait asset (prioritizes GIF over sprite if both are set)
+        /// </summary>
+        public Object GetPortraitAsset()
+        {
+            if (IsGifPortrait())
+            {
+                return portraitGif;
+            }
+            else if (IsSpritePortrait())
+            {
+                return portraitSprite;
+            }
+            return null;
         }
 
         private void OnValidate()

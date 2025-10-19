@@ -17,6 +17,8 @@ namespace Unbound.Dialogue
         [SerializeField] private TextMeshProUGUI speakerNameText;
         [SerializeField] private TextMeshProUGUI dialogueText;
         [SerializeField] private Image portraitImage;
+        [SerializeField] private GifPlayer gifPlayer;
+        [SerializeField] private DialogueGifController gifController;
         [SerializeField] private GameObject choicesPanel;
         [SerializeField] private Button choiceButtonPrefab;
         [SerializeField] private Button continueButton;
@@ -73,6 +75,12 @@ namespace Unbound.Dialogue
             if (dialoguePanel == null)
                 return;
 
+            // Setup GIF controller for this node
+            if (gifController != null)
+            {
+                gifController.SetupForNode(node);
+            }
+
             dialoguePanel.SetActive(true);
             canvasGroup.alpha = 0f;
             StartCoroutine(FadeIn());
@@ -84,10 +92,44 @@ namespace Unbound.Dialogue
             }
 
             // Set portrait
-            if (portraitImage != null)
+            if (portraitImage != null || gifPlayer != null)
             {
-                portraitImage.sprite = node.portraitSprite;
-                portraitImage.gameObject.SetActive(node.portraitSprite != null);
+                if (node.IsGifPortrait() && gifPlayer != null)
+                {
+                    // Use GIF player for GIF portraits
+                    gifPlayer.GifAsset = node.portraitGif;
+                    gifPlayer.gameObject.SetActive(true);
+
+                    // Hide portrait image if it exists
+                    if (portraitImage != null)
+                    {
+                        portraitImage.gameObject.SetActive(false);
+                    }
+                }
+                else if (node.IsSpritePortrait() && portraitImage != null)
+                {
+                    // Use regular image for sprite portraits
+                    portraitImage.sprite = node.portraitSprite;
+                    portraitImage.gameObject.SetActive(true);
+
+                    // Hide GIF player if it exists
+                    if (gifPlayer != null)
+                    {
+                        gifPlayer.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    // No portrait - hide both
+                    if (portraitImage != null)
+                    {
+                        portraitImage.gameObject.SetActive(false);
+                    }
+                    if (gifPlayer != null)
+                    {
+                        gifPlayer.gameObject.SetActive(false);
+                    }
+                }
             }
 
             // Store full text for typing animation
@@ -104,6 +146,13 @@ namespace Unbound.Dialogue
                 {
                     StopCoroutine(currentTextAnimation);
                 }
+
+                // Notify GIF controller that text animation is starting
+                if (gifController != null)
+                {
+                    gifController.OnTextAnimationStart();
+                }
+
                 currentTextAnimation = StartCoroutine(TypeText(node, conditionEvaluator));
             }
             else
@@ -174,6 +223,7 @@ namespace Unbound.Dialogue
             if (dialogueText == null)
                 yield break;
 
+            // Clear any existing text to prevent duplication
             dialogueText.text = "";
             isTextComplete = false;
             textSpeedMultiplier = 1f; // Reset speed multiplier
@@ -183,7 +233,8 @@ namespace Unbound.Dialogue
 
             for (int i = 0; i < displayText.Length; i++)
             {
-                dialogueText.text += displayText[i];
+                // Build the text up to the current character
+                dialogueText.text = displayText.Substring(0, i + 1);
 
                 // Play typing sound
                 if (textAudioSource != null && textTypeSound != null && i % 3 == 0)
@@ -200,6 +251,13 @@ namespace Unbound.Dialogue
             }
 
             isTextComplete = true;
+
+            // Notify GIF controller that text animation is complete
+            if (gifController != null)
+            {
+                gifController.OnTextAnimationComplete();
+            }
+
             ShowContinueButton();
         }
 
@@ -331,6 +389,12 @@ namespace Unbound.Dialogue
             }
 
             isTextComplete = true;
+
+            // Notify GIF controller that text animation is complete (skipped)
+            if (gifController != null)
+            {
+                gifController.OnTextAnimationComplete();
+            }
 
             // Show continue button if not showing choices
             if (continueButton != null && choicesPanel != null && !choicesPanel.activeSelf)

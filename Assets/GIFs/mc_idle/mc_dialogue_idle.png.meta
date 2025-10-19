@@ -1,0 +1,442 @@
+fileFormatVersion: 2
+guid: d8bcf8a803b654038a0ea3244898d904
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2968315229727399999
+    second: mc_dialogue_idle_0
+  - first:
+      213: 7874710324381751790
+    second: mc_dialogue_idle_1
+  - first:
+      213: -3675766595570934392
+    second: mc_dialogue_idle_2
+  - first:
+      213: 6937873940594664980
+    second: mc_dialogue_idle_3
+  - first:
+      213: 7593243447844092864
+    second: mc_dialogue_idle_4
+  - first:
+      213: 945098150578752879
+    second: mc_dialogue_idle_5
+  - first:
+      213: -6388270591568137286
+    second: mc_dialogue_idle_6
+  - first:
+      213: 3103444326234807691
+    second: mc_dialogue_idle_7
+  - first:
+      213: -21275092076221277
+    second: mc_dialogue_idle_8
+  - first:
+      213: -3831921374847512212
+    second: mc_dialogue_idle_9
+  - first:
+      213: 3482846065512862844
+    second: mc_dialogue_idle_10
+  - first:
+      213: -9082601813097357898
+    second: mc_dialogue_idle_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: mc_dialogue_idle_0
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 958
+        width: 269
+        height: 422
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cf57be760d6ec6d0800000000000000
+      internalID: -2968315229727399999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_1
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 958
+        width: 269
+        height: 422
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee910e96157984d60800000000000000
+      internalID: 7874710324381751790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_2
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 958
+        width: 269
+        height: 422
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88d5fb1a1cd0dfcc0800000000000000
+      internalID: -3675766595570934392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_3
+      rect:
+        serializedVersion: 2
+        x: 1221
+        y: 958
+        width: 269
+        height: 422
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 416a59d2797484060800000000000000
+      internalID: 6937873940594664980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_4
+      rect:
+        serializedVersion: 2
+        x: 1621
+        y: 958
+        width: 269
+        height: 422
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cb3fc16fae906960800000000000000
+      internalID: 7593243447844092864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_5
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 478
+        width: 269
+        height: 427
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6d0027b2c9ad1d00800000000000000
+      internalID: 945098150578752879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_6
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 478
+        width: 269
+        height: 429
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab3b1845ebd4857a0800000000000000
+      internalID: -6388270591568137286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_7
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 478
+        width: 269
+        height: 429
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8d5d650c26a11b20800000000000000
+      internalID: 3103444326234807691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_8
+      rect:
+        serializedVersion: 2
+        x: 1221
+        y: 478
+        width: 269
+        height: 429
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3acab3e9a6a64bff0800000000000000
+      internalID: -21275092076221277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_9
+      rect:
+        serializedVersion: 2
+        x: 1621
+        y: 478
+        width: 269
+        height: 429
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c61dcfcdfc742dac0800000000000000
+      internalID: -3831921374847512212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_10
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 0
+        width: 269
+        height: 427
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c74d24e2b0e855030800000000000000
+      internalID: 3482846065512862844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mc_dialogue_idle_11
+      rect:
+        serializedVersion: 2
+        x: 421
+        y: 0
+        width: 269
+        height: 425
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bd530ec5cd14f180800000000000000
+      internalID: -9082601813097357898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      mc_dialogue_idle_0: -2968315229727399999
+      mc_dialogue_idle_1: 7874710324381751790
+      mc_dialogue_idle_10: 3482846065512862844
+      mc_dialogue_idle_11: -9082601813097357898
+      mc_dialogue_idle_2: -3675766595570934392
+      mc_dialogue_idle_3: 6937873940594664980
+      mc_dialogue_idle_4: 7593243447844092864
+      mc_dialogue_idle_5: 945098150578752879
+      mc_dialogue_idle_6: -6388270591568137286
+      mc_dialogue_idle_7: 3103444326234807691
+      mc_dialogue_idle_8: -21275092076221277
+      mc_dialogue_idle_9: -3831921374847512212
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
