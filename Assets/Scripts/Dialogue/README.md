@@ -201,3 +201,4 @@ The system is designed for extensibility:
 
 For more advanced features like dialogue trees or complex branching logic, consider extending the base classes or creating additional manager components.
 
+

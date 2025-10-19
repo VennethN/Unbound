@@ -18,7 +18,7 @@ MonoBehaviour:
   nodes:
   - nodeID: start
     speakerID: Rafa
-    dialogueTextKey: Wtf is this triangle bruh
+    dialogueTextKey: Gay Rectangle
     portraitSprite: {fileID: 0}
     portraitGif: {fileID: 11400000, guid: 5d5a25c2d61a6456292e940376f0af8f, type: 2}
     animationTrigger: 

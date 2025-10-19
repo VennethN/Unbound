@@ -144,3 +144,4 @@ if (bounds.Contains(testPosition))
 ## Integration with Existing Systems
 
 The camera system is designed to work alongside your existing player controller and doesn't interfere with other gameplay systems. It automatically detects the player using the PlayerController2D component and follows it smoothly within the defined boundaries.
+
