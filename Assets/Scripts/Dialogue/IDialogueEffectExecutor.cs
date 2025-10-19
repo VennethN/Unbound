@@ -41,3 +41,4 @@ namespace Unbound.Dialogue
         void TriggerEvent(string eventName);
     }
 }
+

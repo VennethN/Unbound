@@ -26,3 +26,4 @@ namespace Unbound.Dialogue
         bool EvaluateCustomCondition(string conditionType, string[] parameters);
     }
 }
+

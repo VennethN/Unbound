@@ -200,3 +200,4 @@ The system is designed for extensibility:
 - Add dialogue history/backlog functionality
 
 For more advanced features like dialogue trees or complex branching logic, consider extending the base classes or creating additional manager components.
+
