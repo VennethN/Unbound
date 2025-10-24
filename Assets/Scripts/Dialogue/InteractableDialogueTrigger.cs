@@ -38,6 +38,14 @@ namespace Unbound.Dialogue
         private void Awake()
         {
             interactionCollider = GetComponent<Collider2D>();
+            if (interactionIndicator != null)
+            {
+                interactionIndicator.SetActive(false);
+            }
+        }
+
+        private void Start()
+        {
             dialogueController = FindFirstObjectByType<DialogueController>();
 
             if (dialogueController == null)
@@ -45,10 +53,6 @@ namespace Unbound.Dialogue
                 Debug.LogWarning("No DialogueController found in scene. Dialogue triggers will not work.");
             }
 
-            if (interactionIndicator != null)
-            {
-                interactionIndicator.SetActive(false);
-            }
         }
 
         private void OnEnable()

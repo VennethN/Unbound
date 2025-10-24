@@ -22,12 +22,14 @@ namespace Unbound.Dialogue
 
         [Header("Settings")]
         [SerializeField] private bool autoAdvanceOnComplete = false;
+        [SerializeField] private bool freezePlayerMovement = true;
 
         // Runtime state
         private DialogueAsset currentDialogue;
         private DialogueNode currentNode;
         private DialogueState dialogueState;
         private Coroutine currentTextCoroutine;
+        private Unbound.Player.PlayerController2D playerController;
 
         // Event system
         public UnityEvent<DialogueNode> OnNodeStart;
@@ -109,6 +111,12 @@ namespace Unbound.Dialogue
             // Restore any existing progress for this dialogue
             RestoreDialogueProgress();
 
+            // Freeze player movement if enabled
+            if (freezePlayerMovement)
+            {
+                FreezePlayerMovement();
+            }
+
             OnDialogueStart?.Invoke();
             AdvanceToNode(dialogueAsset.startNodeID);
         }
@@ -141,6 +149,12 @@ namespace Unbound.Dialogue
 
             currentDialogue = null;
             currentNode = null;
+
+            // Unfreeze player movement if it was frozen
+            if (freezePlayerMovement)
+            {
+                UnfreezePlayerMovement();
+            }
 
             dialogueView.Hide();
             OnDialogueEnd?.Invoke();
@@ -382,6 +396,37 @@ namespace Unbound.Dialogue
         {
             // TODO: Integrate with event system
             Debug.Log($"Triggering event '{eventName}'");
+        }
+
+        #endregion
+
+        #region Player Movement Control
+
+        /// <summary>
+        /// Freezes the player movement during dialogue
+        /// </summary>
+        private void FreezePlayerMovement()
+        {
+            if (playerController == null)
+            {
+                playerController = FindFirstObjectByType<Unbound.Player.PlayerController2D>();
+            }
+
+            if (playerController != null)
+            {
+                playerController.SetMovementEnabled(false);
+            }
+        }
+
+        /// <summary>
+        /// Unfreezes the player movement after dialogue
+        /// </summary>
+        private void UnfreezePlayerMovement()
+        {
+            if (playerController != null)
+            {
+                playerController.SetMovementEnabled(true);
+            }
         }
 
         #endregion

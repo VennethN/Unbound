@@ -36,6 +36,7 @@ namespace Unbound.Player
         private float _currentSpeedMultiplier = 1f;
         private Vector2 _animationDirection;
         private Vector3 _initialLocalScale;
+        private bool _movementEnabled = true;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -99,13 +100,17 @@ namespace Unbound.Player
         private void Update()
         {
 #if ENABLE_INPUT_SYSTEM
-            if (_moveAction != null)
+            if (_moveAction != null && _movementEnabled)
             {
                 _inputVector = _moveAction.ReadValue<Vector2>();
                 if (_inputVector.sqrMagnitude < inputDeadzone * inputDeadzone)
                 {
                     _inputVector = Vector2.zero;
                 }
+            }
+            else if (!_movementEnabled)
+            {
+                _inputVector = Vector2.zero;
             }
 
             _currentSpeedMultiplier = _sprintAction != null && _sprintAction.IsPressed()
@@ -182,6 +187,29 @@ namespace Unbound.Player
             moveXDebug = _animationDirection.x;
             moveYDebug = _animationDirection.y;
             speedDebug = _currentVelocity.sqrMagnitude;
+        }
+
+        /// <summary>
+        /// Enables or disables player movement
+        /// </summary>
+        public void SetMovementEnabled(bool enabled)
+        {
+            _movementEnabled = enabled;
+            if (!enabled)
+            {
+                // Stop movement immediately when disabled
+                _inputVector = Vector2.zero;
+                _rigidbody.linearVelocity = Vector2.zero;
+                _currentVelocity = Vector2.zero;
+            }
+        }
+
+        /// <summary>
+        /// Returns whether player movement is currently enabled
+        /// </summary>
+        public bool IsMovementEnabled()
+        {
+            return _movementEnabled;
         }
 
 #if UNITY_EDITOR
