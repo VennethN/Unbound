@@ -118,7 +118,17 @@ namespace Unbound.Dialogue
             }
 
             OnDialogueStart?.Invoke();
-            AdvanceToNode(dialogueAsset.startNodeID);
+
+            // Get the appropriate start node based on conditions
+            string startNodeID = dialogueAsset.GetStartNodeID(this);
+            if (string.IsNullOrEmpty(startNodeID))
+            {
+                Debug.LogError($"Cannot start dialogue: No valid start node found for dialogue '{dialogueAsset.dialogueID}'");
+                EndDialogue();
+                return;
+            }
+
+            AdvanceToNode(startNodeID);
         }
 
         /// <summary>
@@ -325,10 +335,29 @@ namespace Unbound.Dialogue
             return currentDialogue != null && currentNode != null;
         }
 
+        /// <summary>
+        /// Gets all dialogue flags (read-only)
+        /// </summary>
+        public System.Collections.Generic.IReadOnlyDictionary<string, bool> GetDialogueFlags()
+        {
+            return dialogueFlags;
+        }
+
         #region IDialogueConditionEvaluator Implementation
 
         public bool EvaluateFlagCondition(string flagName, bool requiredValue)
         {
+            // Check global flags first (persist across scenes)
+            var saveManager = SaveManager.Instance;
+            if (saveManager != null)
+            {
+                if (saveManager.EvaluateGlobalFlag(flagName, requiredValue))
+                {
+                    return true;
+                }
+            }
+            
+            // Fallback to local dialogue flags (session-specific)
             return dialogueFlags.TryGetValue(flagName, out bool value) && value == requiredValue;
         }
 
@@ -360,6 +389,19 @@ namespace Unbound.Dialogue
         public void SetFlag(string flagName, bool value)
         {
             dialogueFlags[flagName] = value;
+        }
+
+        public void SetGlobalFlag(string flagName, bool value)
+        {
+            var saveManager = SaveManager.Instance;
+            if (saveManager != null)
+            {
+                saveManager.SetGlobalFlag(flagName, value);
+            }
+            else
+            {
+                Debug.LogWarning($"Cannot set global flag '{flagName}': SaveManager.Instance is null");
+            }
         }
 
         public void AddItem(string itemID, int quantity)

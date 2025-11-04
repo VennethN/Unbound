@@ -6,9 +6,14 @@ namespace Unbound.Dialogue
     public interface IDialogueEffectExecutor
     {
         /// <summary>
-        /// Sets a dialogue flag to a specific value
+        /// Sets a dialogue flag to a specific value (local to dialogue session)
         /// </summary>
         void SetFlag(string flagName, bool value);
+
+        /// <summary>
+        /// Sets a global flag to a specific value (persists across scenes)
+        /// </summary>
+        void SetGlobalFlag(string flagName, bool value);
 
         /// <summary>
         /// Adds an item to the player's inventory

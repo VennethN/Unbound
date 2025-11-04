@@ -159,6 +159,9 @@ public class SaveManager : MonoBehaviour
             data.saveFileName = fileName;
             data.gameStateData.saveCount++;
             
+            // Sync dictionaries to serializable versions before saving
+            SyncDictionariesToSerializable(data);
+            
             byte[] dataBytes = format == SerializationFormat.JSON 
                 ? SerializeToJSON(data) 
                 : SerializeToBinary(data);
@@ -197,6 +200,9 @@ public class SaveManager : MonoBehaviour
             data.UpdateSaveTime();
             data.saveFileName = fileName;
             data.gameStateData.saveCount++;
+            
+            // Sync dictionaries to serializable versions before saving
+            SyncDictionariesToSerializable(data);
             
             byte[] dataBytes = format == SerializationFormat.JSON 
                 ? SerializeToJSON(data) 
@@ -330,7 +336,15 @@ public class SaveManager : MonoBehaviour
     private SaveData DeserializeFromJSON(byte[] data)
     {
         string json = Encoding.UTF8.GetString(data);
-        return JsonUtility.FromJson<SaveData>(json);
+        SaveData saveData = JsonUtility.FromJson<SaveData>(json);
+        
+        // Sync serializable dictionaries to runtime dictionaries after loading
+        if (saveData != null)
+        {
+            SyncSerializableToDictionaries(saveData);
+        }
+        
+        return saveData;
     }
 
     /// <summary>
@@ -354,7 +368,90 @@ public class SaveManager : MonoBehaviour
         BinaryFormatter formatter = new BinaryFormatter();
         using (MemoryStream stream = new MemoryStream(data))
         {
-            return (SaveData)formatter.Deserialize(stream);
+            SaveData saveData = (SaveData)formatter.Deserialize(stream);
+            
+            // Sync serializable dictionaries to runtime dictionaries after loading
+            if (saveData != null)
+            {
+                SyncSerializableToDictionaries(saveData);
+            }
+            
+            return saveData;
+        }
+    }
+    
+    /// <summary>
+    /// Syncs runtime dictionaries to serializable versions before saving
+    /// </summary>
+    private void SyncDictionariesToSerializable(SaveData data)
+    {
+        if (data == null) return;
+        
+        // Sync PlayerData stats
+        if (data.playerData != null)
+        {
+            data.playerData.stats = data.playerData.stats; // Trigger setter to sync
+        }
+        
+        // Sync GameStateData dictionaries
+        if (data.gameStateData != null)
+        {
+            data.gameStateData.questStates = data.gameStateData.questStates; // Trigger setter to sync
+            data.gameStateData.gameSettings = data.gameStateData.gameSettings; // Trigger setter to sync
+            data.gameStateData.globalFlags = data.gameStateData.globalFlags; // Trigger setter to sync
+        }
+    }
+    
+    /// <summary>
+    /// Syncs serializable dictionaries to runtime dictionaries after loading
+    /// </summary>
+    private void SyncSerializableToDictionaries(SaveData data)
+    {
+        if (data == null) return;
+        
+        // Force initialization of runtime dictionaries from serializable versions
+        if (data.playerData != null)
+        {
+            // Initialize runtime dictionary from serializable
+            if (data.playerData.statsSerializable != null)
+            {
+                data.playerData._stats = data.playerData.statsSerializable.ToDictionary();
+            }
+            else
+            {
+                data.playerData._stats = new System.Collections.Generic.Dictionary<string, int>();
+            }
+        }
+        
+        if (data.gameStateData != null)
+        {
+            // Initialize runtime dictionaries from serializable versions
+            if (data.gameStateData.questStatesSerializable != null)
+            {
+                data.gameStateData._questStates = data.gameStateData.questStatesSerializable.ToDictionary();
+            }
+            else
+            {
+                data.gameStateData._questStates = new System.Collections.Generic.Dictionary<string, bool>();
+            }
+            
+            if (data.gameStateData.gameSettingsSerializable != null)
+            {
+                data.gameStateData._gameSettings = data.gameStateData.gameSettingsSerializable.ToDictionary();
+            }
+            else
+            {
+                data.gameStateData._gameSettings = new System.Collections.Generic.Dictionary<string, float>();
+            }
+            
+            if (data.gameStateData.globalFlagsSerializable != null)
+            {
+                data.gameStateData._globalFlags = data.gameStateData.globalFlagsSerializable.ToDictionary();
+            }
+            else
+            {
+                data.gameStateData._globalFlags = new System.Collections.Generic.Dictionary<string, bool>();
+            }
         }
     }
 
@@ -551,6 +648,66 @@ public class SaveManager : MonoBehaviour
     {
         return new SaveData();
     }
+
+    #region Global Flags Management
+
+    /// <summary>
+    /// Sets a global flag value
+    /// </summary>
+    public void SetGlobalFlag(string flagName, bool value)
+    {
+        if (currentSaveData == null)
+        {
+            currentSaveData = CreateNewSave();
+        }
+
+        // Access through property to ensure serializable version is synced
+        var flags = currentSaveData.gameStateData.globalFlags;
+        flags[flagName] = value;
+        // Sync back to serializable version
+        currentSaveData.gameStateData.globalFlags = flags;
+    }
+
+    /// <summary>
+    /// Gets a global flag value
+    /// </summary>
+    public bool GetGlobalFlag(string flagName, bool defaultValue = false)
+    {
+        if (currentSaveData == null || currentSaveData.gameStateData.globalFlags == null)
+        {
+            return defaultValue;
+        }
+
+        if (currentSaveData.gameStateData.globalFlags.TryGetValue(flagName, out bool value))
+        {
+            return value;
+        }
+
+        return defaultValue;
+    }
+
+    /// <summary>
+    /// Checks if a global flag matches the required value
+    /// </summary>
+    public bool EvaluateGlobalFlag(string flagName, bool requiredValue)
+    {
+        return GetGlobalFlag(flagName) == requiredValue;
+    }
+
+    /// <summary>
+    /// Gets all global flags (read-only)
+    /// </summary>
+    public System.Collections.Generic.IReadOnlyDictionary<string, bool> GetAllGlobalFlags()
+    {
+        if (currentSaveData == null || currentSaveData.gameStateData.globalFlags == null)
+        {
+            return new System.Collections.Generic.Dictionary<string, bool>();
+        }
+
+        return currentSaveData.gameStateData.globalFlags;
+    }
+
+    #endregion
     
     /// <summary>
     /// Gets the current save data being used

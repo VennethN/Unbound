@@ -89,7 +89,28 @@ public class PlayerData
     public Vector3Serializable position;
     public QuaternionSerializable rotation;
     public List<string> inventory;
-    public Dictionary<string, int> stats;
+    public SerializableIntDictionary statsSerializable;
+    
+    // Runtime-only dictionary (not serialized)
+    [System.NonSerialized]
+    internal Dictionary<string, int> _stats;
+    
+    public Dictionary<string, int> stats
+    {
+        get
+        {
+            if (_stats == null)
+            {
+                _stats = statsSerializable != null ? statsSerializable.ToDictionary() : new Dictionary<string, int>();
+            }
+            return _stats;
+        }
+        set
+        {
+            _stats = value;
+            statsSerializable = value != null ? new SerializableIntDictionary(value) : new SerializableIntDictionary();
+        }
+    }
     
     public PlayerData()
     {
@@ -101,7 +122,8 @@ public class PlayerData
         position = Vector3Serializable.zero;
         rotation = QuaternionSerializable.identity;
         inventory = new List<string>();
-        stats = new Dictionary<string, int>();
+        statsSerializable = new SerializableIntDictionary();
+        _stats = new Dictionary<string, int>();
     }
 }
 
@@ -115,8 +137,68 @@ public class GameStateData
     public float playtime;
     public int saveCount;
     public List<string> unlockedAchievements;
-    public Dictionary<string, bool> questStates;
-    public Dictionary<string, float> gameSettings;
+    public SerializableBoolDictionary questStatesSerializable;
+    public SerializableFloatDictionary gameSettingsSerializable;
+    public SerializableBoolDictionary globalFlagsSerializable;
+    
+    // Runtime-only dictionaries (not serialized)
+    [System.NonSerialized]
+    internal Dictionary<string, bool> _questStates;
+    [System.NonSerialized]
+    internal Dictionary<string, float> _gameSettings;
+    [System.NonSerialized]
+    internal Dictionary<string, bool> _globalFlags;
+    
+    public Dictionary<string, bool> questStates
+    {
+        get
+        {
+            if (_questStates == null)
+            {
+                _questStates = questStatesSerializable != null ? questStatesSerializable.ToDictionary() : new Dictionary<string, bool>();
+            }
+            return _questStates;
+        }
+        set
+        {
+            _questStates = value;
+            questStatesSerializable = value != null ? new SerializableBoolDictionary(value) : new SerializableBoolDictionary();
+        }
+    }
+    
+    public Dictionary<string, float> gameSettings
+    {
+        get
+        {
+            if (_gameSettings == null)
+            {
+                _gameSettings = gameSettingsSerializable != null ? gameSettingsSerializable.ToDictionary() : new Dictionary<string, float>();
+            }
+            return _gameSettings;
+        }
+        set
+        {
+            _gameSettings = value;
+            gameSettingsSerializable = value != null ? new SerializableFloatDictionary(value) : new SerializableFloatDictionary();
+        }
+    }
+    
+    public Dictionary<string, bool> globalFlags
+    {
+        get
+        {
+            if (_globalFlags == null)
+            {
+                _globalFlags = globalFlagsSerializable != null ? globalFlagsSerializable.ToDictionary() : new Dictionary<string, bool>();
+            }
+            return _globalFlags;
+        }
+        set
+        {
+            _globalFlags = value;
+            globalFlagsSerializable = value != null ? new SerializableBoolDictionary(value) : new SerializableBoolDictionary();
+        }
+    }
     
     public GameStateData()
     {
@@ -124,8 +206,162 @@ public class GameStateData
         playtime = 0f;
         saveCount = 0;
         unlockedAchievements = new List<string>();
-        questStates = new Dictionary<string, bool>();
-        gameSettings = new Dictionary<string, float>();
+        questStatesSerializable = new SerializableBoolDictionary();
+        gameSettingsSerializable = new SerializableFloatDictionary();
+        globalFlagsSerializable = new SerializableBoolDictionary();
+        _questStates = new Dictionary<string, bool>();
+        _gameSettings = new Dictionary<string, float>();
+        _globalFlags = new Dictionary<string, bool>();
+    }
+}
+
+/// <summary>
+/// Serializable wrapper for Dictionary<string, bool> to support JSON serialization
+/// </summary>
+[Serializable]
+public class SerializableBoolDictionary
+{
+    [Serializable]
+    public class KeyValuePair
+    {
+        public string key;
+        public bool value;
+
+        public KeyValuePair() { }
+
+        public KeyValuePair(string k, bool v)
+        {
+            key = k;
+            value = v;
+        }
+    }
+
+    public List<KeyValuePair> items = new List<KeyValuePair>();
+
+    public SerializableBoolDictionary() { }
+
+    public SerializableBoolDictionary(Dictionary<string, bool> dictionary)
+    {
+        if (dictionary != null)
+        {
+            foreach (var kvp in dictionary)
+            {
+                items.Add(new KeyValuePair(kvp.Key, kvp.Value));
+            }
+        }
+    }
+
+    public Dictionary<string, bool> ToDictionary()
+    {
+        Dictionary<string, bool> dict = new Dictionary<string, bool>();
+        foreach (var item in items)
+        {
+            if (!string.IsNullOrEmpty(item.key))
+            {
+                dict[item.key] = item.value;
+            }
+        }
+        return dict;
+    }
+}
+
+/// <summary>
+/// Serializable wrapper for Dictionary<string, int> to support JSON serialization
+/// </summary>
+[Serializable]
+public class SerializableIntDictionary
+{
+    [Serializable]
+    public class KeyValuePair
+    {
+        public string key;
+        public int value;
+
+        public KeyValuePair() { }
+
+        public KeyValuePair(string k, int v)
+        {
+            key = k;
+            value = v;
+        }
+    }
+
+    public List<KeyValuePair> items = new List<KeyValuePair>();
+
+    public SerializableIntDictionary() { }
+
+    public SerializableIntDictionary(Dictionary<string, int> dictionary)
+    {
+        if (dictionary != null)
+        {
+            foreach (var kvp in dictionary)
+            {
+                items.Add(new KeyValuePair(kvp.Key, kvp.Value));
+            }
+        }
+    }
+
+    public Dictionary<string, int> ToDictionary()
+    {
+        Dictionary<string, int> dict = new Dictionary<string, int>();
+        foreach (var item in items)
+        {
+            if (!string.IsNullOrEmpty(item.key))
+            {
+                dict[item.key] = item.value;
+            }
+        }
+        return dict;
+    }
+}
+
+/// <summary>
+/// Serializable wrapper for Dictionary<string, float> to support JSON serialization
+/// </summary>
+[Serializable]
+public class SerializableFloatDictionary
+{
+    [Serializable]
+    public class KeyValuePair
+    {
+        public string key;
+        public float value;
+
+        public KeyValuePair() { }
+
+        public KeyValuePair(string k, float v)
+        {
+            key = k;
+            value = v;
+        }
+    }
+
+    public List<KeyValuePair> items = new List<KeyValuePair>();
+
+    public SerializableFloatDictionary() { }
+
+    public SerializableFloatDictionary(Dictionary<string, float> dictionary)
+    {
+        if (dictionary != null)
+        {
+            foreach (var kvp in dictionary)
+            {
+                items.Add(new KeyValuePair(kvp.Key, kvp.Value));
+            }
+        }
+    }
+
+    public Dictionary<string, float> ToDictionary()
+    {
+        Dictionary<string, float> dict = new Dictionary<string, float>();
+        foreach (var item in items)
+        {
+            if (!string.IsNullOrEmpty(item.key))
+            {
+                dict[item.key] = item.value;
+            }
+        }
+        return dict;
     }
 }
 

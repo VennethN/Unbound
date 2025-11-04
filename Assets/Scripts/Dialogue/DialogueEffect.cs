@@ -11,6 +11,7 @@ namespace Unbound.Dialogue
         public enum EffectType
         {
             SetFlag,
+            SetGlobalFlag,
             AddItem,
             RemoveItem,
             UpdateQuest,
@@ -54,6 +55,10 @@ namespace Unbound.Dialogue
                     executor.SetFlag(flagName, flagValue);
                     break;
 
+                case EffectType.SetGlobalFlag:
+                    executor.SetGlobalFlag(flagName, flagValue);
+                    break;
+
                 case EffectType.AddItem:
                     executor.AddItem(itemID, itemQuantity);
                     break;
@@ -93,6 +98,9 @@ namespace Unbound.Dialogue
             {
                 case EffectType.SetFlag:
                     return $"Set flag '{flagName}' to {flagValue}";
+
+                case EffectType.SetGlobalFlag:
+                    return $"Set global flag '{flagName}' to {flagValue}";
 
                 case EffectType.AddItem:
                     return $"Add {itemQuantity} of item '{itemID}'";
