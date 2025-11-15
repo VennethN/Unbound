@@ -36,6 +36,9 @@ namespace Unbound.Inventory.UI
             {
                 InventoryManager.Instance.OnInventoryChanged -= RefreshInventory;
             }
+
+            // Ensure description panel closes when inventory UI is closed/disabled
+            HideDescriptionPanel();
         }
         
         private void Awake()
@@ -155,10 +158,7 @@ namespace Unbound.Inventory.UI
         {
             if (slotUI == null || slotUI.IsEmpty)
             {
-                if (descriptionPanel != null)
-                {
-                    descriptionPanel.Hide();
-                }
+                HideDescriptionPanel();
                 _selectedSlot = null;
                 return;
             }
@@ -196,10 +196,23 @@ namespace Unbound.Inventory.UI
             if (descriptionPanel == null || itemData == null)
                 return;
 
-            // If the panel GameObject itself is disabled (because no item was selected previously), enable it
-            descriptionPanel.gameObject.SetActive(!descriptionPanel.gameObject.activeSelf);
+            if (!descriptionPanel.gameObject.activeSelf)
+            {
+                descriptionPanel.gameObject.SetActive(true);
+            }
 
             descriptionPanel.ShowItem(itemData, slotUI);
+        }
+
+        /// <summary>
+        /// Hides the description panel safely
+        /// </summary>
+        private void HideDescriptionPanel()
+        {
+            if (descriptionPanel != null)
+            {
+                descriptionPanel.Hide();
+            }
         }
         
         /// <summary>

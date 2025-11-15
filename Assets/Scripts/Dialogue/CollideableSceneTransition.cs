@@ -1,28 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Unbound.Utilities;
 
 namespace Unbound.Dialogue
 {
     /// <summary>
-    /// Represents a single flag condition requirement
+    /// Component that transports the player to another scene when they touch/collide with this object
     /// </summary>
-    [System.Serializable]
-    public class FlagRequirement
-    {
-        [Tooltip("Name of the global flag to check")]
-        public string flagName = "";
-
-        [Tooltip("Required value for this flag (true/false)")]
-        public bool requiredValue = true;
-    }
-
-    /// <summary>
-    /// Component that transports the player to another scene when they interact with this object
-    /// </summary>
-    public class InteractableSceneTransition : BaseInteractable
+    public class CollideableSceneTransition : BaseCollideable
     {
         public enum TransitionType
         {
@@ -75,7 +61,7 @@ namespace Unbound.Dialogue
                 dialogueController = FindFirstObjectByType<DialogueController>();
                 if (dialogueController == null)
                 {
-                    Debug.LogWarning("InteractableSceneTransition requires DialogueController when blocked dialogue is set, but none found in scene.");
+                    Debug.LogWarning("CollideableSceneTransition requires DialogueController when blocked dialogue is set, but none found in scene.");
                 }
             }
         }
@@ -92,17 +78,20 @@ namespace Unbound.Dialogue
         /// <summary>
         /// Override to check if dialogue is not currently active
         /// </summary>
-        protected override bool CanInteract()
+        protected override bool CanTrigger()
         {
-            bool baseCanInteract = base.CanInteract();
+            if (!base.CanTrigger())
+            {
+                return false;
+            }
 
             // If blocked dialogue is set, make sure dialogue controller exists and dialogue isn't active
             if (blockedDialogueAsset != null && dialogueController != null)
             {
-                return baseCanInteract && !dialogueController.IsDialogueActive();
+                return !dialogueController.IsDialogueActive();
             }
 
-            return baseCanInteract;
+            return true;
         }
 
         /// <summary>
@@ -175,7 +164,7 @@ namespace Unbound.Dialogue
             }
         }
 
-        protected override void PerformInteraction()
+        protected override void PerformCollision()
         {
             // Ensure DialogueController is found if needed
             EnsureDialogueController();
@@ -315,10 +304,10 @@ namespace Unbound.Dialogue
 
         private void SetupPlayerPosition()
         {
-            var player = FindFirstObjectByType<Unbound.Player.PlayerController2D>()?.gameObject ??
+            var targetPlayer = player != null ? player : FindFirstObjectByType<Unbound.Player.PlayerController2D>()?.gameObject ??
                         GameObject.FindGameObjectWithTag("Player");
 
-            if (player != null)
+            if (targetPlayer != null)
             {
                 if (!string.IsNullOrEmpty(playerSpawnPointTag))
                 {
@@ -326,13 +315,13 @@ namespace Unbound.Dialogue
                     var spawnPoint = GameObject.FindGameObjectWithTag(playerSpawnPointTag);
                     if (spawnPoint != null)
                     {
-                        player.transform.position = spawnPoint.transform.position;
+                        targetPlayer.transform.position = spawnPoint.transform.position;
                         return;
                     }
                 }
 
                 // Use the specified position
-                player.transform.position = playerSpawnPosition;
+                targetPlayer.transform.position = playerSpawnPosition;
             }
             else
             {
@@ -520,3 +509,4 @@ namespace Unbound.Dialogue
         }
     }
 }
+

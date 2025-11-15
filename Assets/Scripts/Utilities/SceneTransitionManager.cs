@@ -16,6 +16,7 @@ namespace Unbound.Utilities
         [SerializeField] private float fadeDuration = 1f;
         [SerializeField] private Color fadeColor = Color.black;
         [SerializeField] private bool autoSaveOnTransition = true;
+        [SerializeField] private float blackScreenHoldDuration = 0.2f;
 
         [Header("Transition UI")]
         [SerializeField] private Image fadeImage;
@@ -172,6 +173,9 @@ namespace Unbound.Utilities
             // Fade out
             yield return StartCoroutine(FadeOut());
 
+            // Hold black screen for a short duration to mask the transition
+            yield return new WaitForSeconds(blackScreenHoldDuration);
+
             // Load the new scene
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
             while (!asyncLoad.isDone)
@@ -242,6 +246,63 @@ namespace Unbound.Utilities
                 canvasGroup.blocksRaycasts = false;
                 canvasGroup.interactable = false;
             }
+        }
+
+        /// <summary>
+        /// Performs a fade out transition (without scene loading)
+        /// Returns a coroutine that can be started by the caller
+        /// </summary>
+        public static Coroutine FadeOutOnly()
+        {
+            if (instance == null)
+            {
+                Debug.LogWarning("SceneTransitionManager instance not found. Cannot perform fade.");
+                return null;
+            }
+
+            return instance.StartCoroutine(instance.FadeOut());
+        }
+
+        /// <summary>
+        /// Performs a fade in transition (without scene loading)
+        /// Returns a coroutine that can be started by the caller
+        /// </summary>
+        public static Coroutine FadeInOnly()
+        {
+            if (instance == null)
+            {
+                Debug.LogWarning("SceneTransitionManager instance not found. Cannot perform fade.");
+                return null;
+            }
+
+            return instance.StartCoroutine(instance.FadeIn());
+        }
+
+        /// <summary>
+        /// Performs a complete fade out then fade in transition (without scene loading)
+        /// Useful for teleportation effects within the same scene
+        /// </summary>
+        public static void FadeTransition(System.Action onFadeOutComplete = null, System.Action onComplete = null)
+        {
+            if (instance == null)
+            {
+                Debug.LogWarning("SceneTransitionManager instance not found. Cannot perform fade transition.");
+                onFadeOutComplete?.Invoke();
+                onComplete?.Invoke();
+                return;
+            }
+
+            instance.StartCoroutine(instance.FadeTransitionCoroutine(onFadeOutComplete, onComplete));
+        }
+
+        private IEnumerator FadeTransitionCoroutine(System.Action onFadeOutComplete, System.Action onComplete)
+        {
+            yield return StartCoroutine(FadeOut());
+            onFadeOutComplete?.Invoke();
+            // Hold black screen for a short duration to mask the transition
+            yield return new WaitForSeconds(blackScreenHoldDuration);
+            yield return StartCoroutine(FadeIn());
+            onComplete?.Invoke();
         }
 
         private void AutoSave()

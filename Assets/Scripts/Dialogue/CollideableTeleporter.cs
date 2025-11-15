@@ -6,10 +6,10 @@ using Unbound.Utilities;
 namespace Unbound.Dialogue
 {
     /// <summary>
-    /// Interactable component that teleports the player to a destination within the current scene.
+    /// Collideable component that teleports the player to a destination within the current scene when they touch it.
     /// Supports optional global flag requirements and blocked dialogue feedback.
     /// </summary>
-    public class InteractableTeleporter : BaseInteractable
+    public class CollideableTeleporter : BaseCollideable
     {
         [Header("Teleport Settings")]
         [SerializeField] private Transform destinationPoint;
@@ -53,7 +53,7 @@ namespace Unbound.Dialogue
                 dialogueController = FindFirstObjectByType<DialogueController>();
                 if (dialogueController == null)
                 {
-                    Debug.LogWarning("InteractableTeleporter requires a DialogueController to play blocked dialogue, but none was found in the scene.");
+                    Debug.LogWarning("CollideableTeleporter requires a DialogueController to play blocked dialogue, but none was found in the scene.");
                 }
             }
         }
@@ -66,19 +66,22 @@ namespace Unbound.Dialogue
             }
         }
 
-        protected override bool CanInteract()
+        protected override bool CanTrigger()
         {
-            bool baseCanInteract = base.CanInteract();
-
-            if (blockedDialogueAsset != null && dialogueController != null)
+            if (!base.CanTrigger())
             {
-                return baseCanInteract && !dialogueController.IsDialogueActive();
+                return false;
             }
 
-            return baseCanInteract;
+            if (blockedDialogueAsset != null && dialogueController != null && dialogueController.IsDialogueActive())
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        protected override void PerformInteraction()
+        protected override void PerformCollision()
         {
             EnsureDialogueController();
             EnsureSaveManager();
@@ -86,7 +89,7 @@ namespace Unbound.Dialogue
             Vector3? destination = ResolveDestination();
             if (!destination.HasValue)
             {
-                Debug.LogWarning($"InteractableTeleporter on {name} has no valid destination configured.", this);
+                Debug.LogWarning($"CollideableTeleporter on {name} has no valid destination configured.", this);
                 return;
             }
 
@@ -132,7 +135,7 @@ namespace Unbound.Dialogue
             GameObject targetPlayer = player != null ? player : FindPlayer();
             if (targetPlayer == null)
             {
-                Debug.LogWarning("InteractableTeleporter could not find a player to teleport.");
+                Debug.LogWarning("CollideableTeleporter could not find a player to teleport.");
                 return;
             }
 
@@ -208,7 +211,7 @@ namespace Unbound.Dialogue
 
                 if (dialogueController == null)
                 {
-                    Debug.LogWarning("InteractableTeleporter needs a DialogueController to play the blocked dialogue, but none were found.");
+                    Debug.LogWarning("CollideableTeleporter needs a DialogueController to play the blocked dialogue, but none were found.");
                 }
             }
         }
@@ -385,10 +388,8 @@ namespace Unbound.Dialogue
         /// <summary>
         /// Draws gizmos in the editor to visualize the teleport destination
         /// </summary>
-        protected override void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
-            base.OnDrawGizmosSelected();
-
             // Visualize manual destination if enabled
             if (useManualDestination)
             {
