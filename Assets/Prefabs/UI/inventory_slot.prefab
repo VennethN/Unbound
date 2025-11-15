@@ -307,7 +307,7 @@ MonoBehaviour:
   slotButton: {fileID: 8547363056994255874}
   emptySlotVisual: {fileID: 8009779762221828355}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  selectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &8547363056994255874
 MonoBehaviour:
   m_ObjectHideFlags: 0

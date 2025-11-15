@@ -39,6 +39,7 @@ namespace Unbound.Inventory.UI
         
         public System.Action<ItemData> OnEquipClicked;
         public System.Action<ItemData> OnUseClicked;
+        public bool IsVisible => panelRoot != null && panelRoot.activeSelf;
         
         private void Awake()
         {

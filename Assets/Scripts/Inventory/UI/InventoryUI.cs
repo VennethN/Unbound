@@ -37,8 +37,17 @@ namespace Unbound.Inventory.UI
                 InventoryManager.Instance.OnInventoryChanged -= RefreshInventory;
             }
 
-            // Ensure description panel closes when inventory UI is closed/disabled
-            HideDescriptionPanel();
+            // Hide description panel when inventory UI is closed
+            if (descriptionPanel != null)
+            {
+                descriptionPanel.Hide();
+            }
+
+            if (_selectedSlot != null)
+            {
+                _selectedSlot.SetSelected(false);
+                _selectedSlot = null;
+            }
         }
         
         private void Awake()
@@ -158,25 +167,41 @@ namespace Unbound.Inventory.UI
         {
             if (slotUI == null || slotUI.IsEmpty)
             {
-                HideDescriptionPanel();
+                if (descriptionPanel != null)
+                {
+                    descriptionPanel.Hide();
+                }
                 _selectedSlot = null;
                 return;
             }
             
+            // If clicking the same slot that's currently selected and panel is visible, toggle it off
+            if (_selectedSlot == slotUI && descriptionPanel != null && descriptionPanel.IsVisible)
+            {
+                descriptionPanel.Hide();
+                slotUI.SetSelected(false);
+                _selectedSlot = null;
+                return;
+            }
+
             // Deselect previous slot
             if (_selectedSlot != null && _selectedSlot != slotUI)
             {
                 _selectedSlot.SetSelected(false);
             }
-            
+
             _selectedSlot = slotUI;
             slotUI.SetSelected(true);
-            
+
             // Handle item actions based on type
             ItemData itemData = ItemDatabase.Instance.GetItem(slotUI.Slot.itemID);
             if (itemData == null) return;
-            
-            ShowDescriptionPanel(itemData, slotUI);
+
+            // Show description panel next to the clicked slot
+            if (descriptionPanel != null)
+            {
+                descriptionPanel.ShowItem(itemData, slotUI);
+            }
         }
         
         /// <summary>
@@ -186,33 +211,6 @@ namespace Unbound.Inventory.UI
         {
             // This is called on click, but we handle everything in OnSlotClicked
             // Keeping for compatibility but selection is handled there
-        }
-
-        /// <summary>
-        /// Ensures description panel is active and displays the item
-        /// </summary>
-        private void ShowDescriptionPanel(ItemData itemData, InventorySlotUI slotUI)
-        {
-            if (descriptionPanel == null || itemData == null)
-                return;
-
-            if (!descriptionPanel.gameObject.activeSelf)
-            {
-                descriptionPanel.gameObject.SetActive(true);
-            }
-
-            descriptionPanel.ShowItem(itemData, slotUI);
-        }
-
-        /// <summary>
-        /// Hides the description panel safely
-        /// </summary>
-        private void HideDescriptionPanel()
-        {
-            if (descriptionPanel != null)
-            {
-                descriptionPanel.Hide();
-            }
         }
         
         /// <summary>
