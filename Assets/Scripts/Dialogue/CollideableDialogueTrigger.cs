@@ -8,7 +8,7 @@ namespace Unbound.Dialogue
     public class CollideableDialogueTrigger : BaseCollideable
     {
         [Header("Dialogue Settings")]
-        [SerializeField] private DialogueAsset dialogueAsset;
+        [SerializeField] private string dialogueID;
 
         // Runtime state
         private DialogueController dialogueController;
@@ -38,7 +38,7 @@ namespace Unbound.Dialogue
         /// </summary>
         protected override bool CanTrigger()
         {
-            if (!base.CanTrigger() || dialogueController == null || dialogueAsset == null)
+            if (!base.CanTrigger() || dialogueController == null || string.IsNullOrEmpty(dialogueID))
             {
                 cachedCanTrigger = false;
                 return false;
@@ -73,7 +73,13 @@ namespace Unbound.Dialogue
             lastCheckTime = currentTime;
             
             // Check if dialogue has a valid start node based on conditions
-            cachedCanTrigger = dialogueAsset.HasValidStartNode(dialogueController);
+            DialogueData dialogueData = DialogueDatabase.Instance.GetDialogue(dialogueID);
+            if (dialogueData == null)
+            {
+                cachedCanTrigger = false;
+                return false;
+            }
+            cachedCanTrigger = dialogueData.HasValidStartNode(dialogueController);
             return cachedCanTrigger;
         }
         
@@ -118,9 +124,9 @@ namespace Unbound.Dialogue
         /// </summary>
         protected override void PerformCollision()
         {
-            if (dialogueController != null && dialogueAsset != null)
+            if (dialogueController != null && !string.IsNullOrEmpty(dialogueID))
             {
-                dialogueController.StartDialogue(dialogueAsset);
+                dialogueController.StartDialogue(dialogueID);
             }
         }
 
@@ -133,19 +139,47 @@ namespace Unbound.Dialogue
         }
 
         /// <summary>
-        /// Sets a new dialogue asset
+        /// Sets a new dialogue ID
         /// </summary>
-        public void SetDialogueAsset(DialogueAsset newDialogue)
+        public void SetDialogueID(string newDialogueID)
         {
-            dialogueAsset = newDialogue;
+            dialogueID = newDialogueID;
+            InvalidateCache();
         }
 
         /// <summary>
-        /// Gets the current dialogue asset
+        /// Gets the current dialogue ID
         /// </summary>
+        public string GetDialogueID()
+        {
+            return dialogueID;
+        }
+
+        /// <summary>
+        /// Sets a new dialogue asset (legacy method for backward compatibility)
+        /// </summary>
+        [System.Obsolete("Use SetDialogueID(string) instead. This method will be removed in a future version.")]
+        public void SetDialogueAsset(DialogueAsset newDialogue)
+        {
+            if (newDialogue != null)
+            {
+                SetDialogueID(newDialogue.dialogueID);
+            }
+        }
+
+        /// <summary>
+        /// Gets the current dialogue asset (legacy method for backward compatibility)
+        /// </summary>
+        [System.Obsolete("Use GetDialogueID() instead. This method will be removed in a future version.")]
         public DialogueAsset GetDialogueAsset()
         {
-            return dialogueAsset;
+            if (!string.IsNullOrEmpty(dialogueID))
+            {
+                DialogueData data = DialogueDatabase.Instance.GetDialogue(dialogueID);
+                // Cannot return DialogueAsset from DialogueData, but keeping for compatibility
+                return null;
+            }
+            return null;
         }
 
         /// <summary>

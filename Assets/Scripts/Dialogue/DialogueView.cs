@@ -97,7 +97,7 @@ namespace Unbound.Dialogue
                 if (node.IsGifPortrait() && gifPlayer != null)
                 {
                     // Use GIF player for GIF portraits
-                    gifPlayer.GifAsset = node.portraitGif;
+                    gifPlayer.GifAsset = node.GetPortraitGif();
                     gifPlayer.gameObject.SetActive(true);
 
                     // Hide portrait image if it exists

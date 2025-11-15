@@ -159,7 +159,7 @@ MonoBehaviour:
   onInteractionEnd:
     m_PersistentCalls:
       m_Calls: []
-  dialogueAsset: {fileID: 11400000, guid: 65004210e683046daa8efebf617c774b, type: 2}
+  dialogueID: 
 --- !u!61 &13405993
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -649,7 +649,7 @@ MonoBehaviour:
   onInteractionEnd:
     m_PersistentCalls:
       m_Calls: []
-  dialogueAsset: {fileID: 11400000, guid: dd5728d4c2758468097fb5ca32f250ed, type: 2}
+  dialogueID: 
 --- !u!61 &297266709
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1719,6 +1719,7 @@ MonoBehaviour:
     minY: 0
     maxY: 0
   useBounds: 1
+  useDynamicBounds: 1
   positionThreshold: 0.01
   followMode: 2
 --- !u!1 &610861018
@@ -2238,7 +2239,7 @@ MonoBehaviour:
   onInteractionEnd:
     m_PersistentCalls:
       m_Calls: []
-  dialogueAsset: {fileID: 11400000, guid: 3d7999f790904492a8b3c25c3a114d17, type: 2}
+  dialogueID: 
 --- !u!1001 &802136064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2595,6 +2596,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8835788755032086255, guid: 5e0e5779fcf774d6ca0d2d097e6b8f5f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8957529121200200896, guid: 5e0e5779fcf774d6ca0d2d097e6b8f5f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2754,7 +2759,7 @@ MonoBehaviour:
   onInteractionEnd:
     m_PersistentCalls:
       m_Calls: []
-  dialogueAsset: {fileID: 11400000, guid: 981fd0a7f54c049fbaddea39054b7780, type: 2}
+  dialogueID: 
 --- !u!61 &1287941679
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2930,7 +2935,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 1
-      inventory: []
       inventorySlots: []
       equippedItems:
         weaponItemID: 
@@ -3131,7 +3135,7 @@ MonoBehaviour:
   onInteractionEnd:
     m_PersistentCalls:
       m_Calls: []
-  dialogueAsset: {fileID: 11400000, guid: 3be2c907f62b74749938ad7d5fc8206a, type: 2}
+  dialogueID: 
 --- !u!1001 &1651804295
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3536,7 +3540,7 @@ MonoBehaviour:
   onInteractionEnd:
     m_PersistentCalls:
       m_Calls: []
-  dialogueAsset: {fileID: 11400000, guid: 99c5b3b067e9842fcb7129ef93c1a991, type: 2}
+  dialogueID: 
 --- !u!61 &1817616904
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3924,6 +3928,7 @@ MonoBehaviour:
   transitionType: 0
   sceneName: Test2
   sceneBuildIndex: 0
+  useFadeTransition: 1
   setPlayerPosition: 0
   playerSpawnPosition: {x: 0, y: 0}
   playerSpawnPointTag: 
@@ -3934,7 +3939,7 @@ MonoBehaviour:
     requiredValue: 1
   - flagName: journal-grabbed
     requiredValue: 1
-  blockedDialogueAsset: {fileID: 11400000, guid: c2e3919a345ca4348b6e55d51efa056c, type: 2}
+  blockedDialogueID: 
 --- !u!61 &1932086888
 BoxCollider2D:
   m_ObjectHideFlags: 0

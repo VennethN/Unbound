@@ -137,7 +137,7 @@ namespace Unbound.Camera
                 return;
 
             CameraBounds currentBounds = Bounds;
-            BoundedCameraController[] controllers = FindObjectsOfType<BoundedCameraController>(true);
+            BoundedCameraController[] controllers = FindObjectsByType<BoundedCameraController>(FindObjectsSortMode.None);
             if (controllers == null || controllers.Length == 0)
                 return;
 

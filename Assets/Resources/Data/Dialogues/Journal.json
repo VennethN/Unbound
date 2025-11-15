@@ -1,0 +1,51 @@
+{
+  "dialogueID": "journal",
+  "displayName": "Journal",
+  "startNodeID": "",
+  "startNodeConditions": [
+    {
+      "nodeID": "start1",
+      "flagEvaluationLogic": 0,
+      "flagRequirements": [
+        {
+          "flagName": "journal-grabbed",
+          "requiredValue": false
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeID": "start1",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "I'll grab my journal",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 1,
+          "flagName": "journal-grabbed",
+          "flagValue": true,
+          "itemID": "",
+          "itemQuantity": 0,
+          "questID": "",
+          "questNewState": "",
+          "animationName": "",
+          "eventName": "",
+          "customEffectType": "",
+          "customParameters": []
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+

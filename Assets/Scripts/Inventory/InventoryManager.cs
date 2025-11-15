@@ -25,7 +25,7 @@ namespace Unbound.Inventory
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<InventoryManager>();
+                    _instance = FindFirstObjectByType<InventoryManager>();
                     if (_instance == null)
                     {
                         GameObject go = new GameObject("InventoryManager");

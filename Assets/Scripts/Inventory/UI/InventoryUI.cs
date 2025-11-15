@@ -16,7 +16,7 @@ namespace Unbound.Inventory.UI
         [SerializeField] private ItemDescriptionPanel descriptionPanel;
         
         [Header("Settings")]
-        [SerializeField] private int slotsPerRow = 6;
+        [SerializeField] private int slotsPerRow = 6; // Reserved for future use
         
         private List<InventorySlotUI> _slotUIs = new List<InventorySlotUI>();
         private InventorySlotUI _selectedSlot = null;

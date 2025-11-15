@@ -25,7 +25,7 @@ namespace Unbound.Inventory
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<ItemDatabase>();
+                    _instance = FindFirstObjectByType<ItemDatabase>();
                     if (_instance == null)
                     {
                         GameObject go = new GameObject("ItemDatabase");

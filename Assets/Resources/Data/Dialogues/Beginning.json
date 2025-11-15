@@ -1,0 +1,59 @@
+{
+  "dialogueID": "beginning",
+  "displayName": "Beginning",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "We're going on an adventure? How exciting!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "1",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "1",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Hmmm but I will need my supplies first, now where did I keep them....",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "2",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "2",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Ah, the gay polygons stole them from me, guess I have no choice but to delay this one for now...",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+
+

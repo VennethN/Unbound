@@ -17,6 +17,10 @@ namespace Unbound.Dialogue
         [Header("Visual Settings")]
         public Sprite portraitSprite;
         public GifAsset portraitGif;
+        [Tooltip("Path to portrait sprite (for JSON loading). Loaded at runtime if portraitSprite is null.")]
+        public string portraitSpritePath;
+        [Tooltip("Path to portrait GIF asset (for JSON loading). Loaded at runtime if portraitGif is null.")]
+        public string portraitGifPath;
         public string animationTrigger;
 
         [Header("Flow Control")]
@@ -32,17 +36,17 @@ namespace Unbound.Dialogue
         [Min(0f)] public float textSpeed = 30f; // Characters per second
 
         /// <summary>
-        /// Validates this node against the parent dialogue asset
+        /// Validates this node against the parent dialogue data
         /// </summary>
-        public bool IsValid(DialogueAsset asset)
+        public bool IsValid(IDialogueDataProvider data)
         {
-            return string.IsNullOrEmpty(GetValidationErrors(asset));
+            return string.IsNullOrEmpty(GetValidationErrors(data));
         }
 
         /// <summary>
         /// Gets detailed validation errors for this node
         /// </summary>
-        public string GetValidationErrors(DialogueAsset asset)
+        public string GetValidationErrors(IDialogueDataProvider data)
         {
             var errors = new List<string>();
 
@@ -59,7 +63,7 @@ namespace Unbound.Dialogue
             // Validate choices reference existing nodes
             foreach (var choice in choices)
             {
-                string choiceError = choice.GetValidationErrors(asset);
+                string choiceError = choice.GetValidationErrors(data);
                 if (!string.IsNullOrEmpty(choiceError))
                 {
                     errors.Add(choiceError);
@@ -67,9 +71,9 @@ namespace Unbound.Dialogue
             }
 
             // Validate next node exists if specified
-            if (!string.IsNullOrEmpty(nextNodeID) && asset.GetNode(nextNodeID) == null)
+            if (!string.IsNullOrEmpty(nextNodeID) && data.GetNode(nextNodeID) == null)
             {
-                errors.Add($"Next node '{nextNodeID}' does not exist in dialogue asset");
+                errors.Add($"Next node '{nextNodeID}' does not exist in dialogue data");
             }
 
             return errors.Count > 0 ? $"Node '{nodeID}' errors: {string.Join("; ", errors)}" : string.Empty;
@@ -117,7 +121,26 @@ namespace Unbound.Dialogue
         /// </summary>
         public bool IsGifPortrait()
         {
-            return portraitGif != null;
+            return GetPortraitGif() != null;
+        }
+
+        /// <summary>
+        /// Gets the portrait GIF, loading it from path if necessary
+        /// </summary>
+        public GifAsset GetPortraitGif()
+        {
+            // Return directly assigned GIF if available
+            if (portraitGif != null)
+                return portraitGif;
+
+            // Try loading from path if provided
+            if (!string.IsNullOrEmpty(portraitGifPath))
+            {
+                portraitGif = GifAssetLoader.Load(portraitGifPath);
+                return portraitGif;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -135,7 +158,7 @@ namespace Unbound.Dialogue
         {
             if (IsGifPortrait())
             {
-                return portraitGif;
+                return GetPortraitGif();
             }
             else if (IsSpritePortrait())
             {

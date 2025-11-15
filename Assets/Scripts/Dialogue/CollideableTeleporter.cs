@@ -36,8 +36,8 @@ namespace Unbound.Dialogue
         [Tooltip("List of global flag requirements that must succeed before teleporting")]
         [SerializeField] private List<FlagRequirement> flagRequirements = new List<FlagRequirement>();
 
-        [Tooltip("Dialogue to play when flag requirements are not met")]
-        [SerializeField] private DialogueAsset blockedDialogueAsset;
+        [Tooltip("Dialogue ID to play when flag requirements are not met")]
+        [SerializeField] private string blockedDialogueID;
 
         private DialogueController dialogueController;
         private SaveManager saveManager;
@@ -48,7 +48,7 @@ namespace Unbound.Dialogue
 
             saveManager = SaveManager.Instance;
 
-            if (blockedDialogueAsset != null)
+            if (!string.IsNullOrEmpty(blockedDialogueID))
             {
                 dialogueController = FindFirstObjectByType<DialogueController>();
                 if (dialogueController == null)
@@ -73,7 +73,7 @@ namespace Unbound.Dialogue
                 return false;
             }
 
-            if (blockedDialogueAsset != null && dialogueController != null && dialogueController.IsDialogueActive())
+            if (!string.IsNullOrEmpty(blockedDialogueID) && dialogueController != null && dialogueController.IsDialogueActive())
             {
                 return false;
             }
@@ -205,7 +205,7 @@ namespace Unbound.Dialogue
 
         private void EnsureDialogueController()
         {
-            if (dialogueController == null && blockedDialogueAsset != null)
+            if (dialogueController == null && !string.IsNullOrEmpty(blockedDialogueID))
             {
                 dialogueController = FindFirstObjectByType<DialogueController>();
 
@@ -274,11 +274,11 @@ namespace Unbound.Dialogue
 
         private void HandleBlockedTeleport()
         {
-            if (blockedDialogueAsset != null)
+            if (!string.IsNullOrEmpty(blockedDialogueID))
             {
                 if (dialogueController != null)
                 {
-                    dialogueController.StartDialogue(blockedDialogueAsset);
+                    dialogueController.StartDialogue(blockedDialogueID);
                 }
                 else
                 {
@@ -324,13 +324,19 @@ namespace Unbound.Dialogue
             useManualDestination = false;
         }
 
-        public void SetGlobalFlagRequirement(string flagName, bool requiredValue, DialogueAsset blockedDialogue = null)
+        public void SetGlobalFlagRequirement(string flagName, bool requiredValue, string blockedDialogueID = null)
         {
             requireGlobalFlag = true;
             flagRequirements.Clear();
             flagRequirements.Add(new FlagRequirement { flagName = flagName, requiredValue = requiredValue });
             flagEvaluationLogic = FlagEvaluationLogic.AllMustPass;
-            blockedDialogueAsset = blockedDialogue;
+            this.blockedDialogueID = blockedDialogueID;
+        }
+
+        [System.Obsolete("Use SetGlobalFlagRequirement(string, bool, string) instead. This method will be removed in a future version.")]
+        public void SetGlobalFlagRequirement(string flagName, bool requiredValue, DialogueAsset blockedDialogue)
+        {
+            SetGlobalFlagRequirement(flagName, requiredValue, blockedDialogue?.dialogueID);
         }
 
         public void AddFlagRequirement(string flagName, bool requiredValue)

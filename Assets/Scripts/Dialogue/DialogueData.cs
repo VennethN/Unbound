@@ -4,86 +4,11 @@ using UnityEngine;
 namespace Unbound.Dialogue
 {
     /// <summary>
-    /// Represents a start node with flag conditions
+    /// Data class containing complete dialogue data for a conversation or interaction.
+    /// Loaded from JSON files instead of ScriptableObjects.
     /// </summary>
     [System.Serializable]
-    public class StartNodeCondition
-    {
-        [Tooltip("The node ID to start from when conditions are met")]
-        public string nodeID = "";
-
-        public enum FlagEvaluationLogic
-        {
-            AllMustPass,  // AND logic - all flags must meet their requirements
-            AnyCanPass    // OR logic - at least one flag must meet its requirement
-        }
-
-        [Tooltip("How to evaluate multiple flags: All Must Pass (AND) or Any Can Pass (OR)")]
-        public FlagEvaluationLogic flagEvaluationLogic = FlagEvaluationLogic.AllMustPass;
-
-        [Tooltip("List of flag requirements that must be checked")]
-        public List<FlagRequirement> flagRequirements = new List<FlagRequirement>();
-
-        /// <summary>
-        /// Evaluates if this start node's conditions are met
-        /// </summary>
-        public bool EvaluateConditions(IDialogueConditionEvaluator evaluator)
-        {
-            if (evaluator == null || flagRequirements.Count == 0)
-            {
-                // If no flag requirements, this is a default/fallback start node
-                return true;
-            }
-
-            // Filter out empty flag requirements
-            var validRequirements = new List<FlagRequirement>();
-            foreach (var requirement in flagRequirements)
-            {
-                if (!string.IsNullOrEmpty(requirement.flagName))
-                {
-                    validRequirements.Add(requirement);
-                }
-            }
-
-            // If no valid requirements, treat as unconditional
-            if (validRequirements.Count == 0)
-            {
-                return true;
-            }
-
-            // Evaluate based on logic type
-            if (flagEvaluationLogic == FlagEvaluationLogic.AllMustPass)
-            {
-                // AND logic - all flags must pass
-                foreach (var requirement in validRequirements)
-                {
-                    if (!evaluator.EvaluateFlagCondition(requirement.flagName, requirement.requiredValue))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            else // FlagEvaluationLogic.AnyCanPass
-            {
-                // OR logic - at least one flag must pass
-                foreach (var requirement in validRequirements)
-                {
-                    if (evaluator.EvaluateFlagCondition(requirement.flagName, requirement.requiredValue))
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-    }
-
-    /// <summary>
-    /// ScriptableObject containing complete dialogue data for a conversation or interaction.
-    /// </summary>
-    [CreateAssetMenu(menuName = "Unbound/Dialogue/Dialogue Asset")]
-    public class DialogueAsset : ScriptableObject, IDialogueDataProvider
+    public class DialogueData : IDialogueDataProvider
     {
         [Header("Dialogue Metadata")]
         public string dialogueID;
@@ -179,7 +104,7 @@ namespace Unbound.Dialogue
         }
 
         /// <summary>
-        /// Gets detailed validation errors for this dialogue asset
+        /// Gets detailed validation errors for this dialogue data
         /// </summary>
         public string GetValidationErrors()
         {
@@ -232,22 +157,8 @@ namespace Unbound.Dialogue
                 }
             }
 
-            return errors.Count > 0 ? $"DialogueAsset '{name}' validation failed: {string.Join("; ", errors)}" : string.Empty;
-        }
-
-        private void OnValidate()
-        {
-            // Auto-generate ID if empty
-            if (string.IsNullOrEmpty(dialogueID))
-            {
-                dialogueID = $"dialogue_{name.ToLower().Replace(" ", "_")}";
-            }
-
-            // Ensure display name matches asset name if empty
-            if (string.IsNullOrEmpty(displayName))
-            {
-                displayName = name;
-            }
+            return errors.Count > 0 ? $"DialogueData '{dialogueID}' validation failed: {string.Join("; ", errors)}" : string.Empty;
         }
     }
 }
+

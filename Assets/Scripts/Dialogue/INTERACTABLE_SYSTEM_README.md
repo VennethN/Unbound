@@ -128,10 +128,3 @@ public class MyCustomInteractable : BaseInteractable
 ## Migration from Old System
 
 If you have existing `InteractableDialogueTrigger` components, they will continue to work as the class now inherits from `BaseInteractable` and maintains the same public API.
-
-
-
-
-
-
-

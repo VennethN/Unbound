@@ -20,17 +20,17 @@ namespace Unbound.Dialogue
         public List<DialogueEffect> effects = new List<DialogueEffect>();
 
         /// <summary>
-        /// Validates this choice against the parent dialogue asset
+        /// Validates this choice against the parent dialogue data
         /// </summary>
-        public bool IsValid(DialogueAsset asset)
+        public bool IsValid(IDialogueDataProvider data)
         {
-            return string.IsNullOrEmpty(GetValidationErrors(asset));
+            return string.IsNullOrEmpty(GetValidationErrors(data));
         }
 
         /// <summary>
         /// Gets detailed validation errors for this choice
         /// </summary>
-        public string GetValidationErrors(DialogueAsset asset)
+        public string GetValidationErrors(IDialogueDataProvider data)
         {
             var errors = new List<string>();
 
@@ -48,9 +48,9 @@ namespace Unbound.Dialogue
             {
                 errors.Add("Target node ID is null or empty");
             }
-            else if (asset.GetNode(targetNodeID) == null)
+            else if (data.GetNode(targetNodeID) == null)
             {
-                errors.Add($"Target node '{targetNodeID}' does not exist in dialogue asset");
+                errors.Add($"Target node '{targetNodeID}' does not exist in dialogue data");
             }
 
             return errors.Count > 0 ? $"Choice '{choiceID}' errors: {string.Join("; ", errors)}" : string.Empty;
