@@ -146,6 +146,34 @@ public class SaveManager : MonoBehaviour
                 Debug.Log("Restored inventory state directly from save data");
             }
         }
+
+        // Force refresh UI after a short delay to ensure UI is initialized
+        StartCoroutine(RefreshInventoryUIDelayed());
+    }
+
+    /// <summary>
+    /// Refreshes inventory UI after a short delay to ensure it's initialized
+    /// </summary>
+    private System.Collections.IEnumerator RefreshInventoryUIDelayed()
+    {
+        // Wait one frame to ensure all UI components are initialized
+        yield return null;
+
+        // Find and refresh all InventoryUI components
+        Unbound.Inventory.UI.InventoryUI[] inventoryUIs = FindObjectsByType<Unbound.Inventory.UI.InventoryUI>(FindObjectsSortMode.None);
+        foreach (var ui in inventoryUIs)
+        {
+            if (ui != null)
+            {
+                ui.Refresh();
+            }
+        }
+
+        // Trigger inventory changed event through a public method
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.NotifyInventoryChanged();
+        }
     }
     
     private void Update()

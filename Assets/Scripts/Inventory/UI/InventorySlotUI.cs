@@ -32,6 +32,9 @@ namespace Unbound.Inventory.UI
         
         private void Awake()
         {
+            // Ensure the slot GameObject is always active
+            gameObject.SetActive(true);
+
             if (slotButton != null)
             {
                 slotButton.onClick.AddListener(OnSlotButtonClicked);
@@ -55,6 +58,8 @@ namespace Unbound.Inventory.UI
         public void UpdateSlot(InventorySlot slot)
         {
             _slot = slot;
+            // Ensure slot GameObject stays active
+            gameObject.SetActive(true);
             UpdateVisuals();
         }
         
@@ -77,13 +82,14 @@ namespace Unbound.Inventory.UI
         {
             bool isEmpty = IsEmpty;
             
-            // Show/hide empty slot visual
-            if (emptySlotVisual != null)
+            // Always keep the slot button enabled and visible - slots should always be interactive
+            if (slotButton != null)
             {
-                emptySlotVisual.SetActive(isEmpty);
+                slotButton.interactable = true;
+                slotButton.gameObject.SetActive(true);
             }
-            
-            // Update icon
+
+            // Update icon - show item icon if slot has an item
             if (iconImage != null)
             {
                 if (!isEmpty && _slot != null && !string.IsNullOrEmpty(_slot.itemID))
@@ -113,6 +119,7 @@ namespace Unbound.Inventory.UI
                 }
                 else
                 {
+                    // Empty slot - hide icon but keep slot visible
                     iconImage.gameObject.SetActive(false);
                 }
             }

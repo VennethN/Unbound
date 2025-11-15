@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Unbound.Player;
 
@@ -30,6 +31,9 @@ namespace Unbound.Camera
 
         [Tooltip("If true, bounds are used. If false, camera can move freely")]
         [SerializeField] private bool useBounds = true;
+
+        [Tooltip("If true, automatically finds and uses CameraBoundsHelper instances in the scene")]
+        [SerializeField] private bool useDynamicBounds = true;
 
         [Header("Advanced Settings")]
         [Tooltip("Minimum distance the target must move before camera updates")]
@@ -117,6 +121,13 @@ namespace Unbound.Camera
         /// </summary>
         private void MoveCamera()
         {
+            // Check if target is in any bounds zone
+            if (useBounds && !IsTargetInAnyBoundsZone())
+            {
+                // Target is not in any bounds zone - stop following
+                return;
+            }
+
             if (Vector3.Distance(transform.position, _targetPosition) < positionThreshold)
                 return;
 
@@ -149,9 +160,13 @@ namespace Unbound.Camera
             }
 
             // Apply bounds if enabled
-            if (useBounds && cameraBounds.Size != Vector3.zero)
+            if (useBounds)
             {
-                newPosition = cameraBounds.ClampPosition(newPosition);
+                CameraBounds effectiveBounds = GetEffectiveBounds();
+                if (effectiveBounds.Size != Vector3.zero)
+                {
+                    newPosition = effectiveBounds.ClampPosition(newPosition);
+                }
             }
 
             transform.position = newPosition;
@@ -197,9 +212,13 @@ namespace Unbound.Camera
                 newPosition.z = transform.position.z;
             }
 
-            if (useBounds && cameraBounds.Size != Vector3.zero)
+            if (useBounds)
             {
-                newPosition = cameraBounds.ClampPosition(newPosition);
+                CameraBounds effectiveBounds = GetEffectiveBounds();
+                if (effectiveBounds.Size != Vector3.zero)
+                {
+                    newPosition = effectiveBounds.ClampPosition(newPosition);
+                }
             }
 
             transform.position = newPosition;
@@ -210,7 +229,88 @@ namespace Unbound.Camera
         /// </summary>
         public bool IsWithinBounds()
         {
-            return !useBounds || cameraBounds.Contains(transform.position);
+            if (!useBounds) return true;
+            CameraBounds effectiveBounds = GetEffectiveBounds();
+            return effectiveBounds.Size == Vector3.zero || effectiveBounds.Contains(transform.position);
+        }
+
+        /// <summary>
+        /// Checks if the target position is within any bounds zone.
+        /// </summary>
+        private bool IsTargetInAnyBoundsZone()
+        {
+            if (!useDynamicBounds)
+            {
+                // If not using dynamic bounds, check serialized bounds
+                return cameraBounds.Size == Vector3.zero || cameraBounds.Contains(_targetPosition);
+            }
+
+            CameraBoundsHelper[] helpers = FindObjectsByType<CameraBoundsHelper>(FindObjectsSortMode.None);
+            if (helpers == null || helpers.Length == 0)
+            {
+                // No helpers found, fall back to serialized bounds
+                return cameraBounds.Size == Vector3.zero || cameraBounds.Contains(_targetPosition);
+            }
+
+            foreach (var helper in helpers)
+            {
+                if (helper == null) continue;
+                CameraBounds bounds = helper.Bounds;
+                if (bounds.Size == Vector3.zero) continue;
+
+                if (bounds.Contains(_targetPosition))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the effective bounds to use, either from dynamic lookup or the serialized bounds.
+        /// Only returns bounds if the target is within a bounds zone.
+        /// </summary>
+        private CameraBounds GetEffectiveBounds()
+        {
+            if (useDynamicBounds)
+            {
+                CameraBoundsHelper[] helpers = FindObjectsByType<CameraBoundsHelper>(FindObjectsSortMode.None);
+                if (helpers != null && helpers.Length > 0)
+                {
+                    // Find bounds that contain the target position
+                    List<CameraBounds> containingBounds =
+                        new List<CameraBounds>();
+
+                    foreach (var helper in helpers)
+                    {
+                        if (helper == null) continue;
+                        CameraBounds bounds = helper.Bounds;
+                        if (bounds.Size == Vector3.zero) continue;
+
+                        // Check if this bounds zone contains the target position
+                        if (bounds.Contains(_targetPosition))
+                        {
+                            containingBounds.Add(bounds);
+                        }
+                    }
+
+                    if (containingBounds.Count > 0)
+                    {
+                        // Use union of all containing bounds (allows movement between overlapping zones)
+                        return CameraBounds.Union(containingBounds.ToArray());
+                    }
+                }
+            }
+
+            // Fall back to serialized bounds (only if target is in them)
+            if (cameraBounds.Size != Vector3.zero && cameraBounds.Contains(_targetPosition))
+            {
+                return cameraBounds;
+            }
+
+            // Return empty bounds if target is not in any zone
+            return new CameraBounds(0f, 0f, 0f, 0f);
         }
 
         /// <summary>
@@ -232,11 +332,14 @@ namespace Unbound.Camera
 
         private void OnDrawGizmosSelected()
         {
-            if (!useBounds || cameraBounds.Size == Vector3.zero) return;
+            if (!useBounds) return;
+
+            CameraBounds effectiveBounds = GetEffectiveBounds();
+            if (effectiveBounds.Size == Vector3.zero) return;
 
             Gizmos.color = Color.yellow;
-            Vector3 center = cameraBounds.Center;
-            Vector3 size = cameraBounds.Size;
+            Vector3 center = effectiveBounds.Center;
+            Vector3 size = effectiveBounds.Size;
 
             // Draw bounds rectangle
             Gizmos.DrawWireCube(center, size);

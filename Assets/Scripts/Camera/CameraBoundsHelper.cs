@@ -21,6 +21,11 @@ namespace Unbound.Camera
         [Tooltip("Whether to show bounds visualization in the editor")]
         [SerializeField] private bool showBounds = true;
 
+        [Header("Automation")]
+        [Tooltip("Automatically push these bounds to every BoundedCameraController in the scene. " +
+                 "Note: If controllers use dynamic bounds, they will automatically find this helper.")]
+        [SerializeField] private bool autoApplyToCameraControllers = false;
+
         private CameraBounds _cameraBounds;
 
         /// <summary>
@@ -36,6 +41,17 @@ namespace Unbound.Camera
                 }
                 return _cameraBounds;
             }
+        }
+
+        private void Awake()
+        {
+            UpdateBounds();
+            ApplyBoundsToControllers();
+        }
+
+        private void OnEnable()
+        {
+            ApplyBoundsToControllers();
         }
 
         private void UpdateBounds()
@@ -59,6 +75,7 @@ namespace Unbound.Camera
             width = Mathf.Max(0f, newWidth);
             height = Mathf.Max(0f, newHeight);
             UpdateBounds();
+            ApplyBoundsToControllers();
         }
 
         /// <summary>
@@ -69,6 +86,7 @@ namespace Unbound.Camera
         {
             transform.position = new Vector3(centerPosition.x, centerPosition.y, transform.position.z);
             UpdateBounds();
+            ApplyBoundsToControllers();
         }
 
         private void OnValidate()
@@ -76,6 +94,7 @@ namespace Unbound.Camera
             width = Mathf.Max(0f, width);
             height = Mathf.Max(0f, height);
             UpdateBounds();
+            ApplyBoundsToControllers();
         }
 
         private void OnDrawGizmos()
@@ -110,6 +129,25 @@ namespace Unbound.Camera
             // Draw labels
             Gizmos.color = Color.white;
             // Note: Unity doesn't have built-in text drawing in Gizmos, so we'll skip labels for now
+        }
+
+        private void ApplyBoundsToControllers()
+        {
+            if (!autoApplyToCameraControllers)
+                return;
+
+            CameraBounds currentBounds = Bounds;
+            BoundedCameraController[] controllers = FindObjectsOfType<BoundedCameraController>(true);
+            if (controllers == null || controllers.Length == 0)
+                return;
+
+            foreach (BoundedCameraController controller in controllers)
+            {
+                if (controller == null)
+                    continue;
+
+                controller.SetBounds(currentBounds, true);
+            }
         }
     }
 }

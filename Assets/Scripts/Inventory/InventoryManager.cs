@@ -379,6 +379,14 @@ namespace Unbound.Inventory
             InitializeInventory();
             OnInventoryChanged?.Invoke();
         }
+
+        /// <summary>
+        /// Manually triggers the inventory changed event (useful for external systems)
+        /// </summary>
+        public void NotifyInventoryChanged()
+        {
+            OnInventoryChanged?.Invoke();
+        }
     }
 }
 

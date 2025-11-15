@@ -176,11 +176,7 @@ namespace Unbound.Inventory.UI
             ItemData itemData = ItemDatabase.Instance.GetItem(slotUI.Slot.itemID);
             if (itemData == null) return;
             
-            // Show description panel next to the clicked slot
-            if (descriptionPanel != null)
-            {
-                descriptionPanel.ShowItem(itemData, slotUI);
-            }
+            ShowDescriptionPanel(itemData, slotUI);
         }
         
         /// <summary>
@@ -190,6 +186,20 @@ namespace Unbound.Inventory.UI
         {
             // This is called on click, but we handle everything in OnSlotClicked
             // Keeping for compatibility but selection is handled there
+        }
+
+        /// <summary>
+        /// Ensures description panel is active and displays the item
+        /// </summary>
+        private void ShowDescriptionPanel(ItemData itemData, InventorySlotUI slotUI)
+        {
+            if (descriptionPanel == null || itemData == null)
+                return;
+
+            // If the panel GameObject itself is disabled (because no item was selected previously), enable it
+            descriptionPanel.gameObject.SetActive(!descriptionPanel.gameObject.activeSelf);
+
+            descriptionPanel.ShowItem(itemData, slotUI);
         }
         
         /// <summary>

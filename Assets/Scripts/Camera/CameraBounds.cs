@@ -66,5 +66,39 @@ namespace Unbound.Camera
         /// Gets the size of these bounds.
         /// </summary>
         public Vector3 Size => new Vector3(maxX - minX, maxY - minY, 0f);
+
+        /// <summary>
+        /// Creates a union of multiple bounds (the bounds that encompasses all given bounds).
+        /// </summary>
+        /// <param name="boundsArray">Array of bounds to union</param>
+        /// <returns>The union bounds, or empty bounds if array is null/empty</returns>
+        public static CameraBounds Union(params CameraBounds[] boundsArray)
+        {
+            if (boundsArray == null || boundsArray.Length == 0)
+                return new CameraBounds(0f, 0f, 0f, 0f);
+
+            float minX = float.MaxValue;
+            float maxX = float.MinValue;
+            float minY = float.MaxValue;
+            float maxY = float.MinValue;
+
+            bool hasValidBounds = false;
+            foreach (var bounds in boundsArray)
+            {
+                if (bounds.Size == Vector3.zero)
+                    continue;
+
+                minX = Mathf.Min(minX, bounds.minX);
+                maxX = Mathf.Max(maxX, bounds.maxX);
+                minY = Mathf.Min(minY, bounds.minY);
+                maxY = Mathf.Max(maxY, bounds.maxY);
+                hasValidBounds = true;
+            }
+
+            if (!hasValidBounds)
+                return new CameraBounds(0f, 0f, 0f, 0f);
+
+            return new CameraBounds(minX, maxX, minY, maxY);
+        }
     }
 }

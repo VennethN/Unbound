@@ -68,6 +68,30 @@ Transports the player to another scene when they interact with the object.
 - `SetPlayerSpawnPosition(Vector2)`: Set spawn coordinates
 - `SetPlayerSpawnPoint(string)`: Set spawn point by tag
 
+### InteractableTeleporter
+
+Moves the player to a specific spot within the current scene and optionally gates the interaction behind global flags.
+
+**Usage:**
+1. Add the `InteractableTeleporter` component to a GameObject
+2. Assign a destination via `destinationPoint`, `destinationPointTag`, or enable **Use Manual Destination** with coordinates
+3. (Optional) Toggle **Reset Player Velocity** if you want the rigidbody to stop after teleporting
+4. (Optional) Enable **Require Global Flag** to gate the teleport and provide a `DialogueAsset` for blocked feedback
+
+**Destination Options:**
+- **Transform Reference**: Drag any scene transform into `Destination Point`
+- **Tag Lookup**: Provide a tag; the teleporter will find the first object with that tag at runtime
+- **Manual Coordinates**: Enable **Use Manual Destination** and specify X/Y coordinates directly
+
+**Flag Gating & Feedback:**
+- Supports multiple `FlagRequirement` entries with **All Must Pass** (AND) or **Any Can Pass** (OR) logic
+- When requirements fail, the teleporter can automatically start a `blockedDialogueAsset` through the scene's `DialogueController`
+
+**Key Methods:**
+- `SetDestination(Transform)` / `SetDestination(Vector2)` / `SetDestinationTag(string)` / `ClearDestination()`
+- `SetGlobalFlagRequirement(...)`, `AddFlagRequirement(...)`, `RemoveFlagRequirement(...)`, `SetFlagEvaluationLogic(...)`
+- `CanTeleport()`: Check if flag requirements currently pass
+
 ## Creating Custom Interactables
 
 To create a new type of interactable:

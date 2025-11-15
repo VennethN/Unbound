@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3984919935065755724}
   - component: {fileID: 7079922787647724007}
   - component: {fileID: 8629797266483947936}
+  - component: {fileID: 4233408555921227103}
   m_Layer: 0
   m_Name: InventoryManager
   m_TagString: Untagged
@@ -45,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0668e26d960454316b9c93fc6d8cb11d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Inventory.InventoryManager
-  inventoryWidth: 6
-  inventoryHeight: 8
+  inventoryWidth: 9
+  inventoryHeight: 3
 --- !u!114 &8629797266483947936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,5 +61,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Inventory.ItemSpriteRegistry
   spriteMappings:
-  - spriteID: wood_sword
+  - spriteID: wooden_sword
     sprite: {fileID: 6515938974954269096, guid: da246ee9d3ee54634843231ac005a296, type: 3}
+--- !u!114 &4233408555921227103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4118262771919118974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81248e770ddcd4c6582f739c74fadd8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Inventory.ItemDatabase
+  itemsPath: Data/Items
