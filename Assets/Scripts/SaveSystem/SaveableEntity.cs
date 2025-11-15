@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unbound.Inventory;
 
 /// <summary>
 /// Example implementation of ISaveable for game entities.
@@ -94,9 +95,6 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float experience = 0f;
     
-    [Header("Inventory")]
-    [SerializeField] private List<string> inventory = new List<string>();
-    
     [Header("Save Settings")]
     [SerializeField] private string saveID = "player";
     
@@ -112,8 +110,7 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
             maxHealth = this.maxHealth,
             experience = this.experience,
             position = transform.position,
-            rotation = transform.rotation,
-            inventory = new List<string>(this.inventory)
+            rotation = transform.rotation
         };
     }
 
@@ -128,7 +125,6 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
         this.experience = state.experience;
         transform.position = state.position;
         transform.rotation = state.rotation;
-        this.inventory = new List<string>(state.inventory);
     }
 
     // Non-generic interface implementations
@@ -136,11 +132,66 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
     void ISaveable.RestoreState(object state) => RestoreState(state as SaveablePlayerData);
 
     // Public methods for modifying player state
-    public void AddItem(string item) => inventory.Add(item);
-    public void RemoveItem(string item) => inventory.Remove(item);
+    public void AddItem(string itemID) 
+    {
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.AddItem(itemID, 1);
+        }
+    }
+    
+    public void RemoveItem(string itemID) 
+    {
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.RemoveItem(itemID, 1);
+        }
+    }
+    
     public void TakeDamage(float damage) => health = Mathf.Max(0, health - damage);
     public void Heal(float amount) => health = Mathf.Min(maxHealth, health + amount);
     public void AddExperience(float exp) => experience += exp;
+    
+    /// <summary>
+    /// Captures inventory state from InventoryManager
+    /// </summary>
+    public void CaptureInventoryState(PlayerData playerData)
+    {
+        if (InventoryManager.Instance == null) return;
+        
+        // Capture inventory slots
+        playerData.inventorySlots = InventoryManager.Instance.GetAllSlots();
+        
+        // Capture equipped items
+        playerData.equippedItems.FromEquippedItems(InventoryManager.Instance.EquippedItems);
+    }
+    
+    /// <summary>
+    /// Restores inventory state to InventoryManager
+    /// </summary>
+    public void RestoreInventoryState(PlayerData playerData)
+    {
+        if (InventoryManager.Instance == null) return;
+        
+        // Restore inventory slots
+        if (playerData.inventorySlots != null && playerData.inventorySlots.Count > 0)
+        {
+            InventoryManager.Instance.ClearInventory();
+            foreach (var slot in playerData.inventorySlots)
+            {
+                if (!slot.IsEmpty)
+                {
+                    InventoryManager.Instance.AddItem(slot.itemID, slot.quantity);
+                }
+            }
+        }
+        
+        // Restore equipped items
+        if (playerData.equippedItems != null)
+        {
+            playerData.equippedItems.ToEquippedItems(InventoryManager.Instance.EquippedItems);
+        }
+    }
 }
 
 /// <summary>
@@ -156,7 +207,6 @@ public class SaveablePlayerData
     public float experience;
     public Vector3Serializable position;
     public QuaternionSerializable rotation;
-    public List<string> inventory;
 }
 
 /// <summary>

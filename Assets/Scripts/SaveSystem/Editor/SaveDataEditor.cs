@@ -59,14 +59,34 @@ public class SaveManagerEditor : Editor
             EditorGUILayout.LabelField("Rotation:", currentSave.playerData.rotation.ToQuaternion().eulerAngles.ToString());
             
             // Inventory
-            if (currentSave.playerData.inventory != null && currentSave.playerData.inventory.Count > 0)
+            if (currentSave.playerData.inventorySlots != null && currentSave.playerData.inventorySlots.Count > 0)
             {
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Inventory:", EditorStyles.boldLabel);
-                foreach (var item in currentSave.playerData.inventory)
+                foreach (var slot in currentSave.playerData.inventorySlots)
                 {
-                    EditorGUILayout.LabelField("  • " + item);
+                    if (slot != null && !slot.IsEmpty)
+                    {
+                        EditorGUILayout.LabelField($"  • {slot.itemID} x{slot.quantity}");
+                    }
                 }
+            }
+            
+            // Equipped Items
+            if (currentSave.playerData.equippedItems != null)
+            {
+                EditorGUILayout.Space(5);
+                EditorGUILayout.LabelField("Equipped Items:", EditorStyles.boldLabel);
+                if (!string.IsNullOrEmpty(currentSave.playerData.equippedItems.weaponItemID))
+                    EditorGUILayout.LabelField("  • Weapon: " + currentSave.playerData.equippedItems.weaponItemID);
+                if (!string.IsNullOrEmpty(currentSave.playerData.equippedItems.artifactItemID))
+                    EditorGUILayout.LabelField("  • Artifact: " + currentSave.playerData.equippedItems.artifactItemID);
+                if (!string.IsNullOrEmpty(currentSave.playerData.equippedItems.shoesItemID))
+                    EditorGUILayout.LabelField("  • Shoes: " + currentSave.playerData.equippedItems.shoesItemID);
+                if (!string.IsNullOrEmpty(currentSave.playerData.equippedItems.headwearItemID))
+                    EditorGUILayout.LabelField("  • Headwear: " + currentSave.playerData.equippedItems.headwearItemID);
+                if (!string.IsNullOrEmpty(currentSave.playerData.equippedItems.chestplateItemID))
+                    EditorGUILayout.LabelField("  • Chestplate: " + currentSave.playerData.equippedItems.chestplateItemID);
             }
             
             // Stats

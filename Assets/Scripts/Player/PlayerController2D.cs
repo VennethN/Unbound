@@ -17,6 +17,9 @@ namespace Unbound.Player
         [SerializeField, Min(0f)] private float acceleration = 14f;
         [SerializeField, Min(0f)] private float deceleration = 18f;
         [SerializeField, Range(0f, 0.5f)] private float inputDeadzone = 0.08f;
+        
+        [Header("Stats Integration")]
+        [SerializeField] private PlayerStats playerStats;
 
         [Header("Presentation")]
         [SerializeField] private Animator animator;
@@ -51,6 +54,12 @@ namespace Unbound.Player
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _initialLocalScale = transform.localScale;
+            
+            // Try to find PlayerStats component if not assigned
+            if (playerStats == null)
+            {
+                playerStats = GetComponent<PlayerStats>();
+            }
 
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
@@ -127,7 +136,9 @@ namespace Unbound.Player
                 ? _inputVector.normalized
                 : Vector2.zero;
 
-            Vector2 targetVelocity = normalisedInput * walkSpeed * _currentSpeedMultiplier;
+            // Use PlayerStats move speed if available, otherwise use base walkSpeed
+            float currentWalkSpeed = (playerStats != null) ? playerStats.MoveSpeed : walkSpeed;
+            Vector2 targetVelocity = normalisedInput * currentWalkSpeed * _currentSpeedMultiplier;
             Vector2 newVelocity;
 
             if (smoothMovement)

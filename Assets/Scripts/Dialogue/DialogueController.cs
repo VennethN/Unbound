@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Unbound.Inventory;
 
 namespace Unbound.Dialogue
 {
@@ -363,9 +364,11 @@ namespace Unbound.Dialogue
 
         public bool EvaluateInventoryCondition(string itemID, int requiredQuantity)
         {
-            // TODO: Integrate with actual inventory system
-            // For now, return true (assume item is available)
-            return true;
+            if (InventoryManager.Instance != null)
+            {
+                return InventoryManager.Instance.HasItem(itemID, requiredQuantity);
+            }
+            return false;
         }
 
         public bool EvaluateQuestCondition(string questID, string requiredState)
@@ -406,14 +409,26 @@ namespace Unbound.Dialogue
 
         public void AddItem(string itemID, int quantity)
         {
-            // TODO: Integrate with actual inventory system
-            Debug.Log($"Adding {quantity} of item '{itemID}' to inventory");
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.AddItem(itemID, quantity);
+            }
+            else
+            {
+                Debug.LogWarning($"Cannot add item '{itemID}': InventoryManager.Instance is null");
+            }
         }
 
         public void RemoveItem(string itemID, int quantity)
         {
-            // TODO: Integrate with actual inventory system
-            Debug.Log($"Removing {quantity} of item '{itemID}' from inventory");
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.RemoveItem(itemID, quantity);
+            }
+            else
+            {
+                Debug.LogWarning($"Cannot remove item '{itemID}': InventoryManager.Instance is null");
+            }
         }
 
         public void UpdateQuest(string questID, string newState)

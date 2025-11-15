@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unbound.Inventory;
 
 /// <summary>
 /// Flexible save data container that can store various types of game data.
@@ -88,7 +89,11 @@ public class PlayerData
     public float experience;
     public Vector3Serializable position;
     public QuaternionSerializable rotation;
-    public List<string> inventory;
+    
+    [Header("Inventory System")]
+    public List<InventorySlot> inventorySlots = new List<InventorySlot>();
+    public EquippedItemsData equippedItems = new EquippedItemsData();
+    
     public SerializableIntDictionary statsSerializable;
     
     // Runtime-only dictionary (not serialized)
@@ -121,9 +126,45 @@ public class PlayerData
         experience = 0f;
         position = Vector3Serializable.zero;
         rotation = QuaternionSerializable.identity;
-        inventory = new List<string>();
+        inventorySlots = new List<InventorySlot>();
+        equippedItems = new EquippedItemsData();
         statsSerializable = new SerializableIntDictionary();
         _stats = new Dictionary<string, int>();
+    }
+}
+
+/// <summary>
+/// Serializable version of EquippedItems for save system
+/// </summary>
+[Serializable]
+public class EquippedItemsData
+{
+    public string weaponItemID = string.Empty;
+    public string artifactItemID = string.Empty;
+    public string shoesItemID = string.Empty;
+    public string headwearItemID = string.Empty;
+    public string chestplateItemID = string.Empty;
+    
+    public void FromEquippedItems(EquippedItems equippedItems)
+    {
+        if (equippedItems == null) return;
+        
+        weaponItemID = equippedItems.GetEquippedItem(EquipmentType.Weapon) ?? string.Empty;
+        artifactItemID = equippedItems.GetEquippedItem(EquipmentType.Artifact) ?? string.Empty;
+        shoesItemID = equippedItems.GetEquippedItem(EquipmentType.Shoes) ?? string.Empty;
+        headwearItemID = equippedItems.GetEquippedItem(EquipmentType.Headwear) ?? string.Empty;
+        chestplateItemID = equippedItems.GetEquippedItem(EquipmentType.Chestplate) ?? string.Empty;
+    }
+    
+    public void ToEquippedItems(EquippedItems equippedItems)
+    {
+        if (equippedItems == null) return;
+        
+        equippedItems.Equip(EquipmentType.Weapon, string.IsNullOrEmpty(weaponItemID) ? null : weaponItemID);
+        equippedItems.Equip(EquipmentType.Artifact, string.IsNullOrEmpty(artifactItemID) ? null : artifactItemID);
+        equippedItems.Equip(EquipmentType.Shoes, string.IsNullOrEmpty(shoesItemID) ? null : shoesItemID);
+        equippedItems.Equip(EquipmentType.Headwear, string.IsNullOrEmpty(headwearItemID) ? null : headwearItemID);
+        equippedItems.Equip(EquipmentType.Chestplate, string.IsNullOrEmpty(chestplateItemID) ? null : chestplateItemID);
     }
 }
 

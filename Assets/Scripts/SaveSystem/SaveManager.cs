@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
 using System.IO.Compression;
+using Unbound.Inventory;
 
 /// <summary>
 /// Manager class for handling save/load operations with JSON and binary serialization.
@@ -98,6 +99,52 @@ public class SaveManager : MonoBehaviour
         if (autoSaveOnSceneChange)
         {
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        // Restore inventory state from loaded save data
+        if (currentSaveData != null && currentSaveData.playerData != null)
+        {
+            RestorePlayerInventory();
+        }
+    }
+
+    /// <summary>
+    /// Restores inventory state from save data to InventoryManager
+    /// </summary>
+    private void RestorePlayerInventory()
+    {
+        if (currentSaveData == null || currentSaveData.playerData == null)
+            return;
+
+        // Find SaveablePlayer or use SaveableEntity methods
+        SaveablePlayer player = FindFirstObjectByType<SaveablePlayer>();
+        if (player != null)
+        {
+            player.RestoreInventoryState(currentSaveData.playerData);
+            Debug.Log("Restored inventory state from save data");
+        }
+        else
+        {
+            // Fallback: directly restore inventory if no SaveablePlayer found
+            if (InventoryManager.Instance != null && currentSaveData.playerData.inventorySlots != null)
+            {
+                InventoryManager.Instance.ClearInventory();
+                foreach (var slot in currentSaveData.playerData.inventorySlots)
+                {
+                    if (slot != null && !slot.IsEmpty)
+                    {
+                        InventoryManager.Instance.AddItem(slot.itemID, slot.quantity);
+                    }
+                }
+
+                // Restore equipped items
+                if (currentSaveData.playerData.equippedItems != null)
+                {
+                    currentSaveData.playerData.equippedItems.ToEquippedItems(InventoryManager.Instance.EquippedItems);
+                }
+
+                Debug.Log("Restored inventory state directly from save data");
+            }
         }
     }
     
@@ -242,29 +289,38 @@ public class SaveManager : MonoBehaviour
         {
             fileName = fileName ?? defaultSaveFileName;
             string filePath = GetFilePath(fileName, format);
-            
+
             if (!File.Exists(filePath))
             {
                 Debug.LogWarning($"Save file not found: {filePath}");
                 return null;
             }
-            
+
             byte[] dataBytes = File.ReadAllBytes(filePath);
-            
+
             if (useEncryption)
             {
                 dataBytes = Decrypt(dataBytes);
             }
-            
+
             if (useCompression)
             {
                 dataBytes = Decompress(dataBytes);
             }
-            
-            SaveData data = format == SerializationFormat.JSON 
-                ? DeserializeFromJSON(dataBytes) 
+
+            SaveData data = format == SerializationFormat.JSON
+                ? DeserializeFromJSON(dataBytes)
                 : DeserializeFromBinary(dataBytes);
-            
+
+            // Update current save data
+            currentSaveData = data;
+
+            // Restore inventory if loaded during runtime (not in Awake)
+            if (Application.isPlaying && data != null && data.playerData != null)
+            {
+                RestorePlayerInventory();
+            }
+
             Debug.Log($"Game loaded successfully from: {filePath}");
             return data;
         }
@@ -284,29 +340,38 @@ public class SaveManager : MonoBehaviour
         {
             fileName = fileName ?? defaultSaveFileName;
             string filePath = GetFilePath(fileName, format);
-            
+
             if (!File.Exists(filePath))
             {
                 Debug.LogWarning($"Save file not found: {filePath}");
                 return null;
             }
-            
+
             byte[] dataBytes = await System.Threading.Tasks.Task.Run(() => File.ReadAllBytes(filePath));
-            
+
             if (useEncryption)
             {
                 dataBytes = Decrypt(dataBytes);
             }
-            
+
             if (useCompression)
             {
                 dataBytes = Decompress(dataBytes);
             }
-            
-            SaveData data = format == SerializationFormat.JSON 
-                ? DeserializeFromJSON(dataBytes) 
+
+            SaveData data = format == SerializationFormat.JSON
+                ? DeserializeFromJSON(dataBytes)
                 : DeserializeFromBinary(dataBytes);
-            
+
+            // Update current save data
+            currentSaveData = data;
+
+            // Restore inventory if loaded during runtime
+            if (Application.isPlaying && data != null && data.playerData != null)
+            {
+                RestorePlayerInventory();
+            }
+
             Debug.Log($"Game loaded successfully from: {filePath}");
             return data;
         }
