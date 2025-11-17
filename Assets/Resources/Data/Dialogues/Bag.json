@@ -22,7 +22,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "",
