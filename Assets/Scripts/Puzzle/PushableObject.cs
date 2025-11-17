@@ -20,6 +20,8 @@ namespace Unbound.Puzzle
         [Header("Constraints")]
         [SerializeField] private bool constrainX = false;
         [SerializeField] private bool constrainY = false;
+        [Tooltip("If enabled, restricts pushing to only one axis at a time (X or Y, no diagonal). The axis with greater movement is chosen.")]
+        [SerializeField] private bool lockToSingleAxis = false;
         
         [Header("Events")]
         [SerializeField] private UnityEvent<GameObject> onPushStart;
@@ -34,6 +36,7 @@ namespace Unbound.Puzzle
         private float originalDrag;
         private Vector3 initialPosition;
         private bool hasInitialPosition = false;
+        private PuzzleManager puzzleManager = null;
 
         private void Awake()
         {
@@ -92,6 +95,20 @@ namespace Unbound.Puzzle
                 }
             }
 
+            // Lock to single axis if enabled (prevent diagonal movement)
+            if (lockToSingleAxis && rb.linearVelocity.sqrMagnitude > 0.01f)
+            {
+                Vector2 velocity = rb.linearVelocity;
+                if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y))
+                {
+                    rb.linearVelocity = new Vector2(velocity.x, 0f); // Lock to X axis
+                }
+                else
+                {
+                    rb.linearVelocity = new Vector2(0f, velocity.y); // Lock to Y axis
+                }
+            }
+
             // Apply constraints
             if (constrainX)
             {
@@ -100,6 +117,44 @@ namespace Unbound.Puzzle
             if (constrainY)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            }
+
+            // Check boundary constraints
+            if (puzzleManager != null)
+            {
+                Vector2 currentPosition = transform.position;
+                
+                // First, ensure current position is within bounds (in case boundary was set after object was placed)
+                if (!puzzleManager.IsPositionWithinBoundary(currentPosition))
+                {
+                    Vector2 clampedPos = puzzleManager.ClampPositionToBoundary(currentPosition);
+                    transform.position = clampedPos;
+                    rb.linearVelocity = Vector2.zero;
+                }
+                // Then check if movement would take us outside bounds
+                else if (rb.linearVelocity.sqrMagnitude > 0.01f)
+                {
+                    Vector2 nextPosition = currentPosition + rb.linearVelocity * Time.fixedDeltaTime;
+                    
+                    // Check if the next position would be outside the boundary
+                    if (!puzzleManager.IsPositionWithinBoundary(nextPosition))
+                    {
+                        // Clamp the position to the boundary and adjust velocity
+                        Vector2 clampedPosition = puzzleManager.ClampPositionToBoundary(nextPosition);
+                        Vector2 allowedMovement = clampedPosition - currentPosition;
+                        
+                        // Only allow movement that keeps us within bounds
+                        if (allowedMovement.sqrMagnitude > 0.001f)
+                        {
+                            rb.linearVelocity = allowedMovement / Time.fixedDeltaTime;
+                        }
+                        else
+                        {
+                            // Can't move in this direction, stop
+                            rb.linearVelocity = Vector2.zero;
+                        }
+                    }
+                }
             }
 
             // Track if pushing stopped
@@ -159,6 +214,19 @@ namespace Unbound.Puzzle
 
                 // Apply push force
                 Vector2 pushForce = pushDirection * pushSpeed;
+                
+                // Lock to single axis if enabled (choose the axis with greater movement)
+                if (lockToSingleAxis)
+                {
+                    if (Mathf.Abs(pushForce.x) > Mathf.Abs(pushForce.y))
+                    {
+                        pushForce.y = 0f; // Lock to X axis
+                    }
+                    else
+                    {
+                        pushForce.x = 0f; // Lock to Y axis
+                    }
+                }
                 
                 // Apply constraints before adding force
                 if (constrainX) pushForce.x = 0f;
@@ -280,6 +348,14 @@ namespace Unbound.Puzzle
         public bool HasInitialPosition()
         {
             return hasInitialPosition;
+        }
+
+        /// <summary>
+        /// Sets the PuzzleManager that manages this pushable object's boundary constraints
+        /// </summary>
+        public void SetPuzzleManager(PuzzleManager manager)
+        {
+            puzzleManager = manager;
         }
 
 #if UNITY_EDITOR

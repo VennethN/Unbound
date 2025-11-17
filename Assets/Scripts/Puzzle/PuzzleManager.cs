@@ -22,6 +22,9 @@ namespace Unbound.Puzzle
             
             [Tooltip("Whether this pair is required for puzzle completion")]
             public bool isRequired = true;
+            
+            [Tooltip("Completion distance for this pair (overrides global default if >= 0). Distance from target center to consider complete. Set to -1 to use global default.")]
+            public float completionDistance = -1f; // -1 means use global default, >= 0 means use this value
         }
 
         [Header("Puzzle Configuration")]
@@ -30,10 +33,23 @@ namespace Unbound.Puzzle
         [SerializeField] private bool resetOnCompletion = false;
         
         [Header("Completion Settings")]
+        [Tooltip("Default distance from target center required for completion. Can be overridden per pair.")]
+        [SerializeField] private float defaultCompletionDistance = 0.5f;
         [SerializeField] private float completionDelay = 0f;
         [SerializeField] private bool checkContinuous = true;
         [SerializeField] private float resetDelay = 0.1f;
         [SerializeField] private bool resetPositions = true;
+        
+        [Header("Boundary Settings")]
+        [Tooltip("Optional collider that defines the boundary area. Puzzle objects cannot be moved outside this area.")]
+        [SerializeField] private Collider2D boundaryArea = null;
+        [Tooltip("If boundary area is not set, use these bounds instead (center and size)")]
+        [SerializeField] private bool useCustomBounds = false;
+        [Tooltip("If true, boundary center is in world space. If false (default), boundary center is relative to this transform.")]
+        [SerializeField] private bool useGlobalBounds = false;
+        [SerializeField] private Vector2 boundaryCenter = Vector2.zero;
+        [SerializeField] private Vector2 boundarySize = Vector2.one * 10f;
+        
         [Header("Debug")]
         [SerializeField] private bool enableDebugLogs = false;
         
@@ -70,11 +86,19 @@ namespace Unbound.Puzzle
                 }
             }
 
-            // Subscribe to target events
+            // Register this PuzzleManager with all pushable objects and configure targets
             foreach (var pair in puzzlePairs)
             {
+                if (pair.pushableObject != null)
+                {
+                    pair.pushableObject.SetPuzzleManager(this);
+                }
+                
+                // Set completion distance for target
                 if (pair.target != null)
                 {
+                    float distance = pair.completionDistance >= 0f ? pair.completionDistance : defaultCompletionDistance;
+                    pair.target.SetDetectionRadius(distance);
                     pair.target.onTargetReached.AddListener(OnTargetReached);
                     pair.target.onTargetLeft.AddListener(OnTargetLeft);
                 }
@@ -288,6 +312,64 @@ namespace Unbound.Puzzle
         }
 
         /// <summary>
+        /// Checks if a position is within the boundary area
+        /// </summary>
+        public bool IsPositionWithinBoundary(Vector2 position)
+        {
+            if (boundaryArea != null)
+            {
+                return boundaryArea.OverlapPoint(position);
+            }
+            
+            if (useCustomBounds)
+            {
+                Vector2 center = useGlobalBounds ? boundaryCenter : (Vector2)transform.position + boundaryCenter;
+                Bounds bounds = new Bounds(center, boundarySize);
+                return bounds.Contains(position);
+            }
+            
+            // No boundary set, allow all positions
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the boundary bounds (world space)
+        /// </summary>
+        public Bounds? GetBoundaryBounds()
+        {
+            if (boundaryArea != null)
+            {
+                return boundaryArea.bounds;
+            }
+            
+            if (useCustomBounds)
+            {
+                Vector2 center = useGlobalBounds ? boundaryCenter : (Vector2)transform.position + boundaryCenter;
+                return new Bounds(center, boundarySize);
+            }
+            
+            return null;
+        }
+
+        /// <summary>
+        /// Clamps a position to be within the boundary area
+        /// </summary>
+        public Vector2 ClampPositionToBoundary(Vector2 position)
+        {
+            Bounds? bounds = GetBoundaryBounds();
+            if (bounds == null)
+            {
+                return position;
+            }
+            
+            Bounds b = bounds.Value;
+            return new Vector2(
+                Mathf.Clamp(position.x, b.min.x, b.max.x),
+                Mathf.Clamp(position.y, b.min.y, b.max.y)
+            );
+        }
+
+        /// <summary>
         /// Adds a new puzzle pair at runtime
         /// </summary>
         public void AddPuzzlePair(PushableObject pushable, PuzzleTarget target, bool isRequired = true)
@@ -301,8 +383,17 @@ namespace Unbound.Puzzle
 
             puzzlePairs.Add(pair);
 
+            // Register this PuzzleManager with the pushable object
+            if (pushable != null)
+            {
+                pushable.SetPuzzleManager(this);
+            }
+
             if (target != null)
             {
+                // Set completion distance for target
+                float distance = pair.completionDistance >= 0f ? pair.completionDistance : defaultCompletionDistance;
+                target.SetDetectionRadius(distance);
                 target.onTargetReached.AddListener(OnTargetReached);
                 target.onTargetLeft.AddListener(OnTargetLeft);
             }
@@ -349,6 +440,18 @@ namespace Unbound.Puzzle
                         pair.target.transform.position
                     );
                 }
+            }
+
+            // Draw boundary area
+            Bounds? bounds = GetBoundaryBounds();
+            if (bounds != null)
+            {
+                Bounds b = bounds.Value;
+                Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f); // Orange with transparency
+                Gizmos.DrawCube(b.center, b.size);
+                
+                Gizmos.color = new Color(1f, 0.5f, 0f, 1f); // Orange solid outline
+                Gizmos.DrawWireCube(b.center, b.size);
             }
         }
 #endif

@@ -222,6 +222,22 @@ namespace Unbound.Puzzle
             requiredPushableObject = pushable;
         }
 
+        /// <summary>
+        /// Sets the detection radius for this target
+        /// </summary>
+        public void SetDetectionRadius(float radius)
+        {
+            detectionRadius = Mathf.Max(0f, radius);
+        }
+
+        /// <summary>
+        /// Gets the current detection radius
+        /// </summary>
+        public float GetDetectionRadius()
+        {
+            return detectionRadius;
+        }
+
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
