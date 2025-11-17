@@ -8,7 +8,7 @@ namespace Unbound.Dialogue
     public class DialogueSystemTest : MonoBehaviour
     {
         [Header("Test Settings")]
-        [SerializeField] private DialogueAsset testDialogueAsset;
+        [SerializeField] private string testDialogueID;
         [SerializeField] private KeyCode testKey = KeyCode.T;
 
         private DialogueController dialogueController;
@@ -34,14 +34,14 @@ namespace Unbound.Dialogue
                     dialogueController.EndDialogue();
                     Debug.Log("Ended current dialogue");
                 }
-                else if (testDialogueAsset != null)
+                else if (!string.IsNullOrEmpty(testDialogueID))
                 {
-                    dialogueController.StartDialogue(testDialogueAsset);
-                    Debug.Log("Started test dialogue: " + testDialogueAsset.displayName);
+                    dialogueController.StartDialogue(testDialogueID);
+                    Debug.Log("Started test dialogue: " + testDialogueID);
                 }
                 else
                 {
-                    Debug.LogWarning("No test dialogue asset assigned!");
+                    Debug.LogWarning("No test dialogue ID assigned!");
                 }
             }
         }
@@ -54,11 +54,11 @@ namespace Unbound.Dialogue
         {
             // This would normally be done through the Unity editor or a custom editor window
             // For now, just log instructions
-            Debug.Log("To create a test dialogue asset:");
-            Debug.Log("1. Create a new DialogueAsset ScriptableObject (Assets > Create > Unbound > Dialogue > Dialogue Asset)");
-            Debug.Log("2. Set the dialogueID and startNodeID");
+            Debug.Log("To create a test dialogue:");
+            Debug.Log("1. Create a JSON file in Assets/Resources/Data/Dialogues/");
+            Debug.Log("2. Set the dialogueID and startNodeID in the JSON");
             Debug.Log("3. Add DialogueNode entries with dialogue text and choices");
-            Debug.Log("4. Assign the asset to the testDialogueAsset field in this component");
+            Debug.Log("4. Assign the dialogueID to the testDialogueID field in this component");
         }
     }
 }

@@ -1,0 +1,51 @@
+{
+  "dialogueID": "bag",
+  "displayName": "Bag",
+  "startNodeID": "",
+  "startNodeConditions": [
+    {
+      "nodeID": "start1",
+      "flagEvaluationLogic": 0,
+      "flagRequirements": [
+        {
+          "flagName": "bag-grabbed",
+          "requiredValue": false
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeID": "start1",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "I'll grab my bag",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 1,
+          "flagName": "bag-grabbed",
+          "flagValue": true,
+          "itemID": "",
+          "itemQuantity": 0,
+          "questID": "",
+          "questNewState": "",
+          "animationName": "",
+          "eventName": "",
+          "customEffectType": "",
+          "customParameters": []
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+

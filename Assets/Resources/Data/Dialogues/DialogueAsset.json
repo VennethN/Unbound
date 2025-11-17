@@ -1,0 +1,26 @@
+{
+  "dialogueID": "dialogue_asset",
+  "displayName": "DialogueAsset",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Wtf is this triangle bruh",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 30.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+

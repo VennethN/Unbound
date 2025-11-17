@@ -13,7 +13,7 @@ namespace Unbound.Dialogue
     public class DialogueController : MonoBehaviour, IDialogueConditionEvaluator, IDialogueEffectExecutor
     {
         [Header("Configuration")]
-        [SerializeField] private DialogueAsset defaultDialogueAsset;
+        [SerializeField] private string defaultDialogueID;
 
         [Header("Input")]
         [SerializeField] private InputActionReference continueAction;
@@ -26,7 +26,7 @@ namespace Unbound.Dialogue
         [SerializeField] private bool freezePlayerMovement = true;
 
         // Runtime state
-        private DialogueAsset currentDialogue;
+        private DialogueData currentDialogue;
         private DialogueNode currentNode;
         private DialogueState dialogueState;
         private Coroutine currentTextCoroutine;
@@ -89,24 +89,31 @@ namespace Unbound.Dialogue
         }
 
         /// <summary>
-        /// Starts a dialogue conversation
+        /// Starts a dialogue conversation by dialogue ID
         /// </summary>
-        public void StartDialogue(DialogueAsset dialogueAsset)
+        public void StartDialogue(string dialogueID)
         {
-            if (dialogueAsset == null)
+            if (string.IsNullOrEmpty(dialogueID))
             {
-                Debug.LogError("Cannot start dialogue: dialogue asset is null");
+                Debug.LogError("Cannot start dialogue: dialogue ID is null or empty");
                 return;
             }
 
-            string validationErrors = dialogueAsset.GetValidationErrors();
+            DialogueData dialogueData = DialogueDatabase.Instance.GetDialogue(dialogueID);
+            if (dialogueData == null)
+            {
+                Debug.LogError($"Cannot start dialogue: Dialogue with ID '{dialogueID}' not found in database");
+                return;
+            }
+
+            string validationErrors = dialogueData.GetValidationErrors();
             if (!string.IsNullOrEmpty(validationErrors))
             {
                 Debug.LogError($"Cannot start dialogue: {validationErrors}");
                 return;
             }
 
-            currentDialogue = dialogueAsset;
+            currentDialogue = dialogueData;
             dialogueState.Reset();
 
             // Restore any existing progress for this dialogue
@@ -121,10 +128,10 @@ namespace Unbound.Dialogue
             OnDialogueStart?.Invoke();
 
             // Get the appropriate start node based on conditions
-            string startNodeID = dialogueAsset.GetStartNodeID(this);
+            string startNodeID = dialogueData.GetStartNodeID(this);
             if (string.IsNullOrEmpty(startNodeID))
             {
-                Debug.LogError($"Cannot start dialogue: No valid start node found for dialogue '{dialogueAsset.dialogueID}'");
+                Debug.LogError($"Cannot start dialogue: No valid start node found for dialogue '{dialogueData.dialogueID}'");
                 EndDialogue();
                 return;
             }
@@ -133,17 +140,29 @@ namespace Unbound.Dialogue
         }
 
         /// <summary>
+        /// Starts a dialogue conversation (legacy method for backward compatibility)
+        /// </summary>
+        [System.Obsolete("Use StartDialogue(string dialogueID) instead. This method will be removed in a future version.")]
+        public void StartDialogue(DialogueAsset dialogueAsset)
+        {
+            if (dialogueAsset != null)
+            {
+                StartDialogue(dialogueAsset.dialogueID);
+            }
+        }
+
+        /// <summary>
         /// Starts the default dialogue
         /// </summary>
         public void StartDefaultDialogue()
         {
-            if (defaultDialogueAsset != null)
+            if (!string.IsNullOrEmpty(defaultDialogueID))
             {
-                StartDialogue(defaultDialogueAsset);
+                StartDialogue(defaultDialogueID);
             }
             else
             {
-                Debug.LogWarning("No default dialogue asset assigned");
+                Debug.LogWarning("No default dialogue ID assigned");
             }
         }
 
@@ -313,11 +332,19 @@ namespace Unbound.Dialogue
         }
 
         /// <summary>
-        /// Gets the current dialogue asset
+        /// Gets the current dialogue data
         /// </summary>
-        public DialogueAsset GetCurrentDialogue()
+        public DialogueData GetCurrentDialogue()
         {
             return currentDialogue;
+        }
+
+        /// <summary>
+        /// Gets the current dialogue ID
+        /// </summary>
+        public string GetCurrentDialogueID()
+        {
+            return currentDialogue?.dialogueID;
         }
 
         /// <summary>
@@ -508,7 +535,7 @@ namespace Unbound.Dialogue
 
             // Save to persistent storage (integrate with SaveManager)
             var saveManager = SaveManager.Instance;
-            if (saveManager != null)
+            if (saveManager != null && currentDialogue != null)
             {
                 var saveData = saveManager.GetCurrentSaveData();
                 saveData.AddCustomData($"dialogue_progress_{currentDialogue.dialogueID}", progressData);

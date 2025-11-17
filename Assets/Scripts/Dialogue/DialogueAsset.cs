@@ -83,7 +83,7 @@ namespace Unbound.Dialogue
     /// ScriptableObject containing complete dialogue data for a conversation or interaction.
     /// </summary>
     [CreateAssetMenu(menuName = "Unbound/Dialogue/Dialogue Asset")]
-    public class DialogueAsset : ScriptableObject
+    public class DialogueAsset : ScriptableObject, IDialogueDataProvider
     {
         [Header("Dialogue Metadata")]
         public string dialogueID;

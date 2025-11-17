@@ -69,11 +69,12 @@ namespace Unbound.Dialogue
             }
 
             // Get the GIF asset from the node
-            if (node.IsGifPortrait() && node.portraitGif != null)
+            GifAsset nodeGif = node.GetPortraitGif();
+            if (node.IsGifPortrait() && nodeGif != null)
             {
-                currentGifAsset = node.portraitGif;
-                idleGif = node.portraitGif.IdleTransition;
-                talkingGif = node.portraitGif.TalkingTransition;
+                currentGifAsset = nodeGif;
+                idleGif = nodeGif.IdleTransition;
+                talkingGif = nodeGif.TalkingTransition;
 
                 // Set the main GIF asset
                 if (gifPlayer != null)

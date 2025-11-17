@@ -45,8 +45,8 @@ namespace Unbound.Dialogue
         [Tooltip("List of flag requirements that must be checked")]
         [SerializeField] private List<FlagRequirement> flagRequirements = new List<FlagRequirement>();
 
-        [Tooltip("Dialogue to play when flag requirements are not met")]
-        [SerializeField] private DialogueAsset blockedDialogueAsset;
+        [Tooltip("Dialogue ID to play when flag requirements are not met")]
+        [SerializeField] private string blockedDialogueID;
 
         // Runtime state
         private DialogueController dialogueController;
@@ -56,7 +56,7 @@ namespace Unbound.Dialogue
             base.Awake();
 
             // Find DialogueController if blocked dialogue is set
-            if (blockedDialogueAsset != null)
+            if (!string.IsNullOrEmpty(blockedDialogueID))
             {
                 dialogueController = FindFirstObjectByType<DialogueController>();
                 if (dialogueController == null)
@@ -86,7 +86,7 @@ namespace Unbound.Dialogue
             }
 
             // If blocked dialogue is set, make sure dialogue controller exists and dialogue isn't active
-            if (blockedDialogueAsset != null && dialogueController != null)
+            if (!string.IsNullOrEmpty(blockedDialogueID) && dialogueController != null)
             {
                 return !dialogueController.IsDialogueActive();
             }
@@ -99,7 +99,7 @@ namespace Unbound.Dialogue
         /// </summary>
         private void EnsureDialogueController()
         {
-            if (dialogueController == null && blockedDialogueAsset != null)
+            if (dialogueController == null && !string.IsNullOrEmpty(blockedDialogueID))
             {
                 dialogueController = FindFirstObjectByType<DialogueController>();
             }
@@ -177,11 +177,11 @@ namespace Unbound.Dialogue
             }
 
             // If flag requirements are not met, play dialogue instead of transitioning
-            if (!canTransition && blockedDialogueAsset != null)
+            if (!canTransition && !string.IsNullOrEmpty(blockedDialogueID))
             {
                 if (dialogueController != null)
                 {
-                    dialogueController.StartDialogue(blockedDialogueAsset);
+                    dialogueController.StartDialogue(blockedDialogueID);
                 }
                 else
                 {
@@ -424,13 +424,19 @@ namespace Unbound.Dialogue
         /// <summary>
         /// Sets a single dialogue flag requirement for this transition (backward compatibility)
         /// </summary>
-        public void SetGlobalFlagRequirement(string flagName, bool requiredValue, DialogueAsset blockedDialogue = null)
+        public void SetGlobalFlagRequirement(string flagName, bool requiredValue, string blockedDialogueID = null)
         {
             requireGlobalFlag = true;
             flagRequirements.Clear();
             flagRequirements.Add(new FlagRequirement { flagName = flagName, requiredValue = requiredValue });
             flagEvaluationLogic = FlagEvaluationLogic.AllMustPass;
-            blockedDialogueAsset = blockedDialogue;
+            this.blockedDialogueID = blockedDialogueID;
+        }
+
+        [System.Obsolete("Use SetGlobalFlagRequirement(string, bool, string) instead. This method will be removed in a future version.")]
+        public void SetGlobalFlagRequirement(string flagName, bool requiredValue, DialogueAsset blockedDialogue)
+        {
+            SetGlobalFlagRequirement(flagName, requiredValue, blockedDialogue?.dialogueID);
         }
 
         /// <summary>
@@ -472,11 +478,17 @@ namespace Unbound.Dialogue
         }
 
         /// <summary>
-        /// Sets the dialogue to play when the transition is blocked
+        /// Sets the dialogue ID to play when the transition is blocked
         /// </summary>
+        public void SetBlockedDialogueID(string dialogueID)
+        {
+            blockedDialogueID = dialogueID;
+        }
+
+        [System.Obsolete("Use SetBlockedDialogueID(string) instead. This method will be removed in a future version.")]
         public void SetBlockedDialogue(DialogueAsset dialogue)
         {
-            blockedDialogueAsset = dialogue;
+            SetBlockedDialogueID(dialogue?.dialogueID);
         }
 
         /// <summary>
