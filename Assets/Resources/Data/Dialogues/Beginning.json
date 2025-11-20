@@ -7,7 +7,7 @@
     {
       "nodeID": "start",
       "speakerID": "Rafa",
-      "dialogueTextKey": "We're going on an adventure? How exciting!",
+      "dialogueTextKey": "Alright, it's time to head out!",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
@@ -23,7 +23,7 @@
     {
       "nodeID": "1",
       "speakerID": "Rafa",
-      "dialogueTextKey": "Hmmm but I will need my supplies first, now where did I keep them....",
+      "dialogueTextKey": "I should probably go to the beach first.",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
@@ -39,7 +39,7 @@
     {
       "nodeID": "2",
       "speakerID": "Rafa",
-      "dialogueTextKey": "Ah, the gay polygons stole them from me, guess I have no choice but to delay this one for now...",
+      "dialogueTextKey": "A relaxing morning walk is always necessary!",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
