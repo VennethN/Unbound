@@ -1,25 +1,27 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
+using Unbound.Inventory;
 
 namespace Unbound.Inventory.UI
 {
     /// <summary>
     /// UI component for a single inventory slot
     /// </summary>
-    public class InventorySlotUI : MonoBehaviour
+    public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
         [Header("UI References")]
         [SerializeField] private Image iconImage;
         [SerializeField] private TextMeshProUGUI quantityText;
         [SerializeField] private TextMeshProUGUI hotkeyText;
         [SerializeField] private Button slotButton;
-        [SerializeField] private GameObject emptySlotVisual;
         
         [Header("Visual Settings")]
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color selectedColor = Color.yellow;
         [SerializeField] private Color hotbarSelectedColor = Color.cyan;
+        [SerializeField] private Color draggingColor = new Color(1f, 1f, 1f, 0.5f);
         
         private int _slotIndex = -1;
         private int _hotbarIndex = -1; // -1 means not a hotbar slot
@@ -27,12 +29,18 @@ namespace Unbound.Inventory.UI
         private bool _isSelected = false;
         private bool _isHotbarSelected = false;
         
+        // Drag and drop
+        private GameObject _dragVisual;
+        private Canvas _canvas;
+        private bool _isDragging = false;
+        
         public int SlotIndex => _slotIndex;
         public InventorySlot Slot => _slot;
         public bool IsEmpty => _slot == null || _slot.IsEmpty;
         
         public System.Action<InventorySlotUI> OnSlotClicked;
         public System.Action<InventorySlotUI> OnSlotSelected;
+        public System.Action<InventorySlotUI, InventorySlotUI> OnSlotDropped;
         
         private void Awake()
         {
@@ -42,6 +50,13 @@ namespace Unbound.Inventory.UI
             if (slotButton != null)
             {
                 slotButton.onClick.AddListener(OnSlotButtonClicked);
+            }
+            
+            // Find canvas for drag visual
+            _canvas = GetComponentInParent<Canvas>();
+            if (_canvas == null)
+            {
+                _canvas = FindFirstObjectByType<Canvas>();
             }
             
             UpdateVisuals();
@@ -88,8 +103,144 @@ namespace Unbound.Inventory.UI
         
         private void OnSlotButtonClicked()
         {
+            // Don't trigger click if we're dragging
+            if (_isDragging)
+                return;
+                
             OnSlotClicked?.Invoke(this);
             OnSlotSelected?.Invoke(this);
+        }
+        
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            if (IsEmpty)
+                return;
+            
+            // Prevent dragging if item is currently equipped
+            if (IsItemEquipped())
+                return;
+            
+            _isDragging = true;
+            
+            // Create drag visual
+            if (_canvas != null && iconImage != null && iconImage.sprite != null)
+            {
+                _dragVisual = new GameObject("DragVisual");
+                _dragVisual.transform.SetParent(_canvas.transform, false);
+                _dragVisual.transform.SetAsLastSibling();
+                
+                RectTransform dragRect = _dragVisual.AddComponent<RectTransform>();
+                dragRect.sizeDelta = new Vector2(iconImage.rectTransform.rect.width, iconImage.rectTransform.rect.height);
+                
+                Image dragImage = _dragVisual.AddComponent<Image>();
+                dragImage.sprite = iconImage.sprite;
+                dragImage.color = draggingColor;
+                dragImage.raycastTarget = false;
+                
+                // Add quantity text if needed
+                if (quantityText != null && _slot != null && _slot.quantity > 1)
+                {
+                    GameObject quantityObj = new GameObject("Quantity");
+                    quantityObj.transform.SetParent(_dragVisual.transform, false);
+                    RectTransform quantityRect = quantityObj.AddComponent<RectTransform>();
+                    quantityRect.anchorMin = new Vector2(1f, 0f);
+                    quantityRect.anchorMax = new Vector2(1f, 0f);
+                    quantityRect.pivot = new Vector2(1f, 0f);
+                    quantityRect.anchoredPosition = Vector2.zero;
+                    
+                    TextMeshProUGUI dragQuantity = quantityObj.AddComponent<TextMeshProUGUI>();
+                    dragQuantity.text = _slot.quantity.ToString();
+                    dragQuantity.fontSize = quantityText.fontSize;
+                    dragQuantity.color = quantityText.color;
+                    dragQuantity.alignment = TextAlignmentOptions.BottomRight;
+                }
+                
+                // Make original icon semi-transparent
+                if (iconImage != null)
+                {
+                    iconImage.color = draggingColor;
+                }
+            }
+        }
+        
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (_dragVisual != null && _canvas != null)
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    _canvas.transform as RectTransform,
+                    eventData.position,
+                    _canvas.worldCamera,
+                    out Vector2 localPoint);
+                _dragVisual.transform.localPosition = localPoint;
+            }
+        }
+        
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            _isDragging = false;
+            
+            // Restore original icon color
+            if (iconImage != null && !IsEmpty)
+            {
+                iconImage.color = normalColor;
+            }
+            
+            // Destroy drag visual
+            if (_dragVisual != null)
+            {
+                Destroy(_dragVisual);
+                _dragVisual = null;
+            }
+            
+            // Check if we dropped on a valid slot
+            GameObject dropTarget = eventData.pointerCurrentRaycast.gameObject;
+            if (dropTarget != null)
+            {
+                InventorySlotUI targetSlot = dropTarget.GetComponent<InventorySlotUI>();
+                if (targetSlot == null)
+                {
+                    // Try parent
+                    targetSlot = dropTarget.GetComponentInParent<InventorySlotUI>();
+                }
+                
+                if (targetSlot != null && targetSlot != this)
+                {
+                    OnSlotDropped?.Invoke(this, targetSlot);
+                }
+            }
+        }
+        
+        public void OnDrop(PointerEventData eventData)
+        {
+            // This is handled in OnEndDrag, but we implement IDropHandler for proper event handling
+        }
+        
+        /// <summary>
+        /// Checks if the item in this slot is currently equipped
+        /// </summary>
+        private bool IsItemEquipped()
+        {
+            if (IsEmpty || _slot == null || string.IsNullOrEmpty(_slot.itemID))
+                return false;
+            
+            // Check if it's an equipment item
+            ItemData itemData = ItemDatabase.Instance != null ? ItemDatabase.Instance.GetItem(_slot.itemID) : null;
+            if (itemData == null || itemData.itemType != ItemType.Equipment)
+                return false;
+            
+            // Check if this item is currently equipped
+            if (InventoryManager.Instance != null)
+            {
+                EquippedItems equippedItems = InventoryManager.Instance.EquippedItems;
+                if (equippedItems != null)
+                {
+                    string equippedItemID = equippedItems.GetEquippedItem(itemData.equipmentType);
+                    return equippedItemID == _slot.itemID;
+                }
+            }
+            
+            return false;
         }
         
         private void UpdateVisuals()

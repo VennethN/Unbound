@@ -195,20 +195,25 @@ namespace Unbound.Enemy
         
         private void AttackPlayer()
         {
-            // Try to damage player using SaveableEntity
-            var saveableEntity = _player.GetComponent<SaveableEntity>();
-            if (saveableEntity != null)
+            // Try to damage player using PlayerCombat (which has TakeDamage method)
+            var playerCombat = _player.GetComponent<Unbound.Player.PlayerCombat>();
+            if (playerCombat != null)
             {
-                saveableEntity.TakeDamage(attackDamage);
+                playerCombat.TakeDamage(attackDamage);
                 Debug.Log($"{gameObject.name} attacked player for {attackDamage} damage");
             }
             else
             {
-                // Fallback: try PlayerStats or other health components
-                var playerStats = _player.GetComponent<Unbound.Player.PlayerStats>();
-                if (playerStats != null)
+                // Fallback: try to find any component with TakeDamage method via reflection
+                var takeDamageMethod = _player.GetComponent<MonoBehaviour>()?.GetType().GetMethod("TakeDamage");
+                if (takeDamageMethod != null)
                 {
-                    Debug.LogWarning($"{gameObject.name} tried to attack player but no SaveableEntity found. Player needs SaveableEntity component for damage.");
+                    takeDamageMethod.Invoke(_player.GetComponent<MonoBehaviour>(), new object[] { attackDamage });
+                    Debug.Log($"{gameObject.name} attacked player for {attackDamage} damage (via reflection)");
+                }
+                else
+                {
+                    Debug.LogWarning($"{gameObject.name} tried to attack player but no TakeDamage method found. Player needs PlayerCombat component or a component with TakeDamage method.");
                 }
             }
         }

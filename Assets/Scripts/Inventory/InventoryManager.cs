@@ -227,8 +227,7 @@ namespace Unbound.Inventory
                 UnequipItem(slot);
             }
             
-            // Remove from inventory and equip
-            RemoveItem(itemID, 1);
+            // Equip without removing from inventory
             _equippedItems.Equip(slot, itemID);
             
             OnItemEquipped?.Invoke(slot, itemID);
@@ -245,13 +244,7 @@ namespace Unbound.Inventory
             if (string.IsNullOrEmpty(itemID))
                 return false;
             
-            // Try to add back to inventory
-            if (!AddItem(itemID, 1))
-            {
-                Debug.LogWarning($"Could not unequip {itemID}: inventory is full");
-                return false;
-            }
-            
+            // Unequip without adding back to inventory
             _equippedItems.Unequip(slot);
             OnItemUnequipped?.Invoke(slot);
             OnInventoryChanged?.Invoke();
@@ -389,11 +382,99 @@ namespace Unbound.Inventory
         }
         
         /// <summary>
-        /// Gets the hotbar size (first row of inventory, max 9 slots for hotkeys 1-9)
+        /// Swaps items between two slots
+        /// </summary>
+        public bool SwapSlots(int slotIndex1, int slotIndex2)
+        {
+            if (slotIndex1 < 0 || slotIndex1 >= _inventory.Count || 
+                slotIndex2 < 0 || slotIndex2 >= _inventory.Count)
+                return false;
+            
+            if (slotIndex1 == slotIndex2)
+                return false;
+            
+            InventorySlot slot1 = _inventory[slotIndex1];
+            InventorySlot slot2 = _inventory[slotIndex2];
+            
+            // Swap the slots
+            _inventory[slotIndex1] = slot2.Clone();
+            _inventory[slotIndex2] = slot1.Clone();
+            
+            OnInventoryChanged?.Invoke();
+            return true;
+        }
+        
+        /// <summary>
+        /// Moves an item from one slot to another (swaps if target has item)
+        /// </summary>
+        public bool MoveItem(int fromSlotIndex, int toSlotIndex)
+        {
+            if (fromSlotIndex < 0 || fromSlotIndex >= _inventory.Count || 
+                toSlotIndex < 0 || toSlotIndex >= _inventory.Count)
+                return false;
+            
+            if (fromSlotIndex == toSlotIndex)
+                return false;
+            
+            InventorySlot fromSlot = _inventory[fromSlotIndex];
+            InventorySlot toSlot = _inventory[toSlotIndex];
+            
+            if (fromSlot.IsEmpty)
+                return false;
+            
+            // If target is empty, move the item
+            if (toSlot.IsEmpty)
+            {
+                _inventory[toSlotIndex] = fromSlot.Clone();
+                _inventory[fromSlotIndex] = new InventorySlot();
+            }
+            // If same item and stackable, try to stack
+            else if (fromSlot.itemID == toSlot.itemID)
+            {
+                ItemData itemData = ItemDatabase.Instance.GetItem(fromSlot.itemID);
+                if (itemData != null && itemData.maxStackSize > 1)
+                {
+                    int maxStack = itemData.maxStackSize;
+                    int spaceAvailable = maxStack - toSlot.quantity;
+                    if (spaceAvailable > 0)
+                    {
+                        int moveAmount = Mathf.Min(fromSlot.quantity, spaceAvailable);
+                        _inventory[toSlotIndex].quantity += moveAmount;
+                        _inventory[fromSlotIndex].quantity -= moveAmount;
+                        
+                        if (_inventory[fromSlotIndex].quantity <= 0)
+                        {
+                            _inventory[fromSlotIndex] = new InventorySlot();
+                        }
+                    }
+                    else
+                    {
+                        // Can't stack, swap instead
+                        return SwapSlots(fromSlotIndex, toSlotIndex);
+                    }
+                }
+                else
+                {
+                    // Can't stack, swap instead
+                    return SwapSlots(fromSlotIndex, toSlotIndex);
+                }
+            }
+            // Different items, swap
+            else
+            {
+                return SwapSlots(fromSlotIndex, toSlotIndex);
+            }
+            
+            OnInventoryChanged?.Invoke();
+            return true;
+        }
+        
+        /// <summary>
+        /// Gets the hotbar size (always 9 slots for hotkeys 1-9, first row)
         /// </summary>
         public int GetHotbarSize()
         {
-            return Mathf.Min(inventoryWidth, 9);
+            return 9;
         }
         
         /// <summary>
@@ -401,10 +482,43 @@ namespace Unbound.Inventory
         /// </summary>
         public InventorySlot GetHotbarSlot(int hotbarIndex)
         {
-            if (hotbarIndex < 0 || hotbarIndex >= inventoryWidth)
+            if (hotbarIndex < 0 || hotbarIndex >= 9)
                 return null;
             
             return GetSlot(hotbarIndex);
+        }
+        
+        /// <summary>
+        /// Sets an item directly in a specific hotbar slot (0-8)
+        /// Useful for ensuring items appear in the hotbar
+        /// </summary>
+        public bool SetHotbarSlot(int hotbarIndex, string itemID, int quantity = 1)
+        {
+            if (hotbarIndex < 0 || hotbarIndex >= GetHotbarSize())
+            {
+                Debug.LogWarning($"Hotbar index {hotbarIndex} is out of range (0-{GetHotbarSize() - 1})");
+                return false;
+            }
+            
+            if (string.IsNullOrEmpty(itemID) || quantity <= 0)
+                return false;
+            
+            ItemData itemData = ItemDatabase.Instance.GetItem(itemID);
+            if (itemData == null)
+            {
+                Debug.LogWarning($"Item {itemID} not found in database");
+                return false;
+            }
+            
+            // Set the item in the hotbar slot
+            int maxStack = itemData.maxStackSize > 0 ? itemData.maxStackSize : quantity;
+            int finalQuantity = Mathf.Min(quantity, maxStack);
+            _inventory[hotbarIndex] = new InventorySlot(itemID, finalQuantity);
+            
+            OnItemAdded?.Invoke(_inventory[hotbarIndex], hotbarIndex);
+            OnInventoryChanged?.Invoke();
+            
+            return true;
         }
         
         /// <summary>

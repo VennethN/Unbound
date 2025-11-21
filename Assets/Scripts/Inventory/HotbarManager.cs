@@ -96,15 +96,31 @@ namespace Unbound.Inventory
                 _hotkeyActions[i] = hotkeyAction;
             }
         }
+#endif
         
         private void OnEnable()
         {
-            // Enable hotkey checking via Update since we can't easily bind to number keys
+            // Enable hotkey checking via Update
         }
         
         private void Update()
         {
-            // Check for number key presses (1-9)
+#if ENABLE_INPUT_SYSTEM
+            // Check for number key presses (1-9) using new Input System
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    Key key = (Key)((int)Key.Digit1 + i);
+                    if (keyboard[key].wasPressedThisFrame)
+                    {
+                        UseHotbarSlot(i);
+                    }
+                }
+            }
+#else
+            // Fallback to old input system if Input System is not enabled
             for (int i = 0; i < 9; i++)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
@@ -112,8 +128,8 @@ namespace Unbound.Inventory
                     UseHotbarSlot(i);
                 }
             }
-        }
 #endif
+        }
         
         /// <summary>
         /// Uses the item in the specified hotbar slot
@@ -130,6 +146,21 @@ namespace Unbound.Inventory
             
             if (InventoryManager.Instance == null)
                 return;
+            
+            // If switching to a different hotkey, unequip the item from the previously selected hotkey
+            if (_selectedHotbarSlot != slotIndex && _selectedHotbarSlot >= 0)
+            {
+                InventorySlot previousSlot = InventoryManager.Instance.GetSlot(_selectedHotbarSlot);
+                if (previousSlot != null && !previousSlot.IsEmpty)
+                {
+                    ItemData previousItemData = ItemDatabase.Instance.GetItem(previousSlot.itemID);
+                    if (previousItemData != null && previousItemData.itemType == ItemType.Equipment)
+                    {
+                        // Unequip the equipment from the previously selected hotkey
+                        InventoryManager.Instance.UnequipItem(previousItemData.equipmentType);
+                    }
+                }
+            }
             
             // Get the slot index in the full inventory (first row)
             int inventorySlotIndex = slotIndex;

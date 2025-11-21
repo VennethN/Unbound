@@ -110,7 +110,8 @@ namespace Unbound.Inventory.UI
             // Create slots
             int totalSlots = InventoryManager.Instance != null ? InventoryManager.Instance.InventorySize : 48;
             
-            int hotbarSize = InventoryManager.Instance != null ? InventoryManager.Instance.GetHotbarSize() : 6;
+            // Hotbar is always first 9 slots (first row)
+            int hotbarSize = 9;
             
             for (int i = 0; i < totalSlots; i++)
             {
@@ -129,6 +130,7 @@ namespace Unbound.Inventory.UI
                 slotUI.Initialize(i, hotbarIndex);
                 slotUI.OnSlotClicked += OnSlotClicked;
                 slotUI.OnSlotSelected += OnSlotSelected;
+                slotUI.OnSlotDropped += OnSlotDropped;
                 
                 _slotUIs.Add(slotUI);
             }
@@ -312,8 +314,8 @@ namespace Unbound.Inventory.UI
         /// </summary>
         private void OnHotbarSlotSelected(int hotbarIndex)
         {
-            // Update visual selection for hotbar slots
-            int hotbarSize = InventoryManager.Instance != null ? InventoryManager.Instance.GetHotbarSize() : 6;
+            // Update visual selection for hotbar slots (first 9 slots)
+            int hotbarSize = 9;
             
             for (int i = 0; i < hotbarSize && i < _slotUIs.Count; i++)
             {
@@ -321,6 +323,27 @@ namespace Unbound.Inventory.UI
                 {
                     _slotUIs[i].SetHotbarSelected(i == hotbarIndex);
                 }
+            }
+        }
+        
+        /// <summary>
+        /// Handles drag and drop between slots
+        /// </summary>
+        private void OnSlotDropped(InventorySlotUI fromSlot, InventorySlotUI toSlot)
+        {
+            if (fromSlot == null || toSlot == null)
+                return;
+            
+            if (InventoryManager.Instance == null)
+                return;
+            
+            // Move/swap items
+            bool success = InventoryManager.Instance.MoveItem(fromSlot.SlotIndex, toSlot.SlotIndex);
+            
+            if (success)
+            {
+                // Refresh inventory to update visuals
+                RefreshInventory();
             }
         }
     }

@@ -27,12 +27,44 @@ namespace Unbound.Player
         [Header("Hitbox")]
         [SerializeField] private bool useMouseDirection = true; // If true, attack towards mouse, else use movement direction
         
+        [Header("Health")]
+        public float health = 100f;
+        public float maxHealth = 100f;
+        
+        public System.Action<PlayerCombat, float> OnDamageTaken;
+        public System.Action<PlayerCombat, float> OnHealthChanged;
+        
+        [Header("Weapon Visual")]
+        [SerializeField] private Transform weaponVisualParent; // Parent transform for weapon visual (e.g., hand position)
+        [SerializeField] private Sprite defaultWeaponSprite; // Default weapon sprite when nothing is equipped
+        [SerializeField] private float weaponVisualOffset = 0.3f; // Offset from player center for weapon visual
+        [SerializeField] private string weaponVisualObjectName = "WeaponVisual"; // Name for the weapon visual GameObject
+        [SerializeField] private int weaponSortingOrder = 10; // Sorting order for weapon sprite (higher = renders on top)
+        
+        [Header("Weapon Animation")]
+        [SerializeField] private bool enableIdleAnimation = true; // Enable idle animation
+        [SerializeField] private float idleRotationSpeed = 2f; // Speed of idle rotation animation
+        [SerializeField] private float idleRotationAmount = 5f; // Degrees of rotation for idle animation
+        [SerializeField] private float idleBobSpeed = 3f; // Speed of idle bobbing animation
+        [SerializeField] private float idleBobAmount = 0.05f; // Amount of bobbing for idle animation
+        [SerializeField] private float attackSwingAngle = 90f; // Degrees to swing during attack
+        [SerializeField] private float attackSwingSpeed = 15f; // Speed of attack swing animation
+        [SerializeField] private AnimationCurve attackSwingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f); // Curve for attack swing
+        [SerializeField] private float weaponVisualReach = 1f; // Multiplier for weapon visual reach (1.0 = matches attack range, higher = extends further)
+        
         private PlayerStats _playerStats;
-        private Camera _mainCamera;
+        private UnityEngine.Camera _mainCamera;
         private float _lastAttackTime = 0f;
         private bool _isAttacking = false;
         private Vector2 _attackDirection = Vector2.zero;
         private System.Collections.Generic.HashSet<Collider2D> _hitEnemies = new System.Collections.Generic.HashSet<Collider2D>();
+        private SpriteRenderer _weaponSpriteRenderer; // SpriteRenderer for weapon visual
+        private float _weaponBaseRotation = 0f; // Base rotation angle for weapon
+        private float _weaponAnimationTime = 0f; // Time for animation
+        private float _attackAnimationProgress = 0f; // Progress of attack animation (0-1)
+        private Vector2 _attackStartDirection = Vector2.right; // Direction at start of attack
+        private Vector2 _attackTargetPosition = Vector2.zero; // Target position for weapon during attack
+        private float _attackRange = 1f; // Attack range for current attack
         
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -41,13 +73,41 @@ namespace Unbound.Player
         
         public bool IsAttacking => _isAttacking;
         
+        /// <summary>
+        /// Gets the mouse position using the appropriate Input System
+        /// </summary>
+        private Vector2 GetMousePosition()
+        {
+#if ENABLE_INPUT_SYSTEM
+            if (UnityEngine.InputSystem.Mouse.current != null)
+            {
+                return UnityEngine.InputSystem.Mouse.current.position.ReadValue();
+            }
+            return Vector2.zero;
+#else
+            return Input.mousePosition;
+#endif
+        }
+        
+        private float _lastHealth;
+        private float _lastMaxHealth;
+        
         private void Awake()
         {
             _playerStats = GetComponent<PlayerStats>();
-            if (_playerStats == null)
+            
+            // Initialize health - use default values first, then update from PlayerStats in Start
+            if (maxHealth <= 0)
             {
-                Debug.LogWarning("PlayerCombat: PlayerStats component not found!");
+                maxHealth = 100f; // Default max health
             }
+            if (health <= 0)
+            {
+                health = maxHealth; // Start at full health
+            }
+            
+            _lastHealth = health;
+            _lastMaxHealth = maxHealth;
             
             // Get animator if not assigned
             if (animator == null)
@@ -56,11 +116,14 @@ namespace Unbound.Player
             }
             
             // Get main camera for mouse position
-            _mainCamera = Camera.main;
+            _mainCamera = UnityEngine.Camera.main;
             if (_mainCamera == null)
             {
-                _mainCamera = FindFirstObjectByType<Camera>();
+                _mainCamera = FindFirstObjectByType<UnityEngine.Camera>();
             }
+            
+            // Initialize weapon visual
+            InitializeWeaponVisual();
             
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
@@ -77,11 +140,34 @@ namespace Unbound.Player
 #endif
         }
         
+        private void Start()
+        {
+            // Update health from PlayerStats after it has initialized
+            if (_playerStats != null && _playerStats.MaxHealth > 0)
+            {
+                maxHealth = _playerStats.MaxHealth;
+                health = Mathf.Min(health, maxHealth); // Ensure health doesn't exceed max
+            }
+            
+            _lastHealth = health;
+            _lastMaxHealth = maxHealth;
+        }
+        
         private void OnEnable()
         {
 #if ENABLE_INPUT_SYSTEM
             _attackAction?.Enable();
 #endif
+            
+            // Subscribe to equipment changes
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.OnItemEquipped += OnWeaponEquipped;
+                InventoryManager.Instance.OnItemUnequipped += OnWeaponUnequipped;
+            }
+            
+            // Initialize weapon visual
+            UpdateWeaponVisual();
         }
         
         private void OnDisable()
@@ -89,6 +175,13 @@ namespace Unbound.Player
 #if ENABLE_INPUT_SYSTEM
             _attackAction?.Disable();
 #endif
+            
+            // Unsubscribe from equipment changes
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.OnItemEquipped -= OnWeaponEquipped;
+                InventoryManager.Instance.OnItemUnequipped -= OnWeaponUnequipped;
+            }
         }
         
         private void Update()
@@ -105,10 +198,70 @@ namespace Unbound.Player
                 TryAttack();
             }
 #endif
+            
+            // Update weapon visual rotation and position with procedural animation
+            if (_weaponSpriteRenderer != null && _weaponSpriteRenderer.enabled)
+            {
+                UpdateWeaponAnimation();
+            }
+            
+            // Update health from PlayerStats if it changed
+            if (_playerStats != null)
+            {
+                if (_playerStats.MaxHealth != maxHealth)
+                {
+                    maxHealth = _playerStats.MaxHealth;
+                    health = Mathf.Min(health, maxHealth);
+                }
+            }
+            
+            // Detect inspector changes and notify
+            if (health != _lastHealth)
+            {
+                float oldHealth = _lastHealth;
+                if (health < oldHealth)
+                {
+                    OnDamageTaken?.Invoke(this, oldHealth - health);
+                }
+                OnHealthChanged?.Invoke(this, health);
+                _lastHealth = health;
+            }
+            
+            if (maxHealth != _lastMaxHealth)
+            {
+                OnHealthChanged?.Invoke(this, health);
+                _lastMaxHealth = maxHealth;
+            }
+        }
+        
+        /// <summary>
+        /// Takes damage and updates health
+        /// </summary>
+        public void TakeDamage(float damage)
+        {
+            float oldHealth = health;
+            health = Mathf.Max(0, health - damage);
+            
+            if (health < oldHealth)
+            {
+                OnDamageTaken?.Invoke(this, damage);
+            }
+            
+            OnHealthChanged?.Invoke(this, health);
+        }
+        
+        /// <summary>
+        /// Heals the player
+        /// </summary>
+        public void Heal(float amount)
+        {
+            health = Mathf.Min(maxHealth, health + amount);
+            OnHealthChanged?.Invoke(this, health);
         }
         
         /// <summary>
         /// Attempts to perform an attack if conditions are met
+        /// Requires a weapon to be equipped
         /// </summary>
         public void TryAttack()
         {
@@ -153,7 +306,8 @@ namespace Unbound.Player
             if (useMouseDirection && _mainCamera != null)
             {
                 // Attack towards mouse position
-                Vector3 mouseWorldPos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mouseScreenPos = GetMousePosition();
+                Vector3 mouseWorldPos = _mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, _mainCamera.nearClipPlane));
                 mouseWorldPos.z = 0f;
                 _attackDirection = (mouseWorldPos - transform.position).normalized;
             }
@@ -183,11 +337,13 @@ namespace Unbound.Player
         }
         
         /// <summary>
-        /// Performs the actual attack with weapon stats
+        /// Performs the actual attack with weapon stats (or default stats if no weapon)
         /// </summary>
         private void PerformAttack(string weaponItemID)
         {
             _isAttacking = true;
+            _attackStartDirection = _attackDirection;
+            _attackAnimationProgress = 0f;
             
             // Trigger attack animation
             if (animator != null)
@@ -213,10 +369,14 @@ namespace Unbound.Player
             float attackDamage = _playerStats != null ? _playerStats.AttackDamage : 10f;
             
             // Get attack range from player stats
-            float attackRange = _playerStats != null ? _playerStats.AttackRange : 1f;
+            _attackRange = _playerStats != null ? _playerStats.AttackRange : 1f;
             
             // Create hitbox position in attack direction
-            Vector2 hitboxPosition = (Vector2)transform.position + _attackDirection * attackRange;
+            Vector2 hitboxPosition = (Vector2)transform.position + _attackDirection * _attackRange;
+            
+            // Calculate visual reach position (can extend beyond actual attack range)
+            float visualReachDistance = _attackRange * weaponVisualReach;
+            _attackTargetPosition = (Vector2)transform.position + _attackDirection * visualReachDistance;
             
             // Clear previously hit enemies
             _hitEnemies.Clear();
@@ -246,11 +406,11 @@ namespace Unbound.Player
                 _hitEnemies.Add(hit);
                 
                 // Try to deal damage to the hit object
-                // Check for SaveableEntity (which has TakeDamage method)
-                var saveableEntity = hit.GetComponent<SaveableEntity>();
-                if (saveableEntity != null)
+                // Check for Enemy component (which has TakeDamage method)
+                var enemy = hit.GetComponent<Unbound.Enemy.Enemy>();
+                if (enemy != null)
                 {
-                    saveableEntity.TakeDamage(damage);
+                    enemy.TakeDamage(damage);
                     Debug.Log($"Attack hit: {hit.gameObject.name} for {damage} damage");
                 }
                 else
@@ -281,6 +441,94 @@ namespace Unbound.Player
         private void ResetAttackState()
         {
             _isAttacking = false;
+            _attackAnimationProgress = 0f;
+        }
+        
+        /// <summary>
+        /// Updates weapon visual with procedural animation
+        /// </summary>
+        private void UpdateWeaponAnimation()
+        {
+            if (_weaponSpriteRenderer == null)
+                return;
+            
+            Vector2 direction = _attackDirection;
+            
+            // If no attack direction set yet, calculate from mouse position
+            if (direction == Vector2.zero && useMouseDirection && _mainCamera != null)
+            {
+                Vector2 mouseScreenPos = GetMousePosition();
+                Vector3 mouseWorldPos = _mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, _mainCamera.nearClipPlane));
+                mouseWorldPos.z = 0f;
+                direction = (mouseWorldPos - transform.position).normalized;
+            }
+            
+            // Default to right if still no direction
+            if (direction == Vector2.zero)
+            {
+                direction = Vector2.right;
+            }
+            
+            // Calculate base rotation angle (inverted to fix sprite orientation)
+            float baseAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 180f;
+            
+            // Calculate base position
+            Vector3 basePosition = direction * weaponVisualOffset;
+            
+            // Apply attack swing animation
+            float finalAngle = baseAngle;
+            Vector3 finalPosition = basePosition;
+            
+            if (_isAttacking && _attackAnimationProgress < 1f)
+            {
+                _attackAnimationProgress += attackSwingSpeed * Time.deltaTime;
+                _attackAnimationProgress = Mathf.Clamp01(_attackAnimationProgress);
+                
+                // Calculate swing angle based on curve
+                float curveValue = attackSwingCurve.Evaluate(_attackAnimationProgress);
+                float swingOffset = Mathf.Sin(curveValue * Mathf.PI) * attackSwingAngle;
+                
+                // Swing perpendicular to attack direction
+                Vector2 perpendicular = new Vector2(-direction.y, direction.x);
+                float swingDirection = Mathf.Sign(Vector2.Dot(perpendicular, _attackStartDirection));
+                finalAngle = baseAngle + swingOffset * swingDirection;
+                
+                // Move weapon along arc to attack target position
+                Vector2 startPos = (Vector2)transform.position + (Vector2)basePosition;
+                Vector2 targetPos = _attackTargetPosition;
+                
+                // Interpolate position along arc (using curve for smooth motion)
+                float positionT = curveValue;
+                Vector2 currentWorldPos = Vector2.Lerp(startPos, targetPos, positionT);
+                
+                // Convert to local position
+                finalPosition = transform.InverseTransformPoint(new Vector3(currentWorldPos.x, currentWorldPos.y, 0f));
+            }
+            else
+            {
+                // Apply idle animation when not attacking
+                if (enableIdleAnimation)
+                {
+                    _weaponAnimationTime += Time.deltaTime;
+                    
+                    // Idle rotation
+                    float idleRotation = Mathf.Sin(_weaponAnimationTime * idleRotationSpeed) * idleRotationAmount;
+                    finalAngle += idleRotation;
+                    
+                    // Idle bobbing (applied to position)
+                    float idleBob = Mathf.Sin(_weaponAnimationTime * idleBobSpeed) * idleBobAmount;
+                    finalPosition = basePosition + new Vector3(0f, idleBob, 0f);
+                }
+                else
+                {
+                    // No idle animation, just use base position
+                    finalPosition = basePosition;
+                }
+            }
+            
+            // Apply rotation and position
+            _weaponSpriteRenderer.transform.rotation = Quaternion.Euler(0f, 0f, finalAngle);
+            _weaponSpriteRenderer.transform.localPosition = finalPosition;
         }
         
         
@@ -303,34 +551,158 @@ namespace Unbound.Player
             return !string.IsNullOrEmpty(GetEquippedWeaponID());
         }
         
-        private void OnDrawGizmosSelected()
+        /// <summary>
+        /// Initializes the weapon visual GameObject and SpriteRenderer
+        /// </summary>
+        private void InitializeWeaponVisual()
         {
-            // Draw attack range and hitbox in editor
+            // Find or create weapon visual GameObject
+            Transform parent = weaponVisualParent != null ? weaponVisualParent : transform;
+            Transform weaponVisualTransform = parent.Find(weaponVisualObjectName);
+            
+            if (weaponVisualTransform == null)
+            {
+                // Create new weapon visual GameObject
+                GameObject weaponVisualObj = new GameObject(weaponVisualObjectName);
+                weaponVisualObj.transform.SetParent(parent);
+                weaponVisualObj.transform.localPosition = new Vector3(weaponVisualOffset, 0f, 0f);
+                weaponVisualObj.transform.localRotation = Quaternion.identity;
+                
+                // Add SpriteRenderer component
+                _weaponSpriteRenderer = weaponVisualObj.AddComponent<SpriteRenderer>();
+                _weaponSpriteRenderer.sortingOrder = weaponSortingOrder;
+            }
+            else
+            {
+                // Get existing SpriteRenderer
+                _weaponSpriteRenderer = weaponVisualTransform.GetComponent<SpriteRenderer>();
+                if (_weaponSpriteRenderer == null)
+                {
+                    _weaponSpriteRenderer = weaponVisualTransform.gameObject.AddComponent<SpriteRenderer>();
+                }
+                // Always update sorting order to ensure it's correct
+                _weaponSpriteRenderer.sortingOrder = weaponSortingOrder;
+            }
+            
+            // Update weapon sprite
+            UpdateWeaponVisual();
+        }
+        
+        /// <summary>
+        /// Updates the weapon visual sprite based on currently equipped weapon
+        /// </summary>
+        private void UpdateWeaponVisual()
+        {
+            if (_weaponSpriteRenderer == null)
+            {
+                InitializeWeaponVisual();
+                return;
+            }
+            
+            // Get equipped weapon
+            string equippedWeaponID = GetEquippedWeaponID();
+            Sprite weaponSprite = null;
+            
+            // Try to get weapon sprite if a weapon is equipped
+            if (!string.IsNullOrEmpty(equippedWeaponID))
+            {
+                // Try to get weapon sprite from ItemDatabase
+                if (ItemDatabase.Instance != null)
+                {
+                    weaponSprite = ItemDatabase.Instance.GetItemSprite(equippedWeaponID);
+                }
+            }
+            
+            // Always fall back to default weapon sprite if:
+            // - No weapon is equipped (equippedWeaponID is null/empty)
+            // - Weapon sprite not found in database
+            // - Weapon sprite is null for any reason
+            if (weaponSprite == null)
+            {
+                weaponSprite = defaultWeaponSprite;
+            }
+            
+            // Update sprite (this will set default sprite when unequipped)
+            _weaponSpriteRenderer.sprite = weaponSprite;
+            
+            // Ensure sorting order is set correctly
+            _weaponSpriteRenderer.sortingOrder = weaponSortingOrder;
+            
+            // Hide weapon visual if no sprite is available (including default)
+            if (_weaponSpriteRenderer.sprite == null)
+            {
+                _weaponSpriteRenderer.enabled = false;
+            }
+            else
+            {
+                _weaponSpriteRenderer.enabled = true;
+            }
+        }
+        
+        /// <summary>
+        /// Called when a weapon is equipped
+        /// </summary>
+        private void OnWeaponEquipped(EquipmentType slot, string itemID)
+        {
+            if (slot == EquipmentType.Weapon)
+            {
+                UpdateWeaponVisual();
+            }
+        }
+        
+        /// <summary>
+        /// Called when a weapon is unequipped
+        /// </summary>
+        private void OnWeaponUnequipped(EquipmentType slot)
+        {
+            if (slot == EquipmentType.Weapon)
+            {
+                UpdateWeaponVisual();
+            }
+        }
+        
+        private void OnDrawGizmos()
+        {
+            // Always draw attack area gizmo (not just when selected)
             float attackRange = _playerStats != null ? _playerStats.AttackRange : 1f;
             
-            // Draw attack range circle
-            Gizmos.color = Color.yellow;
+            // Calculate current attack direction (or use mouse direction if in play mode)
+            Vector2 currentDirection = _attackDirection;
+            if (currentDirection == Vector2.zero && Application.isPlaying && useMouseDirection && _mainCamera != null)
+            {
+                // Use helper method to get mouse position
+                Vector2 mouseScreenPos = GetMousePosition();
+                
+                if (mouseScreenPos != Vector2.zero)
+                {
+                    Vector3 mouseWorldPos = _mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, _mainCamera.nearClipPlane));
+                    mouseWorldPos.z = 0f;
+                    currentDirection = (mouseWorldPos - transform.position).normalized;
+                }
+            }
+            
+            // Default direction if still zero
+            if (currentDirection == Vector2.zero)
+            {
+                currentDirection = Vector2.right; // Default direction
+            }
+            
+            // Draw attack range circle around player
+            Gizmos.color = new Color(1f, 1f, 0f, 0.3f); // Yellow with transparency
             Gizmos.DrawWireSphere(transform.position, attackRange);
             
-            // Draw hitbox position if attacking
-            if (_isAttacking && _attackDirection != Vector2.zero)
-            {
-                Vector2 hitboxPosition = (Vector2)transform.position + _attackDirection * attackRange;
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(hitboxPosition, attackRadius);
-                
-                // Draw line showing attack direction
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, hitboxPosition);
-            }
+            // Draw attack hitbox area
+            Vector2 hitboxPosition = (Vector2)transform.position + currentDirection * attackRange;
+            Gizmos.color = new Color(1f, 0f, 0f, 0.5f); // Red with transparency
+            Gizmos.DrawWireSphere(hitboxPosition, attackRadius);
             
-            // Always draw attack direction preview
-            if (_attackDirection != Vector2.zero && Application.isPlaying)
-            {
-                Vector2 hitboxPosition = (Vector2)transform.position + _attackDirection * attackRange;
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(hitboxPosition, attackRadius * 0.5f);
-            }
+            // Draw line showing attack direction
+            Gizmos.color = new Color(1f, 0f, 0f, 0.7f); // Red
+            Gizmos.DrawLine(transform.position, hitboxPosition);
+            
+            // Draw filled circle for better visibility
+            Gizmos.color = new Color(1f, 0f, 0f, 0.2f); // Red with low transparency
+            Gizmos.DrawSphere(hitboxPosition, attackRadius);
         }
     }
 }

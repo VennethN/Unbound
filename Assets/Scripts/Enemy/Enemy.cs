@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unbound.UI;
 
 namespace Unbound.Enemy
 {
@@ -29,9 +30,28 @@ namespace Unbound.Enemy
         public System.Action<Enemy, float> OnDamageTaken;
         public System.Action<Enemy, float> OnHealthChanged;
         
+        private HealthBar _healthBar;
+        
         private void Awake()
         {
             currentHealth = maxHealth;
+            
+            // Set up health bar
+            SetupHealthBar();
+        }
+        
+        /// <summary>
+        /// Sets up the health bar component
+        /// </summary>
+        private void SetupHealthBar()
+        {
+            _healthBar = GetComponent<HealthBar>();
+            if (_healthBar == null)
+            {
+                _healthBar = gameObject.AddComponent<HealthBar>();
+            }
+            
+            _healthBar.SetupForEnemy(this);
         }
         
         /// <summary>

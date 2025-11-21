@@ -91,14 +91,19 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
     [Header("Player Attributes")]
     [SerializeField] private string playerName = "Player";
     [SerializeField] private int level = 1;
-    [SerializeField] private float health = 100f;
-    [SerializeField] private float maxHealth = 100f;
+    public float health = 100f;
+    public float maxHealth = 100f;
     [SerializeField] private float experience = 0f;
     
     [Header("Save Settings")]
     [SerializeField] private string saveID = "player";
     
     public string SaveID => saveID;
+    public float Health => health;
+    public float MaxHealth => maxHealth;
+    
+    public System.Action<SaveablePlayer, float> OnDamageTaken;
+    public System.Action<SaveablePlayer, float> OnHealthChanged;
 
     public SaveablePlayerData CaptureState()
     {
@@ -148,8 +153,57 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
         }
     }
     
-    public void TakeDamage(float damage) => health = Mathf.Max(0, health - damage);
-    public void Heal(float amount) => health = Mathf.Min(maxHealth, health + amount);
+    public void TakeDamage(float damage)
+    {
+        float oldHealth = health;
+        health = Mathf.Max(0, health - damage);
+        
+        if (health < oldHealth)
+        {
+            OnDamageTaken?.Invoke(this, damage);
+        }
+        
+        OnHealthChanged?.Invoke(this, health);
+    }
+    
+    public void Heal(float amount)
+    {
+        health = Mathf.Min(maxHealth, health + amount);
+        OnHealthChanged?.Invoke(this, health);
+    }
+    
+    private float _lastHealth;
+    private float _lastMaxHealth;
+    
+    private void OnValidate()
+    {
+        // Detect inspector changes and notify health bar
+        if (Application.isPlaying)
+        {
+            if (health != _lastHealth)
+            {
+                float oldHealth = _lastHealth;
+                if (health < oldHealth)
+                {
+                    OnDamageTaken?.Invoke(this, oldHealth - health);
+                }
+                OnHealthChanged?.Invoke(this, health);
+                _lastHealth = health;
+            }
+            
+            if (maxHealth != _lastMaxHealth)
+            {
+                OnHealthChanged?.Invoke(this, health);
+                _lastMaxHealth = maxHealth;
+            }
+        }
+    }
+    
+    private void Awake()
+    {
+        _lastHealth = health;
+        _lastMaxHealth = maxHealth;
+    }
     public void AddExperience(float exp) => experience += exp;
     
     /// <summary>
