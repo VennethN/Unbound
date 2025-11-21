@@ -28,6 +28,12 @@ namespace Unbound.Inventory.UI
                 InventoryManager.Instance.OnInventoryChanged += RefreshInventory;
                 RefreshInventory();
             }
+            
+            // Subscribe to hotbar events
+            if (HotbarManager.Instance != null)
+            {
+                HotbarManager.Instance.OnHotbarSlotSelected += OnHotbarSlotSelected;
+            }
         }
         
         private void OnDisable()
@@ -35,6 +41,12 @@ namespace Unbound.Inventory.UI
             if (InventoryManager.Instance != null)
             {
                 InventoryManager.Instance.OnInventoryChanged -= RefreshInventory;
+            }
+            
+            // Unsubscribe from hotbar events
+            if (HotbarManager.Instance != null)
+            {
+                HotbarManager.Instance.OnHotbarSlotSelected -= OnHotbarSlotSelected;
             }
 
             // Hide description panel when inventory UI is closed
@@ -98,6 +110,9 @@ namespace Unbound.Inventory.UI
             // Create slots
             int totalSlots = InventoryManager.Instance != null ? InventoryManager.Instance.InventorySize : 48;
             
+            // Hotbar is always first 9 slots (first row)
+            int hotbarSize = 9;
+            
             for (int i = 0; i < totalSlots; i++)
             {
                 GameObject slotObj = Instantiate(slotPrefab, slotContainer);
@@ -108,9 +123,14 @@ namespace Unbound.Inventory.UI
                     slotUI = slotObj.AddComponent<InventorySlotUI>();
                 }
                 
-                slotUI.Initialize(i);
+                // Mark hotbar slots (first row)
+                bool isHotbarSlot = i < hotbarSize;
+                int hotbarIndex = isHotbarSlot ? i : -1;
+                
+                slotUI.Initialize(i, hotbarIndex);
                 slotUI.OnSlotClicked += OnSlotClicked;
                 slotUI.OnSlotSelected += OnSlotSelected;
+                slotUI.OnSlotDropped += OnSlotDropped;
                 
                 _slotUIs.Add(slotUI);
             }
@@ -287,6 +307,44 @@ namespace Unbound.Inventory.UI
                 return;
             
             InventoryManager.Instance.ConsumeItem(itemData.itemID);
+        }
+        
+        /// <summary>
+        /// Handles hotbar slot selection from HotbarManager
+        /// </summary>
+        private void OnHotbarSlotSelected(int hotbarIndex)
+        {
+            // Update visual selection for hotbar slots (first 9 slots)
+            int hotbarSize = 9;
+            
+            for (int i = 0; i < hotbarSize && i < _slotUIs.Count; i++)
+            {
+                if (_slotUIs[i] != null)
+                {
+                    _slotUIs[i].SetHotbarSelected(i == hotbarIndex);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Handles drag and drop between slots
+        /// </summary>
+        private void OnSlotDropped(InventorySlotUI fromSlot, InventorySlotUI toSlot)
+        {
+            if (fromSlot == null || toSlot == null)
+                return;
+            
+            if (InventoryManager.Instance == null)
+                return;
+            
+            // Move/swap items
+            bool success = InventoryManager.Instance.MoveItem(fromSlot.SlotIndex, toSlot.SlotIndex);
+            
+            if (success)
+            {
+                // Refresh inventory to update visuals
+                RefreshInventory();
+            }
         }
     }
 }
