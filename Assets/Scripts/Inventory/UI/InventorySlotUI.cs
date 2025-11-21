@@ -12,16 +12,20 @@ namespace Unbound.Inventory.UI
         [Header("UI References")]
         [SerializeField] private Image iconImage;
         [SerializeField] private TextMeshProUGUI quantityText;
+        [SerializeField] private TextMeshProUGUI hotkeyText;
         [SerializeField] private Button slotButton;
         [SerializeField] private GameObject emptySlotVisual;
         
         [Header("Visual Settings")]
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color selectedColor = Color.yellow;
+        [SerializeField] private Color hotbarSelectedColor = Color.cyan;
         
         private int _slotIndex = -1;
+        private int _hotbarIndex = -1; // -1 means not a hotbar slot
         private InventorySlot _slot;
         private bool _isSelected = false;
+        private bool _isHotbarSelected = false;
         
         public int SlotIndex => _slotIndex;
         public InventorySlot Slot => _slot;
@@ -44,11 +48,12 @@ namespace Unbound.Inventory.UI
         }
         
         /// <summary>
-        /// Initializes the slot with an index
+        /// Initializes the slot with an index and optional hotbar index
         /// </summary>
-        public void Initialize(int slotIndex)
+        public void Initialize(int slotIndex, int hotbarIndex = -1)
         {
             _slotIndex = slotIndex;
+            _hotbarIndex = hotbarIndex;
             UpdateVisuals();
         }
         
@@ -69,6 +74,15 @@ namespace Unbound.Inventory.UI
         public void SetSelected(bool selected)
         {
             _isSelected = selected;
+            UpdateVisuals();
+        }
+        
+        /// <summary>
+        /// Sets the hotbar selected state (for hotbar slots)
+        /// </summary>
+        public void SetHotbarSelected(bool selected)
+        {
+            _isHotbarSelected = selected;
             UpdateVisuals();
         }
         
@@ -138,11 +152,36 @@ namespace Unbound.Inventory.UI
                 }
             }
             
+            // Update hotkey text (for hotbar slots)
+            if (hotkeyText != null)
+            {
+                if (_hotbarIndex >= 0)
+                {
+                    hotkeyText.text = (_hotbarIndex + 1).ToString();
+                    hotkeyText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    hotkeyText.gameObject.SetActive(false);
+                }
+            }
+            
             // Update selection visual
             if (slotButton != null)
             {
                 var colors = slotButton.colors;
-                colors.normalColor = _isSelected ? selectedColor : normalColor;
+                if (_isHotbarSelected)
+                {
+                    colors.normalColor = hotbarSelectedColor;
+                }
+                else if (_isSelected)
+                {
+                    colors.normalColor = selectedColor;
+                }
+                else
+                {
+                    colors.normalColor = normalColor;
+                }
                 slotButton.colors = colors;
             }
         }

@@ -387,6 +387,84 @@ namespace Unbound.Inventory
         {
             OnInventoryChanged?.Invoke();
         }
+        
+        /// <summary>
+        /// Gets the hotbar size (first row of inventory, max 9 slots for hotkeys 1-9)
+        /// </summary>
+        public int GetHotbarSize()
+        {
+            return Mathf.Min(inventoryWidth, 9);
+        }
+        
+        /// <summary>
+        /// Gets a hotbar slot by index (0-8 for first row)
+        /// </summary>
+        public InventorySlot GetHotbarSlot(int hotbarIndex)
+        {
+            if (hotbarIndex < 0 || hotbarIndex >= inventoryWidth)
+                return null;
+            
+            return GetSlot(hotbarIndex);
+        }
+        
+        /// <summary>
+        /// Equips an item from a hotbar slot (without removing from inventory)
+        /// </summary>
+        public bool EquipItemFromHotbar(int hotbarIndex)
+        {
+            InventorySlot slot = GetHotbarSlot(hotbarIndex);
+            if (slot == null || slot.IsEmpty)
+                return false;
+            
+            ItemData itemData = ItemDatabase.Instance.GetItem(slot.itemID);
+            if (itemData == null || itemData.itemType != ItemType.Equipment)
+                return false;
+            
+            // Equip without removing from inventory (for hotbar quick-access)
+            return EquipItemWithoutRemoving(itemData.itemID, itemData.equipmentType);
+        }
+        
+        /// <summary>
+        /// Equips an item without removing it from inventory (useful for hotbar)
+        /// </summary>
+        public bool EquipItemWithoutRemoving(string itemID, EquipmentType slot)
+        {
+            if (string.IsNullOrEmpty(itemID))
+                return false;
+            
+            ItemData itemData = ItemDatabase.Instance.GetItem(itemID);
+            if (itemData == null || itemData.itemType != ItemType.Equipment)
+            {
+                Debug.LogWarning($"Cannot equip {itemID}: not an equipment item");
+                return false;
+            }
+            
+            if (itemData.equipmentType != slot)
+            {
+                Debug.LogWarning($"Cannot equip {itemID}: equipment type mismatch (expected {slot}, got {itemData.equipmentType})");
+                return false;
+            }
+            
+            if (!HasItem(itemID, 1))
+            {
+                Debug.LogWarning($"Cannot equip {itemID}: not in inventory");
+                return false;
+            }
+            
+            // Unequip current item in slot if any
+            string currentEquipped = _equippedItems.GetEquippedItem(slot);
+            if (!string.IsNullOrEmpty(currentEquipped))
+            {
+                UnequipItem(slot);
+            }
+            
+            // Equip without removing from inventory
+            _equippedItems.Equip(slot, itemID);
+            
+            OnItemEquipped?.Invoke(slot, itemID);
+            OnInventoryChanged?.Invoke();
+            return true;
+        }
     }
 }
 
