@@ -47,8 +47,10 @@ MonoBehaviour:
   fadeDuration: 1
   fadeColor: {r: 0, g: 0, b: 0, a: 1}
   autoSaveOnTransition: 1
+  blackScreenHoldDuration: 0.2
   fadeImage: {fileID: 0}
   transitionCanvas: {fileID: 0}
+  canvasGroup: {fileID: 0}
   OnTransitionStart:
     m_PersistentCalls:
       m_Calls: []

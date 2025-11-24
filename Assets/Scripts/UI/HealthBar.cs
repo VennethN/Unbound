@@ -247,12 +247,13 @@ namespace Unbound.UI
             _currentFillAmount = Mathf.Lerp(_currentFillAmount, _targetFillAmount, Time.deltaTime * fillAnimationSpeed);
             
             // Update fill scale based on health percentage
+            // Since the sprite pivot is at the left edge (0, 0.5), scaling in X will grow/shrink from the left
             float fillWidth = healthBarSize.x * _currentFillAmount;
             healthBarFill.transform.localScale = new Vector3(fillWidth, healthBarSize.y, 1f);
             
-            // Adjust fill position to keep left-aligned
-            float fillX = -healthBarSize.x / 2f + fillWidth / 2f;
-            healthBarFill.transform.localPosition = new Vector3(fillX, 0f, -0.01f);
+            // Position stays fixed at left edge - no need to recalculate
+            // (Position is already set in InitializeHealthBar and doesn't need to change)
+            healthBarFill.transform.localPosition = new Vector3(-healthBarSize.x / 2f, 0f, -0.01f);
         }
         
         /// <summary>
