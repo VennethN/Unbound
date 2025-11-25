@@ -1,0 +1,26 @@
+{
+  "dialogueID": "sign",
+  "displayName": "Sign",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "The waterfall must be that way!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+
