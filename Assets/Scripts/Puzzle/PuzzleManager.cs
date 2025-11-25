@@ -39,6 +39,8 @@ namespace Unbound.Puzzle
         [SerializeField] private bool checkContinuous = true;
         [SerializeField] private float resetDelay = 0.1f;
         [SerializeField] private bool resetPositions = true;
+        [Tooltip("If enabled, pushable objects cannot be moved once the puzzle is completed.")]
+        [SerializeField] private bool lockMovementOnCompletion = false;
         
         [Header("Boundary Settings")]
         [Tooltip("Optional collider that defines the boundary area. Puzzle objects cannot be moved outside this area.")]
@@ -309,6 +311,14 @@ namespace Unbound.Puzzle
         public bool IsCompleted()
         {
             return isCompleted;
+        }
+
+        /// <summary>
+        /// Checks if movement is allowed for pushable objects
+        /// </summary>
+        public bool IsMovementAllowed()
+        {
+            return !lockMovementOnCompletion || !isCompleted;
         }
 
         /// <summary>

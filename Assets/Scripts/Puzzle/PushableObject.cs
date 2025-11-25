@@ -83,6 +83,17 @@ namespace Unbound.Puzzle
 
         private void FixedUpdate()
         {
+            // Stop movement if puzzle is completed and movement is locked
+            if (puzzleManager != null && !puzzleManager.IsMovementAllowed())
+            {
+                if (rb.linearVelocity.sqrMagnitude > 0.01f)
+                {
+                    rb.linearVelocity = Vector2.zero;
+                    HandlePushEnd();
+                }
+                return;
+            }
+
             // Apply friction when not being pushed
             if (!isBeingPushed && rb.linearVelocity.sqrMagnitude > 0.01f)
             {
@@ -185,6 +196,13 @@ namespace Unbound.Puzzle
 
         private void HandlePlayerCollision(Collision2D collision)
         {
+            // Check if movement is allowed (e.g., puzzle completed and locked)
+            if (puzzleManager != null && !puzzleManager.IsMovementAllowed())
+            {
+                HandlePushEnd();
+                return;
+            }
+
             // Get player movement direction
             var playerController = player.GetComponent<Unbound.Player.PlayerController2D>();
             if (playerController == null) return;
