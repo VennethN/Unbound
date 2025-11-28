@@ -63,7 +63,9 @@ namespace Unbound.Enemy
         
         private void Update()
         {
-            if (_enemy.IsDead)
+            if (_rigidbody == null) return;
+            
+            if (_enemy != null && _enemy.IsDead)
             {
                 _rigidbody.linearVelocity = Vector2.zero;
                 return;
@@ -89,6 +91,16 @@ namespace Unbound.Enemy
         private void HandleIdle()
         {
             _rigidbody.linearVelocity = Vector2.zero;
+            
+            // Check if player is within detection range to start chasing
+            if (_player != null)
+            {
+                float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+                if (distanceToPlayer < detectionRange)
+                {
+                    behavior = AIBehavior.ChasePlayer;
+                }
+            }
         }
         
         private void HandlePatrol()
@@ -100,10 +112,14 @@ namespace Unbound.Enemy
             }
             
             // Check if we should chase player instead
-            if (_player != null && Vector2.Distance(transform.position, _player.position) < detectionRange)
+            if (_player != null)
             {
-                behavior = AIBehavior.ChasePlayer;
-                return;
+                float distanceToPlayer = Vector2.Distance(transform.position, _player.position);
+                if (distanceToPlayer < detectionRange)
+                {
+                    behavior = AIBehavior.ChasePlayer;
+                    return;
+                }
             }
             
             // Wait at patrol point
