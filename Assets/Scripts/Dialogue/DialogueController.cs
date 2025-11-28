@@ -31,6 +31,7 @@ namespace Unbound.Dialogue
         private DialogueState dialogueState;
         private Coroutine currentTextCoroutine;
         private Unbound.Player.PlayerController2D playerController;
+        private Unbound.Player.PlayerCombat playerCombat;
 
         // Event system
         public UnityEvent<DialogueNode> OnNodeStart;
@@ -487,7 +488,7 @@ namespace Unbound.Dialogue
         #region Player Movement Control
 
         /// <summary>
-        /// Freezes the player movement during dialogue
+        /// Freezes the player movement and combat during dialogue
         /// </summary>
         private void FreezePlayerMovement()
         {
@@ -500,16 +501,33 @@ namespace Unbound.Dialogue
             {
                 playerController.SetMovementEnabled(false);
             }
+            
+            // Also freeze combat to prevent sword throwing during dialogue
+            if (playerCombat == null)
+            {
+                playerCombat = FindFirstObjectByType<Unbound.Player.PlayerCombat>();
+            }
+
+            if (playerCombat != null)
+            {
+                playerCombat.SetCombatEnabled(false);
+            }
         }
 
         /// <summary>
-        /// Unfreezes the player movement after dialogue
+        /// Unfreezes the player movement and combat after dialogue
         /// </summary>
         private void UnfreezePlayerMovement()
         {
             if (playerController != null)
             {
                 playerController.SetMovementEnabled(true);
+            }
+            
+            // Also unfreeze combat
+            if (playerCombat != null)
+            {
+                playerCombat.SetCombatEnabled(true);
             }
         }
 

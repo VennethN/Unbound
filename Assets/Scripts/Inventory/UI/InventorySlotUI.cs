@@ -9,7 +9,7 @@ namespace Unbound.Inventory.UI
     /// <summary>
     /// UI component for a single inventory slot
     /// </summary>
-    public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+    public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("UI References")]
         [SerializeField] private Image iconImage;
@@ -41,6 +41,8 @@ namespace Unbound.Inventory.UI
         public System.Action<InventorySlotUI> OnSlotClicked;
         public System.Action<InventorySlotUI> OnSlotSelected;
         public System.Action<InventorySlotUI, InventorySlotUI> OnSlotDropped;
+        public System.Action<InventorySlotUI> OnSlotHoverEnter;
+        public System.Action<InventorySlotUI> OnSlotHoverExit;
         
         private void Awake()
         {
@@ -214,6 +216,20 @@ namespace Unbound.Inventory.UI
         public void OnDrop(PointerEventData eventData)
         {
             // This is handled in OnEndDrag, but we implement IDropHandler for proper event handling
+        }
+        
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            // Only trigger hover if slot has an item and we're not dragging
+            if (!IsEmpty && !_isDragging)
+            {
+                OnSlotHoverEnter?.Invoke(this);
+            }
+        }
+        
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            OnSlotHoverExit?.Invoke(this);
         }
         
         /// <summary>

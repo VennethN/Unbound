@@ -10,9 +10,13 @@ namespace Unbound.Inventory.UI
     /// </summary>
     public class HotbarUI : MonoBehaviour
     {
+        // Singleton instance for easy access
+        public static HotbarUI Instance { get; private set; }
+        
         [Header("UI References")]
         [SerializeField] private Transform slotContainer;
         [SerializeField] private GameObject slotPrefab;
+        [SerializeField] private ItemDescriptionPanel tooltipPanel;
         
         private List<InventorySlotUI> _slotUIs = new List<InventorySlotUI>();
         
@@ -46,6 +50,12 @@ namespace Unbound.Inventory.UI
         
         private void Awake()
         {
+            // Set singleton instance
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            
             InitializeSlots();
         }
         
@@ -90,6 +100,8 @@ namespace Unbound.Inventory.UI
                 slotUI.Initialize(i, i);
                 slotUI.OnSlotClicked += OnSlotClicked;
                 slotUI.OnSlotDropped += OnSlotDropped;
+                slotUI.OnSlotHoverEnter += OnSlotHoverEnter;
+                slotUI.OnSlotHoverExit += OnSlotHoverExit;
                 
                 _slotUIs.Add(slotUI);
             }
@@ -180,11 +192,54 @@ namespace Unbound.Inventory.UI
         }
         
         /// <summary>
+        /// Handles slot hover enter - shows item tooltip
+        /// </summary>
+        private void OnSlotHoverEnter(InventorySlotUI slotUI)
+        {
+            if (slotUI == null || slotUI.IsEmpty || tooltipPanel == null)
+                return;
+            
+            ItemData itemData = ItemDatabase.Instance.GetItem(slotUI.Slot.itemID);
+            if (itemData == null)
+                return;
+            
+            // Show tooltip on hover
+            tooltipPanel.ShowItem(itemData, slotUI);
+        }
+        
+        /// <summary>
+        /// Handles slot hover exit - hides item tooltip
+        /// </summary>
+        private void OnSlotHoverExit(InventorySlotUI slotUI)
+        {
+            if (tooltipPanel != null)
+            {
+                tooltipPanel.Hide();
+            }
+        }
+        
+        /// <summary>
         /// Public method to manually refresh the hotbar UI
         /// </summary>
         public void Refresh()
         {
             RefreshHotbar();
+        }
+        
+        /// <summary>
+        /// Shows or hides the hotbar (called by InventoryUI)
+        /// Deactivates/activates the entire hotbar GameObject
+        /// </summary>
+        public void SetVisible(bool visible)
+        {
+            // Deactivate/activate the entire hotbar GameObject
+            gameObject.SetActive(visible);
+            
+            // Hide tooltip when hiding (before deactivating)
+            if (!visible && tooltipPanel != null)
+            {
+                tooltipPanel.Hide();
+            }
         }
     }
 }

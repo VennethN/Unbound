@@ -65,6 +65,7 @@ namespace Unbound.Player
         private Vector2 _attackStartDirection = Vector2.right; // Direction at start of attack
         private Vector2 _attackTargetPosition = Vector2.zero; // Target position for weapon during attack
         private float _attackRange = 1f; // Attack range for current attack
+        private bool _combatEnabled = true; // Whether combat input is allowed
         
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -186,18 +187,22 @@ namespace Unbound.Player
         
         private void Update()
         {
+            // Only check for attack input if combat is enabled
+            if (_combatEnabled)
+            {
 #if ENABLE_INPUT_SYSTEM
-            if (_attackAction != null && _attackAction.WasPressedThisFrame())
-            {
-                TryAttack();
-            }
+                if (_attackAction != null && _attackAction.WasPressedThisFrame())
+                {
+                    TryAttack();
+                }
 #else
-            // Fallback to old input system
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
-            {
-                TryAttack();
-            }
+                // Fallback to old input system
+                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+                {
+                    TryAttack();
+                }
 #endif
+            }
             
             // Update weapon visual rotation and position with procedural animation
             if (_weaponSpriteRenderer != null && _weaponSpriteRenderer.enabled)
@@ -549,6 +554,22 @@ namespace Unbound.Player
         public bool HasWeaponEquipped()
         {
             return !string.IsNullOrEmpty(GetEquippedWeaponID());
+        }
+        
+        /// <summary>
+        /// Enables or disables combat input
+        /// </summary>
+        public void SetCombatEnabled(bool enabled)
+        {
+            _combatEnabled = enabled;
+        }
+        
+        /// <summary>
+        /// Returns whether combat input is currently enabled
+        /// </summary>
+        public bool IsCombatEnabled()
+        {
+            return _combatEnabled;
         }
         
         /// <summary>

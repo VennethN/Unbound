@@ -34,6 +34,12 @@ namespace Unbound.Inventory.UI
             {
                 HotbarManager.Instance.OnHotbarSlotSelected += OnHotbarSlotSelected;
             }
+            
+            // Hide the hotbar UI when inventory opens
+            if (HotbarUI.Instance != null)
+            {
+                HotbarUI.Instance.SetVisible(false);
+            }
         }
         
         private void OnDisable()
@@ -59,6 +65,12 @@ namespace Unbound.Inventory.UI
             {
                 _selectedSlot.SetSelected(false);
                 _selectedSlot = null;
+            }
+            
+            // Show the hotbar UI when inventory closes
+            if (HotbarUI.Instance != null)
+            {
+                HotbarUI.Instance.SetVisible(true);
             }
         }
         
@@ -131,6 +143,8 @@ namespace Unbound.Inventory.UI
                 slotUI.OnSlotClicked += OnSlotClicked;
                 slotUI.OnSlotSelected += OnSlotSelected;
                 slotUI.OnSlotDropped += OnSlotDropped;
+                slotUI.OnSlotHoverEnter += OnSlotHoverEnter;
+                slotUI.OnSlotHoverExit += OnSlotHoverExit;
                 
                 _slotUIs.Add(slotUI);
             }
@@ -231,6 +245,45 @@ namespace Unbound.Inventory.UI
         {
             // This is called on click, but we handle everything in OnSlotClicked
             // Keeping for compatibility but selection is handled there
+        }
+        
+        /// <summary>
+        /// Handles slot hover enter - shows item tooltip
+        /// </summary>
+        private void OnSlotHoverEnter(InventorySlotUI slotUI)
+        {
+            if (slotUI == null || slotUI.IsEmpty)
+                return;
+            
+            // Don't show hover tooltip if an item is already selected (clicked)
+            if (_selectedSlot != null && descriptionPanel != null && descriptionPanel.IsVisible)
+                return;
+            
+            ItemData itemData = ItemDatabase.Instance.GetItem(slotUI.Slot.itemID);
+            if (itemData == null)
+                return;
+            
+            // Show description panel as tooltip on hover
+            if (descriptionPanel != null)
+            {
+                descriptionPanel.ShowItem(itemData, slotUI);
+            }
+        }
+        
+        /// <summary>
+        /// Handles slot hover exit - hides item tooltip
+        /// </summary>
+        private void OnSlotHoverExit(InventorySlotUI slotUI)
+        {
+            // Don't hide if the slot is selected (clicked)
+            if (_selectedSlot != null && descriptionPanel != null && descriptionPanel.IsVisible)
+                return;
+            
+            // Hide the description panel
+            if (descriptionPanel != null)
+            {
+                descriptionPanel.Hide();
+            }
         }
         
         /// <summary>

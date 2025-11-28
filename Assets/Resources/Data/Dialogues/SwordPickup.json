@@ -1,0 +1,63 @@
+{
+  "dialogueID": "sword_pickup",
+  "displayName": "NoCloak",
+  "startNodeID": "pickup",
+  "startNodeConditions": [
+    {
+      "nodeID": "already_have",
+      "flagEvaluationLogic": 0,
+      "flagRequirements": [
+        {
+          "flagName": "picked_cave_wooden_sword",
+          "requiredValue": true
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeID": "pickup",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Whoa, a wooden sword!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 2,
+          "itemID": "wooden_sword",
+          "itemQuantity": 1
+        },
+        {
+          "effectType": 1,
+          "flagName": "picked_cave_wooden_sword",
+          "flagValue": true
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 99.7
+    },
+    {
+      "nodeID": "already_have",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "You already have this sword.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 99.7
+    }
+  ],
+  "localizationTable": "Dialogue"
+}

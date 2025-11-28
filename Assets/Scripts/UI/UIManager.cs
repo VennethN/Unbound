@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unbound.Player;
 
 namespace Unbound.UI
 {
@@ -34,6 +35,9 @@ namespace Unbound.UI
             [Tooltip("Should we apply color feedback to the button?")]
             public bool useColorFeedback = false;
             
+            [Tooltip("GameObjects to hide when this panel is shown")]
+            public List<GameObject> hideOnShow = new List<GameObject>();
+            
             [HideInInspector]
             public bool isActive = false;
         }
@@ -54,8 +58,17 @@ namespace Unbound.UI
         
         [SerializeField] private AudioClip buttonClickSound;
         
+        [Header("Player Input Control")]
+        [Tooltip("Disable player movement when any panel is open")]
+        [SerializeField] private bool disablePlayerMovementOnPanelOpen = true;
+        
+        [Tooltip("Disable player combat when any panel is open")]
+        [SerializeField] private bool disablePlayerCombatOnPanelOpen = true;
+        
         private AudioSource audioSource;
         private Dictionary<Button, UIButtonPanelPair> buttonLookup;
+        private PlayerController2D playerController;
+        private PlayerCombat playerCombat;
         
         private void Awake()
         {
@@ -66,6 +79,10 @@ namespace Unbound.UI
         
         private void Start()
         {
+            // Cache player references
+            playerController = FindFirstObjectByType<PlayerController2D>();
+            playerCombat = FindFirstObjectByType<PlayerCombat>();
+            
             if (startAllInactive)
             {
                 DeactivateAllPanels();
@@ -78,6 +95,9 @@ namespace Unbound.UI
                     pair.isActive = pair.panel != null && pair.panel.activeSelf;
                     UpdateButtonVisuals(pair);
                 }
+                
+                // Check if any panels are initially active and update player input state
+                UpdatePlayerInputState();
             }
         }
         
@@ -184,6 +204,18 @@ namespace Unbound.UI
             {
                 // Fallback to simple SetActive if no UIPanel component
                 pair.panel.SetActive(active);
+            }
+            
+            // Handle hideOnShow objects - hide them when this panel is shown, show them when hidden
+            if (pair.hideOnShow != null)
+            {
+                foreach (var obj in pair.hideOnShow)
+                {
+                    if (obj != null)
+                    {
+                        obj.SetActive(!active);
+                    }
+                }
             }
             
             UpdateButtonVisuals(pair);
@@ -371,8 +403,48 @@ namespace Unbound.UI
         /// </summary>
         protected virtual void OnPanelStateChanged(GameObject panel, bool isActive)
         {
-            // Override in derived classes for custom behavior
-            // Example: trigger animations, save state, etc.
+            // Update player input state when any panel changes
+            UpdatePlayerInputState();
+        }
+        
+        #endregion
+        
+        #region Player Input Control
+        
+        /// <summary>
+        /// Updates player movement and combat based on whether any panels are open
+        /// </summary>
+        private void UpdatePlayerInputState()
+        {
+            bool anyPanelActive = GetActivePanels().Count > 0;
+            
+            // Disable/enable player movement
+            if (disablePlayerMovementOnPanelOpen)
+            {
+                if (playerController == null)
+                {
+                    playerController = FindFirstObjectByType<PlayerController2D>();
+                }
+                
+                if (playerController != null)
+                {
+                    playerController.SetMovementEnabled(!anyPanelActive);
+                }
+            }
+            
+            // Disable/enable player combat
+            if (disablePlayerCombatOnPanelOpen)
+            {
+                if (playerCombat == null)
+                {
+                    playerCombat = FindFirstObjectByType<PlayerCombat>();
+                }
+                
+                if (playerCombat != null)
+                {
+                    playerCombat.SetCombatEnabled(!anyPanelActive);
+                }
+            }
         }
         
         #endregion
