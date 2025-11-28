@@ -109,6 +109,34 @@ public class SaveManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Captures current inventory state from InventoryManager to save data
+    /// </summary>
+    private void CapturePlayerInventoryState(SaveData data)
+    {
+        if (data == null || data.playerData == null)
+            return;
+
+        // Find SaveablePlayer or use fallback method
+        SaveablePlayer player = FindFirstObjectByType<SaveablePlayer>();
+        if (player != null)
+        {
+            player.CaptureInventoryState(data.playerData);
+        }
+        else
+        {
+            // Fallback: directly capture inventory if no SaveablePlayer found
+            if (InventoryManager.Instance != null)
+            {
+                // Capture inventory slots
+                data.playerData.inventorySlots = InventoryManager.Instance.GetAllSlots();
+                
+                // Capture equipped items
+                data.playerData.equippedItems.FromEquippedItems(InventoryManager.Instance.EquippedItems);
+            }
+        }
+    }
+
+    /// <summary>
     /// Restores inventory state from save data to InventoryManager
     /// </summary>
     private void RestorePlayerInventory()
@@ -234,6 +262,9 @@ public class SaveManager : MonoBehaviour
             data.saveFileName = fileName;
             data.gameStateData.saveCount++;
             
+            // Capture current inventory state before saving
+            CapturePlayerInventoryState(data);
+            
             // Sync dictionaries to serializable versions before saving
             SyncDictionariesToSerializable(data);
             
@@ -275,6 +306,9 @@ public class SaveManager : MonoBehaviour
             data.UpdateSaveTime();
             data.saveFileName = fileName;
             data.gameStateData.saveCount++;
+            
+            // Capture current inventory state before saving
+            CapturePlayerInventoryState(data);
             
             // Sync dictionaries to serializable versions before saving
             SyncDictionariesToSerializable(data);

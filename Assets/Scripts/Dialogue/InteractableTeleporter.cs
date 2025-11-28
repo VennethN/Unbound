@@ -20,6 +20,8 @@ namespace Unbound.Dialogue
         [SerializeField] private bool manualDestinationIsRelative = false;
         [SerializeField] private bool resetPlayerVelocity = true;
         [SerializeField] private bool useFadeTransition = false;
+        [Tooltip("If true, day/night lighting effect will be enabled after teleporting. If false, it will be disabled.")]
+        [SerializeField] private bool enableDayNightLighting = true;
 
         [Header("Global Flag Requirement")]
         [SerializeField] private bool requireGlobalFlag = false;
@@ -153,6 +155,25 @@ namespace Unbound.Dialogue
             else
             {
                 playerTransform.position = destination;
+            }
+
+            // Apply day/night lighting setting
+            ApplyDayNightLightingSetting();
+        }
+
+        private void ApplyDayNightLightingSetting()
+        {
+            DayNightManager dayNightManager = DayNightManager.Instance;
+            if (dayNightManager != null)
+            {
+                if (enableDayNightLighting)
+                {
+                    dayNightManager.ResumeCycle();
+                }
+                else
+                {
+                    dayNightManager.PauseCycle();
+                }
             }
         }
 

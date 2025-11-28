@@ -23,6 +23,9 @@ public class DayNightManager : MonoBehaviour
     }
 
     [Header("Day/Night Cycle Settings")]
+    [Tooltip("If true, day/night cycle will be enabled on start. If false, it will be paused.")]
+    [SerializeField] private bool startEnabled = true;
+    
     [Tooltip("Duration of a full day/night cycle in seconds (real time)")]
     [SerializeField] private float cycleDuration = 120f; // 2 minutes for a full cycle
     
@@ -63,6 +66,9 @@ public class DayNightManager : MonoBehaviour
         
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        
+        // Set initial enabled state
+        enabled = startEnabled;
         
         // Find Global Light 2D if not assigned
         if (globalLight2D == null)
