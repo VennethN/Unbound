@@ -51,6 +51,25 @@ namespace Unbound.Inventory
             LoadItems();
         }
         
+        private void Start()
+        {
+            // Ensure all sprite registries have registered their sprites
+            // This handles cases where ItemSpriteRegistry components initialize after ItemDatabase
+            RefreshSpriteRegistries();
+        }
+        
+        /// <summary>
+        /// Refreshes sprites from all ItemSpriteRegistry components in the scene
+        /// </summary>
+        public void RefreshSpriteRegistries()
+        {
+            ItemSpriteRegistry[] registries = FindObjectsByType<ItemSpriteRegistry>(FindObjectsSortMode.None);
+            foreach (ItemSpriteRegistry registry in registries)
+            {
+                registry.RegisterSprites();
+            }
+        }
+        
         /// <summary>
         /// Loads all items from JSON files in the Resources folder
         /// </summary>
@@ -156,18 +175,37 @@ namespace Unbound.Inventory
         
         /// <summary>
         /// Gets a sprite by sprite ID from the registry
+        /// If not found, checks ItemSpriteRegistry components in the scene as fallback
         /// </summary>
         public Sprite GetSprite(string spriteID)
         {
             if (string.IsNullOrEmpty(spriteID))
                 return null;
             
-            _spriteRegistry.TryGetValue(spriteID, out Sprite sprite);
-            return sprite;
+            // Check internal registry first
+            if (_spriteRegistry.TryGetValue(spriteID, out Sprite sprite))
+                return sprite;
+            
+            // Fallback: Check ItemSpriteRegistry components in scene
+            // This handles initialization order issues where registries haven't registered yet
+            ItemSpriteRegistry[] registries = FindObjectsByType<ItemSpriteRegistry>(FindObjectsSortMode.None);
+            foreach (ItemSpriteRegistry registry in registries)
+            {
+                Sprite foundSprite = registry.GetSprite(spriteID);
+                if (foundSprite != null)
+                {
+                    // Register it in our internal registry for future lookups
+                    RegisterSprite(spriteID, foundSprite);
+                    return foundSprite;
+                }
+            }
+            
+            return null;
         }
         
         /// <summary>
         /// Gets a sprite for an item (checks spriteID first, then iconPath from Resources)
+        /// If spriteID is not registered, tries to load from Resources using spriteID as path
         /// </summary>
         public Sprite GetItemSprite(string itemID)
         {
@@ -184,6 +222,22 @@ namespace Unbound.Inventory
                 Sprite sprite = GetSprite(itemData.spriteID);
                 if (sprite != null)
                     return sprite;
+                
+                // If spriteID not registered, try loading from Resources using spriteID as path
+                // Try common paths: Items/{spriteID}, Sprites/{spriteID}, Icons/{spriteID}
+                string[] possiblePaths = {
+                    $"Items/{itemData.spriteID}",
+                    $"Sprites/{itemData.spriteID}",
+                    $"Icons/{itemData.spriteID}",
+                    itemData.spriteID
+                };
+                
+                foreach (string path in possiblePaths)
+                {
+                    sprite = ItemIconLoader.LoadIcon(path);
+                    if (sprite != null)
+                        return sprite;
+                }
             }
             
             // Fall back to iconPath (Resources)
