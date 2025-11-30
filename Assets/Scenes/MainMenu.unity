@@ -874,7 +874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveFileReset
   resetOnStart: 0
-  saveAfterReset: 1
+  saveAfterReset: 0
   saveFileName: 
   deleteAllSaves: 0
 --- !u!114 &892739148

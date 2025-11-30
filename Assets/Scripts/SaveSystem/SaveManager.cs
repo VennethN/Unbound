@@ -154,22 +154,28 @@ public class SaveManager : MonoBehaviour
         else
         {
             // Fallback: directly restore inventory if no SaveablePlayer found
-            if (InventoryManager.Instance != null && currentSaveData.playerData.inventorySlots != null)
+            if (InventoryManager.Instance != null)
             {
+                // Always clear inventory first to ensure clean state
                 InventoryManager.Instance.ClearInventory();
-                foreach (var slot in currentSaveData.playerData.inventorySlots)
+                
+                // Clear all equipped items first
+                InventoryManager.Instance.EquippedItems.ClearAll();
+                
+                // Restore inventory slots (if any)
+                if (currentSaveData.playerData.inventorySlots != null)
                 {
-                    if (slot != null && !slot.IsEmpty)
+                    foreach (var slot in currentSaveData.playerData.inventorySlots)
                     {
-                        InventoryManager.Instance.AddItem(slot.itemID, slot.quantity);
+                        if (slot != null && !slot.IsEmpty)
+                        {
+                            InventoryManager.Instance.AddItem(slot.itemID, slot.quantity);
+                        }
                     }
                 }
 
-                // Restore equipped items
-                if (currentSaveData.playerData.equippedItems != null)
-                {
-                    currentSaveData.playerData.equippedItems.ToEquippedItems(InventoryManager.Instance.EquippedItems);
-                }
+                // NOTE: Equipped items are NOT auto-restored on save reload
+                // Players must manually equip items after loading
 
                 Debug.Log("Restored inventory state directly from save data");
             }
@@ -697,7 +703,7 @@ public class SaveManager : MonoBehaviour
     /// <summary>
     /// Deletes a save file
     /// </summary>
-    public bool DeleteSave(string fileName = null, SerializationFormat format = SerializationFormat.JSON)
+    public bool DeleteSave(string fileName = null, SerializationFormat format = SerializationFormat.JSON, bool clearCurrentSaveIfMatch = true)
     {
         try
         {
@@ -708,6 +714,14 @@ public class SaveManager : MonoBehaviour
             {
                 File.Delete(filePath);
                 Debug.Log($"Save file deleted: {filePath}");
+                
+                // Clear current save data if it matches the deleted file
+                if (clearCurrentSaveIfMatch && currentSaveData != null && currentSaveData.saveFileName == fileName)
+                {
+                    currentSaveData = null;
+                    Debug.Log("Current save data cleared after deletion.");
+                }
+                
                 return true;
             }
             else

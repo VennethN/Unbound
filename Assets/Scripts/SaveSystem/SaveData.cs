@@ -160,11 +160,29 @@ public class EquippedItemsData
     {
         if (equippedItems == null) return;
         
-        equippedItems.Equip(EquipmentType.Weapon, string.IsNullOrEmpty(weaponItemID) ? null : weaponItemID);
-        equippedItems.Equip(EquipmentType.Artifact, string.IsNullOrEmpty(artifactItemID) ? null : artifactItemID);
-        equippedItems.Equip(EquipmentType.Shoes, string.IsNullOrEmpty(shoesItemID) ? null : shoesItemID);
-        equippedItems.Equip(EquipmentType.Headwear, string.IsNullOrEmpty(headwearItemID) ? null : headwearItemID);
-        equippedItems.Equip(EquipmentType.Chestplate, string.IsNullOrEmpty(chestplateItemID) ? null : chestplateItemID);
+        // Use InventoryManager to properly validate and equip items (checks if item exists in inventory)
+        if (InventoryManager.Instance != null)
+        {
+            if (!string.IsNullOrEmpty(weaponItemID))
+                InventoryManager.Instance.EquipItem(weaponItemID, EquipmentType.Weapon);
+            if (!string.IsNullOrEmpty(artifactItemID))
+                InventoryManager.Instance.EquipItem(artifactItemID, EquipmentType.Artifact);
+            if (!string.IsNullOrEmpty(shoesItemID))
+                InventoryManager.Instance.EquipItem(shoesItemID, EquipmentType.Shoes);
+            if (!string.IsNullOrEmpty(headwearItemID))
+                InventoryManager.Instance.EquipItem(headwearItemID, EquipmentType.Headwear);
+            if (!string.IsNullOrEmpty(chestplateItemID))
+                InventoryManager.Instance.EquipItem(chestplateItemID, EquipmentType.Chestplate);
+        }
+        else
+        {
+            // Fallback: direct equip if InventoryManager not available (shouldn't happen during normal restore)
+            equippedItems.Equip(EquipmentType.Weapon, string.IsNullOrEmpty(weaponItemID) ? null : weaponItemID);
+            equippedItems.Equip(EquipmentType.Artifact, string.IsNullOrEmpty(artifactItemID) ? null : artifactItemID);
+            equippedItems.Equip(EquipmentType.Shoes, string.IsNullOrEmpty(shoesItemID) ? null : shoesItemID);
+            equippedItems.Equip(EquipmentType.Headwear, string.IsNullOrEmpty(headwearItemID) ? null : headwearItemID);
+            equippedItems.Equip(EquipmentType.Chestplate, string.IsNullOrEmpty(chestplateItemID) ? null : chestplateItemID);
+        }
     }
 }
 

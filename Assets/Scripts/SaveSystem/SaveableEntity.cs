@@ -227,10 +227,15 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
     {
         if (InventoryManager.Instance == null) return;
         
+        // Always clear inventory first to ensure clean state
+        InventoryManager.Instance.ClearInventory();
+        
+        // Clear all equipped items first
+        InventoryManager.Instance.EquippedItems.ClearAll();
+        
         // Restore inventory slots
         if (playerData.inventorySlots != null && playerData.inventorySlots.Count > 0)
         {
-            InventoryManager.Instance.ClearInventory();
             foreach (var slot in playerData.inventorySlots)
             {
                 if (!slot.IsEmpty)
@@ -240,11 +245,8 @@ public class SaveablePlayer : MonoBehaviour, ISaveable<SaveablePlayerData>
             }
         }
         
-        // Restore equipped items
-        if (playerData.equippedItems != null)
-        {
-            playerData.equippedItems.ToEquippedItems(InventoryManager.Instance.EquippedItems);
-        }
+        // NOTE: Equipped items are NOT auto-restored on save reload
+        // Players must manually equip items after loading
     }
 }
 

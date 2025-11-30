@@ -62,7 +62,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Inventory.ItemSpriteRegistry
   spriteMappings:
   - spriteID: wooden_sword
-    sprite: {fileID: -3753825769889500098, guid: baa4756685ecffa4db0a679da63c5a86, type: 3}
+    sprite: {fileID: -3753825769889500098, guid: d10be8ecf04734922a989cc4709e2b79, type: 3}
 --- !u!114 &4233408555921227103
 MonoBehaviour:
   m_ObjectHideFlags: 0

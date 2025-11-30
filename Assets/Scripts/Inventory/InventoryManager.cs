@@ -13,8 +13,8 @@ namespace Unbound.Inventory
         private static InventoryManager _instance;
         
         [Header("Inventory Settings")]
-        [SerializeField] private int inventoryWidth = 6;
-        [SerializeField] private int inventoryHeight = 8;
+        [SerializeField] private int inventoryWidth = 9;
+        [SerializeField] private int inventoryHeight = 3;
         
         private List<InventorySlot> _inventory = new List<InventorySlot>();
         private EquippedItems _equippedItems = new EquippedItems();
