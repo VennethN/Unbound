@@ -7,7 +7,7 @@
     {
       "nodeID": "start",
       "speakerID": "Rafa",
-      "dialogueTextKey": "Alright, it's time to head out!",
+      "dialogueTextKey": "Ahh, what a lovely day! The perfect day to celebrate my 18th birthday!",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
@@ -23,7 +23,7 @@
     {
       "nodeID": "1",
       "speakerID": "Rafa",
-      "dialogueTextKey": "I should probably go to the beach first.",
+      "dialogueTextKey": "I should get my bag and journal first, then head out to hang out with Mong.",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
@@ -39,11 +39,27 @@
     {
       "nodeID": "2",
       "speakerID": "Rafa",
-      "dialogueTextKey": "A relaxing morning walk is always necessary!",
+      "dialogueTextKey": "He's always chasing after squirrels... I hope he doesn't run off again.",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
       "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "3",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+    {
+      "nodeID": "3",
+      "speakerID": "",
+      "dialogueTextKey": "Use [WASD] to move around and [E] to interact with objects!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "",

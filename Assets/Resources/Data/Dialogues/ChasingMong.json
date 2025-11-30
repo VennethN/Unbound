@@ -1,0 +1,75 @@
+{
+  "dialogueID": "mong",
+  "displayName": "Chasing Mong",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Hey, Mong! Where are you going?!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_talk",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "1",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "1",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Ahh... It's probably another squirrel...",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "2",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "2",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "He headed South to the beach. I should chase after him before he gets lost!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "3",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+    {
+      "nodeID": "3",
+      "speakerID": "",
+      "dialogueTextKey": "Hold down [shift] to sprint!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+
+
