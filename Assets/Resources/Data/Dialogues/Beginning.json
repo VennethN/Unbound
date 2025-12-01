@@ -51,11 +51,11 @@
       "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
-    }
+    },
     {
       "nodeID": "3",
       "speakerID": "",
-      "dialogueTextKey": "Use [WASD] to move around and [E] to interact with objects!",
+      "dialogueTextKey": "Use (WASD) to move around and (E) to interact with objects!",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",

@@ -51,11 +51,11 @@
       "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
-    }
+    },
     {
       "nodeID": "3",
       "speakerID": "",
-      "dialogueTextKey": "Hold down [shift] to sprint!",
+      "dialogueTextKey": "Hold down (shift) to sprint!",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",

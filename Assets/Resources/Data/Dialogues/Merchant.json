@@ -11,7 +11,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "Data/Gifs/mc_idle",
+      "portraitGifPath": "Data/Gifs/Merchant_talk",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "1",
@@ -43,7 +43,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "Data/Gifs/mc_idle",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "3",
@@ -51,7 +51,7 @@
       "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
-    }
+    },
     {
       "nodeID": "3",
       "speakerID": "Merchant",
@@ -59,7 +59,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "4",
@@ -67,7 +67,7 @@
       "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
-    }
+    },
     {
       "nodeID": "4",
       "speakerID": "Rafa",
@@ -75,7 +75,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "5",
@@ -83,7 +83,7 @@
       "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
-    }
+    },
     {
       "nodeID": "5",
       "speakerID": "Merchant",
@@ -91,7 +91,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "6",
@@ -99,7 +99,7 @@
       "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
-    }
+    },
     {
       "nodeID": "6",
       "speakerID": "Merchant",
@@ -107,7 +107,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "7",
@@ -115,7 +115,7 @@
       "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
-    }
+    },
     {
       "nodeID": "7",
       "speakerID": "Rafa",
@@ -123,7 +123,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "",
