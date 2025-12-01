@@ -55,6 +55,7 @@ public class DayNightManager : MonoBehaviour
     [Header("Runtime Info (Read-Only)")]
     [SerializeField] private bool isDayTime;
     [SerializeField] private float currentCycleProgress;
+    [SerializeField] private bool isCycleEnabled = true;
     
     private void Awake()
     {
@@ -67,8 +68,8 @@ public class DayNightManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
         
-        // Set initial enabled state
-        enabled = startEnabled;
+        // Set initial cycle enabled state (time always advances, this controls lighting effects)
+        isCycleEnabled = startEnabled;
         
         // Find Global Light 2D if not assigned
         if (globalLight2D == null)
@@ -83,7 +84,16 @@ public class DayNightManager : MonoBehaviour
     
     private void Start()
     {
-        UpdateLighting();
+        if (isCycleEnabled)
+        {
+            UpdateLighting();
+        }
+        else if (globalLight2D != null)
+        {
+            // Reset to full daylight if cycle is disabled on start
+            globalLight2D.color = dayColor;
+            globalLight2D.intensity = dayIntensity;
+        }
     }
     
     private void Update()
@@ -97,7 +107,11 @@ public class DayNightManager : MonoBehaviour
             timeOfDay -= 1f;
         }
         
-        UpdateLighting();
+        // Only apply lighting effects if cycle is enabled
+        if (isCycleEnabled)
+        {
+            UpdateLighting();
+        }
     }
     
     /// <summary>
@@ -201,7 +215,7 @@ public class DayNightManager : MonoBehaviour
     }
     
     /// <summary>
-    /// Pauses the day/night cycle
+    /// Pauses the day/night cycle (freezes at current lighting)
     /// </summary>
     public void PauseCycle()
     {
@@ -214,6 +228,41 @@ public class DayNightManager : MonoBehaviour
     public void ResumeCycle()
     {
         enabled = true;
+    }
+    
+    /// <summary>
+    /// Disables the day/night lighting effects and resets to full daylight.
+    /// Time continues to advance, but lighting stays fixed.
+    /// Use this for indoor areas or areas that should not have day/night effects.
+    /// </summary>
+    public void DisableCycle()
+    {
+        isCycleEnabled = false;
+        
+        // Reset lighting to full daylight
+        if (globalLight2D != null)
+        {
+            globalLight2D.color = dayColor;
+            globalLight2D.intensity = dayIntensity;
+        }
+    }
+    
+    /// <summary>
+    /// Enables the day/night lighting effects.
+    /// Lighting will immediately update to match current time of day.
+    /// </summary>
+    public void EnableCycle()
+    {
+        isCycleEnabled = true;
+        UpdateLighting();
+    }
+    
+    /// <summary>
+    /// Returns whether the day/night cycle is currently enabled.
+    /// </summary>
+    public bool IsCycleEnabled()
+    {
+        return isCycleEnabled;
     }
 }
 

@@ -171,11 +171,11 @@ namespace Unbound.Dialogue
             {
                 if (enableDayNightLighting)
                 {
-                    dayNightManager.ResumeCycle();
+                    dayNightManager.EnableCycle();
                 }
                 else
                 {
-                    dayNightManager.PauseCycle();
+                    dayNightManager.DisableCycle();
                 }
             }
         }
