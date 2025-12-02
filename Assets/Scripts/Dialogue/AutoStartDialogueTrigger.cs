@@ -11,6 +11,12 @@ namespace Unbound.Dialogue
     {
         [Header("Dialogue Settings")]
         [SerializeField] private string dialogueID;
+        public UnityEvent onConditionsMet;   // <-- NEW PUBLIC EVENT
+
+        private bool hasInvokedConditionsEvent = false;
+
+        [Header("Custom Condition")]
+        public string requiredFlag;   // <-- NEW: Input your condition as a string
 
         // Runtime state
         private DialogueController dialogueController;
@@ -73,7 +79,31 @@ namespace Unbound.Dialogue
                 return false;
             }
 
+
+            // NEW: Additional custom string-based condition
+            if (!string.IsNullOrEmpty(requiredFlag))
+            {
+                if (!saveManager.GetGlobalFlag(requiredFlag))
+                {
+                    cachedCanTrigger = false;
+                    return false;
+                }
+            }
+
+
             cachedCanTrigger = data.HasValidStartNode(dialogueController);
+
+            // 🔥 Fire event ONCE when conditions become valid
+            if (cachedCanTrigger && !hasInvokedConditionsEvent)
+            {
+                hasInvokedConditionsEvent = true;
+                onConditionsMet?.Invoke();
+            }
+
+            // Reset when conditions fail again
+            if (!cachedCanTrigger)
+            hasInvokedConditionsEvent = false;
+
             return cachedCanTrigger;
         }
 
