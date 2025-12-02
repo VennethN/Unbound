@@ -6,6 +6,7 @@
   "spriteID": "cloak",
   "iconPath": "Data/Sprites/cloak_item",
   "equipmentType": 4,
+  "equipAnimatorPath": "Data/Animators/player_cloak",
   "stats": {
     "maxHealth": 0,
     "healthRegen": 0,
