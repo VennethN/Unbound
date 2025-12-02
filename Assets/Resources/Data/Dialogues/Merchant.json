@@ -112,7 +112,18 @@
       "choices": [],
       "nextNodeID": "7",
       "conditions": [],
-      "effects": [],
+      "effects": [
+        {
+          "effectType": 2,
+          "itemID": "cloak",
+          "itemQuantity": 1
+        },
+        {
+          "effectType": 1,
+          "flagName": "cloak_obtained",
+          "flagValue": true
+        }
+      ],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
     },

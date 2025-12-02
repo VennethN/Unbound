@@ -1,0 +1,19 @@
+{
+  "itemID": "cloak",
+  "name": "Cloak",
+  "description": "An old cloak gifted to you from the wandering merchant. Can be used to disguise yourself.",
+  "itemType": 0,
+  "spriteID": "cloak",
+  "iconPath": "Data/Sprites/cloak_item",
+  "equipmentType": 4,
+  "stats": {
+    "maxHealth": 0,
+    "healthRegen": 0,
+    "attackDamage": 0,
+    "moveSpeed": 0,
+    "attackSpeed": 0,
+    "attackRange": 0,
+    "globalFlags": ["cloak"]
+  },
+  "maxStackSize": 1
+}
