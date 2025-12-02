@@ -1,0 +1,150 @@
+{
+  "dialogueID": "merchant1",
+  "displayName": "Merchant",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Merchant",
+      "dialogueTextKey": "Hey, Rafa! It's been a while",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_talk",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "1",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "1",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Oh, hi there! I wasn't expecting to see you here at this hour.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "2",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "2",
+      "speakerID": "Merchant",
+      "dialogueTextKey": "Just strolling around as usual. I guess I got here early.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "3",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "3",
+      "speakerID": "Merchant",
+      "dialogueTextKey": "Then, what brings you to the beach on this sunny day?",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "4",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "4",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "I was planning to go on a birthday walk with Mong! Of course, until he ran out here... Well, a little bit of off-road adventure isn't so bad.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "5",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "5",
+      "speakerID": "Merchant",
+      "dialogueTextKey": "How lovely. Unfortunately I've not any gifts, neither for sale or for gifting. But I do have this.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "6",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "6",
+      "speakerID": "Merchant",
+      "dialogueTextKey": "It's just a plain dark cloak. I have no need for such things. It only weighs me down. Perhaps a smart youngin like you could find some use of it.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "7",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 2,
+          "itemID": "cloak",
+          "itemQuantity": 1
+        },
+        {
+          "effectType": 1,
+          "flagName": "cloak_obtained",
+          "flagValue": true
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "7",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Thanks! I'll keep it in my stash. Maybe it'll prove useful someday.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+
+

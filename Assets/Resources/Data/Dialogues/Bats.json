@@ -1,0 +1,58 @@
+{
+  "dialogueID": "bats",
+  "displayName": "Bats",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Damn, what the hell were those bats?",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "2",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "2",
+      "speakerID": "Nimfa",
+      "dialogueTextKey": "Hey! Language!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "3",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "3",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Wha- I'm literally 18! Whatever, let's keep going.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_talk",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+

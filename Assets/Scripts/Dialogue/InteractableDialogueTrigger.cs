@@ -12,6 +12,8 @@ namespace Unbound.Dialogue
         [Header("Dialogue Settings")]
         [SerializeField] private string dialogueID;
 
+        [Header("Custom Condition")]
+        public string requiredFlag; 
         // Runtime state
         private DialogueController dialogueController;
         private SaveManager saveManager;
@@ -82,6 +84,16 @@ namespace Unbound.Dialogue
                 cachedCanTrigger = false;
                 return false;
             }
+            // NEW: Additional custom string-based condition
+            if (!string.IsNullOrEmpty(requiredFlag))
+            {
+                if (!saveManager.GetGlobalFlag(requiredFlag))
+                {
+                    cachedCanTrigger = false;
+                    return false;
+                }
+            }
+            
             cachedCanTrigger = dialogueData.HasValidStartNode(dialogueController);
             return cachedCanTrigger;
         }

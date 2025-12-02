@@ -1,7 +1,7 @@
 {
   "itemID": "wooden_sword",
   "name": "Wooden Sword",
-  "description": "a trusty wooden sword",
+  "description": "An old worn down wooden sword. I wonder who could have left this?",
   "itemType": 0,
   "spriteID": "wooden_sword",
   "iconPath": "Data/Sprites/wooden_sword",

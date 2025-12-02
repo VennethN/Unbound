@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unbound.UI;
+using Unbound.Player;
 
 namespace Unbound.Enemy
 {
@@ -13,6 +14,14 @@ namespace Unbound.Enemy
         [SerializeField] private float maxHealth = 50f;
         [SerializeField] private float currentHealth;
         
+        [Header("Experience Drop")]
+        [Tooltip("Amount of experience the player gains when this enemy dies")]
+        [SerializeField] private int experienceDrop = 10;
+        [Tooltip("If true, will grant experience to the player on death")]
+        [SerializeField] private bool grantExperienceOnDeath = true;
+        [Tooltip("If true, shows floating text at enemy position when exp is dropped")]
+        [SerializeField] private bool showExpFloatingText = true;
+        
         [Header("Death")]
         [SerializeField] private bool destroyOnDeath = true;
         [SerializeField] private float destroyDelay = 0f;
@@ -25,6 +34,11 @@ namespace Unbound.Enemy
         public float MaxHealth => maxHealth;
         public float CurrentHealth => currentHealth;
         public bool IsDead => currentHealth <= 0f;
+        
+        /// <summary>
+        /// Experience points dropped when this enemy is killed
+        /// </summary>
+        public int ExperienceDrop => experienceDrop;
         
         public System.Action<Enemy> OnDeath;
         public System.Action<Enemy, float> OnDamageTaken;
@@ -117,6 +131,9 @@ namespace Unbound.Enemy
         {
             OnDeath?.Invoke(this);
             
+            // Grant experience to player
+            GrantExperience();
+            
             // Spawn death effect if assigned
             if (deathEffectPrefab != null)
             {
@@ -140,6 +157,55 @@ namespace Unbound.Enemy
                 // Just disable the enemy
                 gameObject.SetActive(false);
             }
+        }
+        
+        /// <summary>
+        /// Grants experience to the player when this enemy is killed
+        /// </summary>
+        private void GrantExperience()
+        {
+            if (!grantExperienceOnDeath || experienceDrop <= 0) return;
+            
+            var levelingSystem = LevelingSystem.Instance;
+            if (levelingSystem != null)
+            {
+                // Show floating text at enemy position
+                if (showExpFloatingText)
+                {
+                    var notificationManager = ExpNotificationManager.Instance;
+                    if (notificationManager != null)
+                    {
+                        // Tell the notification manager to skip the auto-notification since we're showing our own
+                        notificationManager.SkipNextExpNotification();
+                        
+                        notificationManager.SpawnFloatingTextAt(
+                            transform.position + Vector3.up * 0.5f,
+                            $"+{experienceDrop} EXP",
+                            new Color(0.4f, 0.9f, 1f, 1f),
+                            0.5f
+                        );
+                    }
+                }
+                
+                levelingSystem.AddExperience(experienceDrop);
+                Debug.Log($"{gameObject.name} dropped {experienceDrop} EXP");
+            }
+        }
+        
+        /// <summary>
+        /// Sets the experience drop amount
+        /// </summary>
+        public void SetExperienceDrop(int amount)
+        {
+            experienceDrop = Mathf.Max(0, amount);
+        }
+        
+        /// <summary>
+        /// Enables or disables experience drop on death
+        /// </summary>
+        public void SetGrantExperienceOnDeath(bool grant)
+        {
+            grantExperienceOnDeath = grant;
         }
         
         private void OnDrawGizmosSelected()

@@ -36,6 +36,32 @@ namespace Unbound.Inventory
         [Tooltip("Stats provided by this equipment (only for Equipment items)")]
         public ItemStats stats;
         
+        [Tooltip("Path to animator controller (relative to Resources folder) for JSON items. Leave empty to keep default animator.")]
+        public string equipAnimatorPath;
+        
+        // Runtime-loaded animator controller (loaded from equipAnimatorPath)
+        [NonSerialized]
+        private RuntimeAnimatorController _loadedAnimatorController;
+        
+        /// <summary>
+        /// Gets the animator controller for this equipment (loads from path if needed)
+        /// </summary>
+        public RuntimeAnimatorController GetEquipAnimatorController()
+        {
+            if (_loadedAnimatorController != null)
+                return _loadedAnimatorController;
+            
+            if (string.IsNullOrEmpty(equipAnimatorPath))
+                return null;
+            
+            _loadedAnimatorController = Resources.Load<RuntimeAnimatorController>(equipAnimatorPath);
+            if (_loadedAnimatorController == null)
+            {
+                Debug.LogWarning($"ItemData: Could not load animator controller at path: {equipAnimatorPath}");
+            }
+            return _loadedAnimatorController;
+        }
+        
         [Header("Consumable Properties")]
         [Tooltip("Effects when consumed (only for Consumable items)")]
         public ConsumableEffect consumableEffect;
