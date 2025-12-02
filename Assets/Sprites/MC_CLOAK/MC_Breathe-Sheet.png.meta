@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: fe048de629bea814a99b4064976baa8e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 147289036386592340
+    second: MC_Breathe-Sheet_0
+  - first:
+      213: -3930487672286589096
+    second: MC_Breathe-Sheet_1
+  - first:
+      213: 983198229778627517
+    second: MC_Breathe-Sheet_2
+  - first:
+      213: -3243045667567000551
+    second: MC_Breathe-Sheet_3
+  - first:
+      213: -5157699991216845302
+    second: MC_Breathe-Sheet_4
+  - first:
+      213: 505654725000366676
+    second: MC_Breathe-Sheet_5
+  - first:
+      213: -2836909793224991799
+    second: MC_Breathe-Sheet_6
+  - first:
+      213: -71730681229850239
+    second: MC_Breathe-Sheet_7
+  - first:
+      213: -3207022485390595289
+    second: MC_Breathe-Sheet_8
+  - first:
+      213: 8745090207637884226
+    second: MC_Breathe-Sheet_9
+  - first:
+      213: 2849318128862927103
+    second: MC_Breathe-Sheet_10
+  - first:
+      213: 6069616314959668695
+    second: MC_Breathe-Sheet_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 4
+        width: 151
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 456e12529964b0200800000000000000
+      internalID: 147289036386592340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 4
+        width: 151
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85f4e43694a1479c0800000000000000
+      internalID: -3930487672286589096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 4
+        width: 151
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbb7fbda49505ad00800000000000000
+      internalID: 983198229778627517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 4
+        width: 151
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 914ac42d5236ef2d0800000000000000
+      internalID: -3243045667567000551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 4
+        width: 151
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e0c754f2b2c68b0800000000000000
+      internalID: -5157699991216845302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 4
+        width: 151
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45a05a61b42740700800000000000000
+      internalID: 505654725000366676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 4
+        width: 151
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cb5ffad29541a8d0800000000000000
+      internalID: -2836909793224991799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 4
+        width: 151
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1894cc15359210ff0800000000000000
+      internalID: -71730681229850239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 1330
+        y: 4
+        width: 151
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72b6a938a0e5e73d0800000000000000
+      internalID: -3207022485390595289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 1495
+        y: 4
+        width: 151
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24dc00bd53dcc5970800000000000000
+      internalID: 8745090207637884226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 1660
+        y: 4
+        width: 151
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff894faedbfca8720800000000000000
+      internalID: 2849318128862927103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MC_Breathe-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 1825
+        y: 4
+        width: 151
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d5261851eb9b3450800000000000000
+      internalID: 6069616314959668695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      MC_Breathe-Sheet_0: 147289036386592340
+      MC_Breathe-Sheet_1: -3930487672286589096
+      MC_Breathe-Sheet_10: 2849318128862927103
+      MC_Breathe-Sheet_11: 6069616314959668695
+      MC_Breathe-Sheet_2: 983198229778627517
+      MC_Breathe-Sheet_3: -3243045667567000551
+      MC_Breathe-Sheet_4: -5157699991216845302
+      MC_Breathe-Sheet_5: 505654725000366676
+      MC_Breathe-Sheet_6: -2836909793224991799
+      MC_Breathe-Sheet_7: -71730681229850239
+      MC_Breathe-Sheet_8: -3207022485390595289
+      MC_Breathe-Sheet_9: 8745090207637884226
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

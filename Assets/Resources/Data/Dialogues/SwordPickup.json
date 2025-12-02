@@ -22,10 +22,10 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "Data/Gifs/mc_idle",
+      "portraitGifPath": "Data/Gifs/mc_talk",
       "animationTrigger": "",
       "choices": [],
-      "nextNodeID": "",
+      "nextNodeID": "2",
       "conditions": [],
       "effects": [
         {
@@ -39,6 +39,22 @@
           "flagValue": true
         }
       ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 99.7
+    },
+    {
+      "nodeID": "2",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "I wonder who could have left this here...",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 99.7
     },

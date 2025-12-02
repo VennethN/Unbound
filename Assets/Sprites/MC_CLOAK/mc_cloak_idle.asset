@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d653f4dcb114a44e2ab2fdc038c6ec4a, type: 3}
+  m_Name: mc_cloak_idle
+  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Dialogue.GifAsset
+  frames:
+  - {fileID: 147289036386592340, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: -3930487672286589096, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: 983198229778627517, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: -3243045667567000551, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: -5157699991216845302, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: 505654725000366676, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: -2836909793224991799, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: -71730681229850239, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: -3207022485390595289, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: 8745090207637884226, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: 2849318128862927103, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  - {fileID: 6069616314959668695, guid: fe048de629bea814a99b4064976baa8e, type: 3}
+  frameRate: 2
+  loop: 1
+  playOnAwake: 1
+  idleTransition: {fileID: 0}
+  talkingTransition: {fileID: 11400000, guid: 965ee7edade2b4740b0fa061e2b6d35f, type: 2}
+  transitionSpeed: 1

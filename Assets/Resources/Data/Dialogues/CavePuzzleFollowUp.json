@@ -1,0 +1,58 @@
+{
+  "dialogueID": "cave_solved",
+  "displayName": "CavePuzzleFollowUp",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "Woah! That shocked me!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_talk",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "2",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "2",
+      "speakerID": "Nimfa",
+      "dialogueTextKey": "You should really start expecting such things to happen after messing with such kind of technology.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "3",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "3",
+      "speakerID": "Rafa",
+      "dialogueTextKey": "...Let's keep going.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/mc_idle",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+
