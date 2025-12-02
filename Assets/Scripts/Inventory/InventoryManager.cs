@@ -230,6 +230,9 @@ namespace Unbound.Inventory
             // Equip without removing from inventory
             _equippedItems.Equip(slot, itemID);
             
+            // Set global flags from item stats
+            SetItemGlobalFlags(itemData, true);
+            
             OnItemEquipped?.Invoke(slot, itemID);
             OnInventoryChanged?.Invoke();
             return true;
@@ -244,11 +247,43 @@ namespace Unbound.Inventory
             if (string.IsNullOrEmpty(itemID))
                 return false;
             
+            // Unset global flags from item stats before unequipping
+            ItemData itemData = ItemDatabase.Instance.GetItem(itemID);
+            if (itemData != null)
+            {
+                SetItemGlobalFlags(itemData, false);
+            }
+            
             // Unequip without adding back to inventory
             _equippedItems.Unequip(slot);
             OnItemUnequipped?.Invoke(slot);
             OnInventoryChanged?.Invoke();
             return true;
+        }
+        
+        /// <summary>
+        /// Sets or unsets global flags from an item's stats
+        /// </summary>
+        private void SetItemGlobalFlags(ItemData itemData, bool value)
+        {
+            if (itemData == null || itemData.stats == null || itemData.stats.globalFlags == null)
+                return;
+            
+            var saveManager = SaveManager.Instance;
+            if (saveManager == null)
+            {
+                Debug.LogWarning("Cannot set global flags: SaveManager.Instance is null");
+                return;
+            }
+            
+            foreach (string flag in itemData.stats.globalFlags)
+            {
+                if (!string.IsNullOrEmpty(flag))
+                {
+                    saveManager.SetGlobalFlag(flag, value);
+                    Debug.Log($"Set global flag '{flag}' to {value} (item: {itemData.itemID})");
+                }
+            }
         }
         
         /// <summary>
@@ -574,6 +609,9 @@ namespace Unbound.Inventory
             
             // Equip without removing from inventory
             _equippedItems.Equip(slot, itemID);
+            
+            // Set global flags from item stats
+            SetItemGlobalFlags(itemData, true);
             
             OnItemEquipped?.Invoke(slot, itemID);
             OnInventoryChanged?.Invoke();
