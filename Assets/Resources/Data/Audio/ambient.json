@@ -1,0 +1,103 @@
+{
+  "clips": [
+    {
+      "clipID": "ambient_forest",
+      "displayName": "Forest Ambience",
+      "clipPath": "Audio/Ambient/forest",
+      "category": 2,
+      "defaultVolume": 0.4,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 200
+    },
+    {
+      "clipID": "ambient_cave",
+      "displayName": "Cave Ambience",
+      "clipPath": "Audio/Ambient/cave",
+      "category": 2,
+      "defaultVolume": 0.5,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 200
+    },
+    {
+      "clipID": "ambient_village",
+      "displayName": "Village Ambience",
+      "clipPath": "Audio/Ambient/village",
+      "category": 2,
+      "defaultVolume": 0.35,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 200
+    },
+    {
+      "clipID": "ambient_wind",
+      "displayName": "Wind",
+      "clipPath": "Audio/Ambient/wind",
+      "category": 2,
+      "defaultVolume": 0.3,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 200
+    },
+    {
+      "clipID": "ambient_rain",
+      "displayName": "Rain",
+      "clipPath": "Audio/Ambient/rain",
+      "category": 2,
+      "defaultVolume": 0.5,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 200
+    },
+    {
+      "clipID": "ambient_water_stream",
+      "displayName": "Water Stream",
+      "clipPath": "Audio/Ambient/water_stream",
+      "category": 2,
+      "defaultVolume": 0.4,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 1.0,
+      "minDistance": 2.0,
+      "maxDistance": 30.0,
+      "priority": 200
+    },
+    {
+      "clipID": "ambient_campfire",
+      "displayName": "Campfire Crackling",
+      "clipPath": "Audio/Ambient/campfire",
+      "category": 2,
+      "defaultVolume": 0.45,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 1.0,
+      "minDistance": 1.0,
+      "maxDistance": 15.0,
+      "priority": 200
+    }
+  ]
+}
+

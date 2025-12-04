@@ -1,0 +1,117 @@
+{
+  "clips": [
+    {
+      "clipID": "sfx_footstep_stone_1",
+      "displayName": "Footstep Stone 1",
+      "clipPath": "Audio/SFX/footstep_stone_1",
+      "category": 1,
+      "defaultVolume": 0.5,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.1,
+      "loop": false,
+      "spatialBlend": 1.0,
+      "minDistance": 1.0,
+      "maxDistance": 20.0,
+      "priority": 128
+    },
+    {
+      "clipID": "sfx_footstep_stone_2",
+      "displayName": "Footstep Stone 2",
+      "clipPath": "Audio/SFX/footstep_stone_2",
+      "category": 1,
+      "defaultVolume": 0.5,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.1,
+      "loop": false,
+      "spatialBlend": 1.0,
+      "minDistance": 1.0,
+      "maxDistance": 20.0,
+      "priority": 128
+    },
+    {
+      "clipID": "sfx_attack_sword",
+      "displayName": "Sword Attack",
+      "clipPath": "Audio/SFX/attack_sword",
+      "category": 1,
+      "defaultVolume": 0.7,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.05,
+      "loop": false,
+      "spatialBlend": 0.5,
+      "minDistance": 1.0,
+      "maxDistance": 30.0,
+      "priority": 100
+    },
+    {
+      "clipID": "sfx_hit_enemy",
+      "displayName": "Hit Enemy",
+      "clipPath": "Audio/SFX/hit_enemy",
+      "category": 1,
+      "defaultVolume": 0.8,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.1,
+      "loop": false,
+      "spatialBlend": 0.5,
+      "minDistance": 1.0,
+      "maxDistance": 30.0,
+      "priority": 90
+    },
+    {
+      "clipID": "sfx_player_hurt",
+      "displayName": "Player Hurt",
+      "clipPath": "Audio/SFX/player_hurt",
+      "category": 1,
+      "defaultVolume": 0.9,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.05,
+      "loop": false,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 50.0,
+      "priority": 50
+    },
+    {
+      "clipID": "sfx_item_pickup",
+      "displayName": "Item Pickup",
+      "clipPath": "Audio/SFX/item_pickup",
+      "category": 1,
+      "defaultVolume": 0.6,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.1,
+      "loop": false,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 20.0,
+      "priority": 128
+    },
+    {
+      "clipID": "sfx_door_open",
+      "displayName": "Door Open",
+      "clipPath": "Audio/SFX/door_open",
+      "category": 1,
+      "defaultVolume": 0.7,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": false,
+      "spatialBlend": 1.0,
+      "minDistance": 1.0,
+      "maxDistance": 25.0,
+      "priority": 128
+    },
+    {
+      "clipID": "sfx_door_close",
+      "displayName": "Door Close",
+      "clipPath": "Audio/SFX/door_close",
+      "category": 1,
+      "defaultVolume": 0.7,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": false,
+      "spatialBlend": 1.0,
+      "minDistance": 1.0,
+      "maxDistance": 25.0,
+      "priority": 128
+    }
+  ]
+}
+

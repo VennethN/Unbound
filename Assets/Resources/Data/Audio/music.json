@@ -1,0 +1,61 @@
+{
+  "clips": [
+    {
+      "clipID": "music_main_menu",
+      "displayName": "Main Menu Theme",
+      "clipPath": "Audio/Music/main_menu",
+      "category": 0,
+      "defaultVolume": 0.8,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 0
+    },
+    {
+      "clipID": "music_exploration",
+      "displayName": "Exploration Theme",
+      "clipPath": "Audio/Music/exploration",
+      "category": 0,
+      "defaultVolume": 0.7,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 0
+    },
+    {
+      "clipID": "music_combat",
+      "displayName": "Combat Theme",
+      "clipPath": "Audio/Music/combat",
+      "category": 0,
+      "defaultVolume": 0.85,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 0
+    },
+    {
+      "clipID": "music_peaceful",
+      "displayName": "Peaceful Theme",
+      "clipPath": "Audio/Music/peaceful",
+      "category": 0,
+      "defaultVolume": 0.6,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": true,
+      "spatialBlend": 0.0,
+      "minDistance": 1.0,
+      "maxDistance": 500.0,
+      "priority": 0
+    }
+  ]
+}
+
