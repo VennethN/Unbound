@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unbound.Inventory;
+using Unbound.Audio;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -33,6 +34,13 @@ namespace Unbound.Player
         
         public System.Action<PlayerCombat, float> OnDamageTaken;
         public System.Action<PlayerCombat, float> OnHealthChanged;
+        
+        [Header("Audio")]
+        [SerializeField] private string attackSoundID = "sfx_attack_sword";
+        [SerializeField] private string hitSoundID = "sfx_hit_enemy";
+        [SerializeField] private string hurtSoundID = "sfx_player_hurt";
+        [SerializeField] private string missSwingSoundID = ""; // Optional: sound when attack misses
+        [SerializeField] private bool enableCombatAudio = true;
         
         [Header("Weapon Visual")]
         [SerializeField] private Transform weaponVisualParent; // Parent transform for weapon visual (e.g., hand position)
@@ -249,6 +257,8 @@ namespace Unbound.Player
             
             if (health < oldHealth)
             {
+                // Play hurt sound
+                PlayCombatSound(hurtSoundID);
                 OnDamageTaken?.Invoke(this, damage);
             }
             
@@ -350,6 +360,9 @@ namespace Unbound.Player
             _attackStartDirection = _attackDirection;
             _attackAnimationProgress = 0f;
             
+            // Play attack sound
+            PlayCombatSound(attackSoundID);
+            
             // Trigger attack animation
             if (animator != null)
             {
@@ -416,6 +429,7 @@ namespace Unbound.Player
                 if (enemy != null)
                 {
                     enemy.TakeDamage(damage);
+                    PlayCombatSound(hitSoundID, hit.transform.position);
                     Debug.Log($"Attack hit: {hit.gameObject.name} for {damage} damage");
                 }
                 else
@@ -425,6 +439,7 @@ namespace Unbound.Player
                     if (takeDamageMethod != null)
                     {
                         takeDamageMethod.Invoke(hit.GetComponent<MonoBehaviour>(), new object[] { damage });
+                        PlayCombatSound(hitSoundID, hit.transform.position);
                         Debug.Log($"Attack hit: {hit.gameObject.name} for {damage} damage (via reflection)");
                     }
                     else
@@ -436,6 +451,11 @@ namespace Unbound.Player
             
             if (!hitSomething)
             {
+                // Play miss/swing sound if configured
+                if (!string.IsNullOrEmpty(missSwingSoundID))
+                {
+                    PlayCombatSound(missSwingSoundID);
+                }
                 Debug.Log($"Attack performed (no targets in hitbox). Damage: {damage}, Range: {radius}");
             }
         }
@@ -680,6 +700,52 @@ namespace Unbound.Player
             {
                 UpdateWeaponVisual();
             }
+        }
+        
+        /// <summary>
+        /// Plays a combat sound effect
+        /// </summary>
+        private void PlayCombatSound(string soundID, Vector3? position = null)
+        {
+            if (!enableCombatAudio || string.IsNullOrEmpty(soundID))
+                return;
+            
+            if (AudioManager.Instance == null)
+                return;
+            
+            AudioManager.Instance.PlaySFXOneShot(soundID, position);
+        }
+        
+        /// <summary>
+        /// Sets the attack sound ID at runtime
+        /// </summary>
+        public void SetAttackSound(string soundID)
+        {
+            attackSoundID = soundID;
+        }
+        
+        /// <summary>
+        /// Sets the hit sound ID at runtime
+        /// </summary>
+        public void SetHitSound(string soundID)
+        {
+            hitSoundID = soundID;
+        }
+        
+        /// <summary>
+        /// Sets the hurt sound ID at runtime
+        /// </summary>
+        public void SetHurtSound(string soundID)
+        {
+            hurtSoundID = soundID;
+        }
+        
+        /// <summary>
+        /// Enables or disables combat audio
+        /// </summary>
+        public void SetCombatAudioEnabled(bool enabled)
+        {
+            enableCombatAudio = enabled;
         }
         
         private void OnDrawGizmos()
