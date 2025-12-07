@@ -15,11 +15,11 @@
       "priority": 0
     },
     {
-      "clipID": "music_exploration",
-      "displayName": "Exploration Theme",
-      "clipPath": "Audio/Music/exploration",
+      "clipID": "music_default",
+      "displayName": "Outdoor Music",
+      "clipPath": "Audio/OutdoorMusic",
       "category": 0,
-      "defaultVolume": 0.7,
+      "defaultVolume": 2.5,
       "defaultPitch": 1.0,
       "pitchVariation": 0.0,
       "loop": true,
@@ -29,11 +29,11 @@
       "priority": 0
     },
     {
-      "clipID": "music_combat",
-      "displayName": "Combat Theme",
-      "clipPath": "Audio/Music/combat",
+      "clipID": "music_house",
+      "displayName": "House Theme",
+      "clipPath": "Audio/HouseTheme",
       "category": 0,
-      "defaultVolume": 0.85,
+      "defaultVolume": 0.5,
       "defaultPitch": 1.0,
       "pitchVariation": 0.0,
       "loop": true,

@@ -1,11 +1,11 @@
 {
   "clips": [
     {
-      "clipID": "ambient_forest",
-      "displayName": "Forest Ambience",
-      "clipPath": "Audio/Ambient/forest",
+      "clipID": "ambient_bird",
+      "displayName": "BirdAmbience",
+      "clipPath": "Audio/BirdAmbience",
       "category": 2,
-      "defaultVolume": 0.4,
+      "defaultVolume": 0.5,
       "defaultPitch": 1.0,
       "pitchVariation": 0.0,
       "loop": true,
@@ -16,10 +16,10 @@
     },
     {
       "clipID": "ambient_cave",
-      "displayName": "Cave Ambience",
-      "clipPath": "Audio/Ambient/cave",
+      "displayName": "CaveAmbience",
+      "clipPath": "Audio/CaveAmbience",
       "category": 2,
-      "defaultVolume": 0.5,
+      "defaultVolume": 0.7,
       "defaultPitch": 1.0,
       "pitchVariation": 0.0,
       "loop": true,

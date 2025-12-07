@@ -1,9 +1,9 @@
 {
   "clips": [
     {
-      "clipID": "sfx_footstep_stone_1",
-      "displayName": "Footstep Stone 1",
-      "clipPath": "Audio/SFX/footstep_stone_1",
+      "clipID": "sfx_footstep_general",
+      "displayName": "Footsteps General",
+      "clipPath": "Audio/SFX/FootstepsGeneral",
       "category": 1,
       "defaultVolume": 0.5,
       "defaultPitch": 1.0,
@@ -15,9 +15,9 @@
       "priority": 128
     },
     {
-      "clipID": "sfx_footstep_stone_2",
-      "displayName": "Footstep Stone 2",
-      "clipPath": "Audio/SFX/footstep_stone_2",
+      "clipID": "sfx_door",
+      "displayName": "Door",
+      "clipPath": "Audio/Door",
       "category": 1,
       "defaultVolume": 0.5,
       "defaultPitch": 1.0,
@@ -71,9 +71,9 @@
       "priority": 50
     },
     {
-      "clipID": "sfx_item_pickup",
-      "displayName": "Item Pickup",
-      "clipPath": "Audio/SFX/item_pickup",
+      "clipID": "sfx_item",
+      "displayName": "Collect Item",
+      "clipPath": "Audio/SFX/CollectItem",
       "category": 1,
       "defaultVolume": 0.6,
       "defaultPitch": 1.0,
@@ -85,9 +85,9 @@
       "priority": 128
     },
     {
-      "clipID": "sfx_door_open",
-      "displayName": "Door Open",
-      "clipPath": "Audio/SFX/door_open",
+      "clipID": "sfx_bat_death",
+      "displayName": "Bat Death",
+      "clipPath": "Audio/SFX/BatDeath",
       "category": 1,
       "defaultVolume": 0.7,
       "defaultPitch": 1.0,
@@ -99,9 +99,9 @@
       "priority": 128
     },
     {
-      "clipID": "sfx_door_close",
-      "displayName": "Door Close",
-      "clipPath": "Audio/SFX/door_close",
+      "clipID": "sfx_bat_damage",
+      "displayName": "Bat Damage",
+      "clipPath": "Audio/SFX/BatDMG",
       "category": 1,
       "defaultVolume": 0.7,
       "defaultPitch": 1.0,
