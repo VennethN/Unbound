@@ -44,6 +44,79 @@ namespace Unbound.Audio
 
             _instance = this;
             BuildGroupsLookup();
+            
+            // Subscribe to database loaded event to register dynamic groups
+            AudioDatabase.Instance.OnDatabaseLoaded += RegisterFootstepGroups;
+        }
+
+        private void Start()
+        {
+            // If database is already loaded, register groups immediately
+            if (AudioDatabase.Instance != null)
+            {
+                RegisterFootstepGroups();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_instance == this && AudioDatabase.Instance != null)
+            {
+                AudioDatabase.Instance.OnDatabaseLoaded -= RegisterFootstepGroups;
+            }
+        }
+
+        /// <summary>
+        /// Registers footstep groups automatically from loaded audio clips
+        /// </summary>
+        private void RegisterFootstepGroups()
+        {
+            // Register main footsteps group
+            List<string> footstepClipIDs = new List<string>();
+            footstepClipIDs.Add("sfx_footstep_general");
+            footstepClipIDs.Add("sfx_footstep_stone_1");
+            footstepClipIDs.Add("sfx_footstep_stone_2");
+            
+            // Only register clips that exist in the database
+            List<string> validClipIDs = new List<string>();
+            foreach (string clipID in footstepClipIDs)
+            {
+                if (AudioDatabase.Instance.GetClipData(clipID) != null)
+                {
+                    validClipIDs.Add(clipID);
+                }
+            }
+            
+            if (validClipIDs.Count > 0 && !_groupsLookup.ContainsKey("footsteps"))
+            {
+                RegisterGroup("footsteps", validClipIDs, SFXSelectionMode.RandomNoRepeat);
+            }
+            
+            // Register surface-specific groups if they don't exist
+            RegisterSurfaceGroup("footsteps_stone", new List<string> { "sfx_footstep_stone_1", "sfx_footstep_stone_2" });
+        }
+
+        /// <summary>
+        /// Registers a surface-specific footstep group if clips exist
+        /// </summary>
+        private void RegisterSurfaceGroup(string groupID, List<string> clipIDs)
+        {
+            if (_groupsLookup.ContainsKey(groupID))
+                return;
+                
+            List<string> validClipIDs = new List<string>();
+            foreach (string clipID in clipIDs)
+            {
+                if (AudioDatabase.Instance.GetClipData(clipID) != null)
+                {
+                    validClipIDs.Add(clipID);
+                }
+            }
+            
+            if (validClipIDs.Count > 0)
+            {
+                RegisterGroup(groupID, validClipIDs, SFXSelectionMode.RandomNoRepeat);
+            }
         }
 
         private void Update()

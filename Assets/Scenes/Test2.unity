@@ -6082,7 +6082,8 @@ GameObject:
   - component: {fileID: 61880412}
   - component: {fileID: 61880414}
   - component: {fileID: 61880413}
-  m_Layer: 0
+  - component: {fileID: 61880415}
+  m_Layer: 6
   m_Name: CAVE FLOOR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11221,6 +11222,44 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!19719996 &61880415
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61880411}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1 &62432567
 GameObject:
   m_ObjectHideFlags: 0
@@ -60521,6 +60560,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Player.PlayerAnimatorEquipment
   playerAnimator: {fileID: 528094863}
   defaultAnimatorController: {fileID: 9100000, guid: b8527e574cbd844c1815018dcf697e8b, type: 2}
+--- !u!114 &528094867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528094855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f2ad6cbf200b5a40b774d15b712f66b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Audio.FootstepAudio
+  footstepGroupID: footsteps
+  stepInterval: 0.4
+  runningMultiplier: 0.6
+  movementThreshold: 0.01
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundCheckDistance: 0.1
+  defaultSurface: 0
+  detectSurfaceType: 0
+  isGroundedDebug: 0
+  isMovingDebug: 0
+  isRunningDebug: 0
+  stepTimerDebug: 0
+  detectedCollidersCount: 0
+  currentSurfaceDebug: 0
+  lastPlayedGroupID: 
 --- !u!1001 &528634358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -103641,7 +103709,8 @@ GameObject:
   - component: {fileID: 977003029}
   - component: {fileID: 977003028}
   - component: {fileID: 977003031}
-  m_Layer: 0
+  - component: {fileID: 977003032}
+  m_Layer: 6
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104359,6 +104428,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Audio.SurfaceTag
   surfaceType: 0
+--- !u!19719996 &977003032
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977003024}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1 &977083566
 GameObject:
   m_ObjectHideFlags: 0
@@ -118518,6 +118625,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1150742457}
   - component: {fileID: 1150742456}
+  - component: {fileID: 1150742458}
+  - component: {fileID: 1150742459}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -118550,7 +118659,7 @@ MonoBehaviour:
     muteAmbient: 0
     muteUI: 0
     muteVoice: 0
-  loadSettingsOnAwake: 1
+  loadSettingsOnAwake: 0
   saveSettingsOnDestroy: 1
   initialPoolSize: 10
   maxPoolSize: 50
@@ -118570,6 +118679,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1150742458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150742455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cbd6214a3ed2754e9a83bebfd947f33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Audio.SFXController
+  sfxGroups:
+  - groupID: footsteps
+    clipIDs:
+    - sfx_footstep_general
+    selectionMode: 2
+    cooldown: 0
+  defaultCooldown: 0.05
+--- !u!114 &1150742459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150742455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d8afa115ea2484e98ea165f9d1c20b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Audio.AudioDatabase
+  audioDataPath: Data/Audio
+  loadOnAwake: 1
 --- !u!1001 &1151191245
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133663,6 +133805,10 @@ PrefabInstance:
     - target: {fileID: 267369066481151220, guid: 3f60ec1131cf046768976b672ea9bfa6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1541283341678552730, guid: 3f60ec1131cf046768976b672ea9bfa6, type: 3}
+      propertyPath: autoLoadOnStart
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6499560052774196165, guid: 3f60ec1131cf046768976b672ea9bfa6, type: 3}
       propertyPath: m_Name
@@ -149953,7 +150099,8 @@ GameObject:
   - component: {fileID: 1470348967}
   - component: {fileID: 1470348969}
   - component: {fileID: 1470348968}
-  m_Layer: 0
+  - component: {fileID: 1470348970}
+  m_Layer: 6
   m_Name: PATHS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178900,6 +179047,44 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!19719996 &1470348970
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470348966}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1001 &1470656713
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -180594,7 +180779,8 @@ GameObject:
   - component: {fileID: 1480788033}
   - component: {fileID: 1480788035}
   - component: {fileID: 1480788034}
-  m_Layer: 0
+  - component: {fileID: 1480788036}
+  m_Layer: 6
   m_Name: GRASS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212349,6 +212535,44 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!19719996 &1480788036
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480788032}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1001 &1480898747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -267582,6 +267806,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8860493363688486940, guid: 67865fc91b7374c03bfd2976011045f8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 528094866}
+    - targetCorrespondingSourceObject: {fileID: 8860493363688486940, guid: 67865fc91b7374c03bfd2976011045f8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 528094867}
   m_SourcePrefab: {fileID: 100100000, guid: 67865fc91b7374c03bfd2976011045f8, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -3,9 +3,9 @@
     {
       "clipID": "sfx_footstep_general",
       "displayName": "Footsteps General",
-      "clipPath": "Audio/SFX/FootstepsGeneral",
+      "clipPath": "Audio/SFX/footsteps/FootstepsGeneral",
       "category": 1,
-      "defaultVolume": 0.5,
+      "defaultVolume": 1,
       "defaultPitch": 1.0,
       "pitchVariation": 0.1,
       "loop": false,
