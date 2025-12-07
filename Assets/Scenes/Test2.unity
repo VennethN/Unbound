@@ -118660,7 +118660,7 @@ MonoBehaviour:
     muteUI: 0
     muteVoice: 0
   loadSettingsOnAwake: 0
-  saveSettingsOnDestroy: 1
+  saveSettingsOnDestroy: 0
   initialPoolSize: 10
   maxPoolSize: 50
   defaultMusicFadeDuration: 1
