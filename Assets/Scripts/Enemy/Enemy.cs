@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Events;
+
 using Unbound.UI;
 using Unbound.Player;
 
@@ -31,6 +33,10 @@ namespace Unbound.Enemy
         [SerializeField] private bool showHealthBar = true;
         [SerializeField] private Vector2 healthBarOffset = new Vector2(0f, 1f);
         
+        [Header("Events")]
+        public UnityEvent OnDeathEvent;
+        public DamageEvent OnTakeDamageEvent;
+
         public float MaxHealth => maxHealth;
         public float CurrentHealth => currentHealth;
         public bool IsDead => currentHealth <= 0f;
@@ -45,12 +51,12 @@ namespace Unbound.Enemy
         public System.Action<Enemy, float> OnHealthChanged;
         
         private HealthBar _healthBar;
-        
+        private Animator animator;
+
         private void Awake()
         {
             currentHealth = maxHealth;
-            
-            // Set up health bar
+            animator = GetComponent<Animator>();
             SetupHealthBar();
         }
         
@@ -80,6 +86,8 @@ namespace Unbound.Enemy
             
             OnDamageTaken?.Invoke(this, damage);
             OnHealthChanged?.Invoke(this, currentHealth);
+
+            OnTakeDamageEvent?.Invoke(damage);
             
             Debug.Log($"{gameObject.name} took {damage} damage. Health: {currentHealth}/{maxHealth}");
             
@@ -130,34 +138,39 @@ namespace Unbound.Enemy
         private void Die()
         {
             OnDeath?.Invoke(this);
-            
-            // Grant experience to player
+
+            OnDeathEvent?.Invoke();
+
             GrantExperience();
-            
-            // Spawn death effect if assigned
+
+            // Spawn death effect prefab
             if (deathEffectPrefab != null)
             {
                 Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
             }
-            
-            // Destroy or disable the enemy
-            if (destroyOnDeath)
+
+            // If there's an animator, play death animation
+            if (animator != null)
             {
-                if (destroyDelay > 0f)
+                animator.SetTrigger("Die");
+                // Delay destruction until animation is done
+                float deathAnimLength = GetAnimationClipLength("bat_dying");
+                Destroy(gameObject, deathAnimLength + 0.5f);
+            }
+            else
+            {
+                // No animator = fallback destroy
+                if (destroyOnDeath)
                 {
                     Destroy(gameObject, destroyDelay);
                 }
                 else
                 {
-                    Destroy(gameObject);
+                    gameObject.SetActive(false);
                 }
             }
-            else
-            {
-                // Just disable the enemy
-                gameObject.SetActive(false);
-            }
         }
+
         
         /// <summary>
         /// Grants experience to the player when this enemy is killed
@@ -226,6 +239,25 @@ namespace Unbound.Enemy
                 }
             }
         }
+
+        private float GetAnimationClipLength(string clipName)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null)
+                return 0f;
+
+            foreach (var clip in animator.runtimeAnimatorController.animationClips)
+            {
+                if (clip.name == clipName)
+                    return clip.length;
+            }
+
+            return 0f;
+        }
+
     }
+
+    [System.Serializable]
+    public class DamageEvent : UnityEvent<float> { }
+
 }
 
