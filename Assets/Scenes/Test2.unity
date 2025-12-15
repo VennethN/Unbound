@@ -116791,12 +116791,9 @@ GameObject:
   - component: {fileID: 1100012242}
   - component: {fileID: 1100012241}
   - component: {fileID: 1100012240}
-<<<<<<< Updated upstream
-=======
   - component: {fileID: 1100012244}
   - component: {fileID: 1100012246}
   - component: {fileID: 1100012245}
->>>>>>> Stashed changes
   m_Layer: 0
   m_Name: TELE_HOUSE_INT
   m_TagString: Untagged
@@ -116961,8 +116958,6 @@ Transform:
   - {fileID: 1299501189}
   m_Father: {fileID: 1339422713}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!114 &1100012244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117035,7 +117030,6 @@ MonoBehaviour:
   requiredTag: Player
   onlyPlayOnce: 0
   cooldown: 0
->>>>>>> Stashed changes
 --- !u!1001 &1100429587
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -271392,8 +271386,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-<<<<<<< Updated upstream
-=======
     - target: {fileID: 3285130341960280192, guid: 67865fc91b7374c03bfd2976011045f8, type: 3}
       propertyPath: healthBarContainer
       value: 
@@ -271402,7 +271394,6 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Weapon
       objectReference: {fileID: 0}
->>>>>>> Stashed changes
     - target: {fileID: 4810863596078254720, guid: 67865fc91b7374c03bfd2976011045f8, type: 3}
       propertyPath: m_Size.x
       value: 0.68
@@ -271598,9 +271589,6 @@ SceneRoots:
   - {fileID: 1728879249}
   - {fileID: 1705161345}
   - {fileID: 1182420821}
-<<<<<<< Updated upstream
-=======
-  - {fileID: 1150742457}
   - {fileID: 555716431}
   - {fileID: 1115455756}
   - {fileID: 1190623830}
@@ -271619,4 +271607,3 @@ SceneRoots:
   - {fileID: 1226274904}
   - {fileID: 1802713680}
   - {fileID: 63974445}
->>>>>>> Stashed changes
