@@ -30,8 +30,8 @@
     },
     {
       "clipID": "sfx_attack_sword",
-      "displayName": "Sword Attack",
-      "clipPath": "Audio/SFX/attack_sword",
+      "displayName": "Sword Slash",
+      "clipPath": "Audio/SFX/SwordSlash",
       "category": 1,
       "defaultVolume": 0.7,
       "defaultPitch": 1.0,
@@ -58,8 +58,8 @@
     },
     {
       "clipID": "sfx_player_hurt",
-      "displayName": "Player Hurt",
-      "clipPath": "Audio/SFX/player_hurt",
+      "displayName": "MC DMG",
+      "clipPath": "Audio/SFX/MCDMG",
       "category": 1,
       "defaultVolume": 0.9,
       "defaultPitch": 1.0,

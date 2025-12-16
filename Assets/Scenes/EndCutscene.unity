@@ -283,7 +283,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141688989}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 1cf7635b58b8ba74ba8fcea06fc5a054, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 2ae17292854d197498b7cb19fa1cbb0a, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 782259371}
@@ -367,8 +367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a3a0269792b047eb860f5d2819cd4c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Utilities.SceneTransitionInvoker
-  sceneName: Test2
-  sceneIndex: 2
+  sceneName: MainMenu
+  sceneIndex: 0
 --- !u!1 &1475237031
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,12 +11,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/IntroCutscene.unity
     guid: 76b844b48ac1fec40aef03ea750d607e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Test.unity
     guid: 216fe703068454e51a2dd96773977420
   - enabled: 1
     path: Assets/Scenes/Test2.unity
     guid: a8acbd459bda64017a55e32c8c7ef7ec
+  - enabled: 1
+    path: Assets/Scenes/EndCutscene.unity
+    guid: beedb3458220b4740804f77f2427bd56
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
