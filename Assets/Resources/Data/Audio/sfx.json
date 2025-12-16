@@ -125,6 +125,20 @@
       "minDistance": 1.0,
       "maxDistance": 25.0,
       "priority": 128
+    },
+    {
+      "clipID": "rockfall",
+      "displayName": "Rockfall",
+      "clipPath": "Audio/SFX/Rockfall",
+      "category": 1,
+      "defaultVolume": 0.7,
+      "defaultPitch": 1.0,
+      "pitchVariation": 0.0,
+      "loop": false,
+      "spatialBlend": 1.0,
+      "minDistance": 1.0,
+      "maxDistance": 25.0,
+      "priority": 128
     }
   ]
 }

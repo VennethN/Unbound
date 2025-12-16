@@ -171,7 +171,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "Data/Gifs/npc_female",
+      "portraitGifPath": "Data/Gifs/npc_male",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "12",

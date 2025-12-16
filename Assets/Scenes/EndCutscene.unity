@@ -367,8 +367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a3a0269792b047eb860f5d2819cd4c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Utilities.SceneTransitionInvoker
-  sceneName: MainMenu
-  sceneIndex: 0
+  sceneName: CreditsScene
+  sceneIndex: 4
 --- !u!1 &1475237031
 GameObject:
   m_ObjectHideFlags: 0
