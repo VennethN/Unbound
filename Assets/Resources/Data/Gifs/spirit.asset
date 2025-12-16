@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d653f4dcb114a44e2ab2fdc038c6ec4a, type: 3}
-  m_Name: mong_hehe
+  m_Name: spirit
   m_EditorClassIdentifier: Assembly-CSharp::Unbound.Dialogue.GifAsset
   frames:
-  - {fileID: 3597935456579447710, guid: 8ecec99756e37de4886cab40795b5ae7, type: 3}
-  - {fileID: -3661187742465475478, guid: 8ecec99756e37de4886cab40795b5ae7, type: 3}
-  - {fileID: 2802406256516760771, guid: 8ecec99756e37de4886cab40795b5ae7, type: 3}
-  - {fileID: -5128872884876417880, guid: 8ecec99756e37de4886cab40795b5ae7, type: 3}
-  frameRate: 4
+  - {fileID: 8334651344603559088, guid: 6752ebc4897755f47a8bf6c8b3a87895, type: 3}
+  - {fileID: 9204931480678746970, guid: 6752ebc4897755f47a8bf6c8b3a87895, type: 3}
+  - {fileID: -8359625512513901107, guid: 6752ebc4897755f47a8bf6c8b3a87895, type: 3}
+  frameRate: 2
   loop: 1
   playOnAwake: 1
   idleTransition: {fileID: 0}

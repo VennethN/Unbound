@@ -16,7 +16,18 @@
       "choices": [],
       "nextNodeID": "2",
       "conditions": [],
-      "effects": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "SpiritInside",
+          "enableGameObject": true
+        },
+        {
+          "effectType": 7,
+          "gameObjectName": "Scroll",
+          "enableGameObject": true
+        }
+      ],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
     },
@@ -27,7 +38,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "3",
@@ -48,7 +59,13 @@
       "choices": [],
       "nextNodeID": "4",
       "conditions": [],
-      "effects": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "Scroll",
+          "enableGameObject": false
+        }
+      ],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
     },
@@ -59,7 +76,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "5",
@@ -91,7 +108,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "7",
@@ -123,7 +140,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "9",
@@ -155,7 +172,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "11",
@@ -187,7 +204,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "13",
@@ -219,7 +236,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "15",
@@ -247,7 +264,7 @@
     {
       "nodeID": "16",
       "speakerID": "",
-      "dialogueTextKey": "To equip the cloak, simply keep its hotbar slot active.",
+      "dialogueTextKey": "You're cloak is now cast with a delusion spell! To equip the cloak, simply keep its hotbar slot active.",
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
@@ -256,7 +273,13 @@
       "choices": [],
       "nextNodeID": "17",
       "conditions": [],
-      "effects": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "SpiritInside",
+          "enableGameObject": false
+        }
+      ],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
     },
