@@ -483,6 +483,49 @@ namespace Unbound.Dialogue
             Debug.Log($"Triggering event '{eventName}'");
         }
 
+        public void EnableGameObject(string gameObjectName, bool enable)
+        {
+            if (string.IsNullOrEmpty(gameObjectName))
+            {
+                Debug.LogWarning("Cannot enable/disable GameObject: gameObjectName is null or empty");
+                return;
+            }
+
+            GameObject targetObject = GameObject.Find(gameObjectName);
+            
+            if (targetObject == null)
+            {
+                // Try finding by path (e.g., "Parent/Child/Object")
+                string[] pathParts = gameObjectName.Split('/');
+                if (pathParts.Length > 1)
+                {
+                    GameObject root = GameObject.Find(pathParts[0]);
+                    if (root != null)
+                    {
+                        Transform current = root.transform;
+                        for (int i = 1; i < pathParts.Length; i++)
+                        {
+                            current = current.Find(pathParts[i]);
+                            if (current == null)
+                                break;
+                        }
+                        if (current != null)
+                            targetObject = current.gameObject;
+                    }
+                }
+            }
+
+            if (targetObject != null)
+            {
+                targetObject.SetActive(enable);
+                Debug.Log($"{(enable ? "Enabled" : "Disabled")} GameObject '{gameObjectName}'");
+            }
+            else
+            {
+                Debug.LogWarning($"GameObject '{gameObjectName}' not found. Cannot {(enable ? "enable" : "disable")}.");
+            }
+        }
+
         #endregion
 
         #region Player Movement Control

@@ -1,0 +1,172 @@
+{
+  "dialogueID": "example_gameobject_effect",
+  "displayName": "Example: GameObject Enable Effect",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Guide",
+      "dialogueTextKey": "Welcome! I'll show you how to reveal hidden objects.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "reveal",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "reveal",
+      "speakerID": "Guide",
+      "dialogueTextKey": "Watch closely... *snaps fingers* There! A secret door has appeared!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "explain",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "SecretDoor",
+          "enableGameObject": true
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "explain",
+      "speakerID": "Guide",
+      "dialogueTextKey": "This door was hidden until now. You can use this effect to reveal or hide any GameObject during dialogue!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "hide_ui",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "hide_ui",
+      "speakerID": "Guide",
+      "dialogueTextKey": "You can also hide UI elements. Watch as I hide the tutorial hints...",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "show_ui",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "TutorialHints",
+          "enableGameObject": false
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "show_ui",
+      "speakerID": "Guide",
+      "dialogueTextKey": "...and bring them back!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "nested_example",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "TutorialHints",
+          "enableGameObject": true
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "nested_example",
+      "speakerID": "Guide",
+      "dialogueTextKey": "You can also control nested GameObjects using paths like 'Parent/Child/Object'.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "multiple_effects",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "Room/SecretArea/HiddenTreasure",
+          "enableGameObject": true
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "multiple_effects",
+      "speakerID": "Guide",
+      "dialogueTextKey": "You can even combine multiple effects! Watch as I set a flag AND reveal an object at the same time.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "end",
+      "conditions": [],
+      "effects": [
+        {
+          "effectType": 1,
+          "flagName": "tutorial-completed",
+          "flagValue": true
+        },
+        {
+          "effectType": 7,
+          "gameObjectName": "RewardChest",
+          "enableGameObject": true
+        }
+      ],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    },
+    {
+      "nodeID": "end",
+      "speakerID": "Guide",
+      "dialogueTextKey": "That's how you use the EnableGameObject effect! The GameObject name must match exactly what's in your scene hierarchy.",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
