@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using Unbound.Inventory;
 using Unbound.Audio;
 #if ENABLE_INPUT_SYSTEM
@@ -31,7 +32,13 @@ namespace Unbound.Player
         [Header("Health")]
         public float health = 100f;
         public float maxHealth = 100f;
-        
+
+        [Header("Events")]
+        [Tooltip("Invoked when the player takes damage (passes damage amount)")]
+        public UnityEvent<float> OnDamageTakenEvent;
+        [Tooltip("Invoked once when the player dies (health reaches 0)")]
+        public UnityEvent OnDeathEvent;
+
         public System.Action<PlayerCombat, float> OnDamageTaken;
         public System.Action<PlayerCombat, float> OnHealthChanged;
         
@@ -74,6 +81,7 @@ namespace Unbound.Player
         private Vector2 _attackTargetPosition = Vector2.zero; // Target position for weapon during attack
         private float _attackRange = 1f; // Attack range for current attack
         private bool _combatEnabled = true; // Whether combat input is allowed
+        private bool _isDead = false;
         
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -249,6 +257,12 @@ namespace Unbound.Player
                 OnHealthChanged?.Invoke(this, health);
                 _lastMaxHealth = maxHealth;
             }
+
+            if (!_isDead && health <= 0f)
+            {
+                HandleDeath();
+            }
+
         }
         
         /// <summary>
@@ -259,14 +273,22 @@ namespace Unbound.Player
             float oldHealth = health;
             health = Mathf.Max(0, health - damage);
             
+
             if (health < oldHealth)
             {
                 // Play hurt sound
                 PlayCombatSound(hurtSoundID);
                 OnDamageTaken?.Invoke(this, damage);
+                OnDamageTakenEvent?.Invoke(damage);
             }
             
             OnHealthChanged?.Invoke(this, health);
+
+            if (health <= 0f)
+            {
+                HandleDeath();
+            }
+
         }
         
         /// <summary>
@@ -317,6 +339,32 @@ namespace Unbound.Player
             _lastAttackTime = Time.time;
         }
         
+        private void HandleDeath()
+        {
+            if (_isDead)
+                return;
+
+            _isDead = true;
+
+            // Invoke Inspector event
+            OnDeathEvent?.Invoke();
+
+            // Optional: disable combat automatically
+            SetCombatEnabled(false);
+
+            // Optional: log for debugging
+            Debug.Log("PlayerCombat: Player has died.");
+        }
+
+        public void Revive(float reviveHealth)
+        {
+            health = Mathf.Clamp(reviveHealth, 1f, maxHealth);
+            _isDead = false;
+            SetCombatEnabled(true);
+            OnHealthChanged?.Invoke(this, health);
+        }
+
+
         /// <summary>
         /// Calculates the direction of attack based on mouse position or movement
         /// </summary>

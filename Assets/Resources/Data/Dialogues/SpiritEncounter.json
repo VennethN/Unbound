@@ -96,7 +96,13 @@
       "choices": [],
       "nextNodeID": "7",
       "conditions": [],
-      "effects": [],
+      "effects": [
+        {
+          "effectType": 1,
+          "flagName": "meet_spirit",
+          "flagValue": true
+        }
+      ],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
     },
