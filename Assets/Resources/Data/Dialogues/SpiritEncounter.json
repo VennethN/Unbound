@@ -98,9 +98,9 @@
       "conditions": [],
       "effects": [
         {
-          "effectType": 1,
-          "flagName": "meet_spirit",
-          "flagValue": true
+          "effectType": 7,
+          "gameObjectName": "TheSpirit",
+          "enableGameObject": true
         }
       ],
       "autoAdvanceDelay": 0.0,
