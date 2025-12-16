@@ -31,7 +31,7 @@
     {
       "clipID": "sfx_attack_sword",
       "displayName": "Sword Slash",
-      "clipPath": "Audio/SFX/SwordSlash",
+      "clipPath": "Audio/SFX/SwordSwing",
       "category": 1,
       "defaultVolume": 0.7,
       "defaultPitch": 1.0,

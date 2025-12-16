@@ -177,6 +177,10 @@ namespace Unbound.Player
             
             // Initialize weapon visual
             UpdateWeaponVisual();
+            
+            // Initialize attack sound for currently equipped weapon
+            string currentWeapon = GetEquippedWeaponID();
+            UpdateAttackSoundForWeapon(currentWeapon);
         }
         
         private void OnDisable()
@@ -688,6 +692,7 @@ namespace Unbound.Player
             if (slot == EquipmentType.Weapon)
             {
                 UpdateWeaponVisual();
+                UpdateAttackSoundForWeapon(itemID);
             }
         }
         
@@ -699,6 +704,44 @@ namespace Unbound.Player
             if (slot == EquipmentType.Weapon)
             {
                 UpdateWeaponVisual();
+                // Reset to default attack sound when unequipped
+                attackSoundID = "sfx_attack_sword";
+            }
+        }
+        
+        /// <summary>
+        /// Updates the attack sound based on the equipped weapon
+        /// </summary>
+        private void UpdateAttackSoundForWeapon(string weaponItemID)
+        {
+            if (string.IsNullOrEmpty(weaponItemID))
+            {
+                // No weapon equipped, use default
+                attackSoundID = "sfx_attack_sword";
+                return;
+            }
+            
+            // Map weapon itemIDs to their corresponding attack sound IDs
+            // Add more weapons here as needed
+            switch (weaponItemID)
+            {
+                case "wooden_sword":
+                    attackSoundID = "sfx_attack_sword";
+                    break;
+                // Add more weapon cases here:
+                // case "iron_sword":
+                //     attackSoundID = "sfx_attack_sword";
+                //     break;
+                // case "hammer_war":
+                //     attackSoundID = "sfx_attack_hammer";
+                //     break;
+                // case "dagger_steel":
+                //     attackSoundID = "sfx_attack_dagger";
+                //     break;
+                default:
+                    // Default sound for unknown weapons
+                    attackSoundID = "sfx_attack_sword";
+                    break;
             }
         }
         
@@ -707,11 +750,31 @@ namespace Unbound.Player
         /// </summary>
         private void PlayCombatSound(string soundID, Vector3? position = null)
         {
-            if (!enableCombatAudio || string.IsNullOrEmpty(soundID))
+            if (!enableCombatAudio)
+            {
+                Debug.LogWarning("PlayerCombat: Combat audio is disabled");
                 return;
+            }
+            
+            if (string.IsNullOrEmpty(soundID))
+            {
+                Debug.LogWarning("PlayerCombat: Sound ID is null or empty");
+                return;
+            }
             
             if (AudioManager.Instance == null)
+            {
+                Debug.LogWarning("PlayerCombat: AudioManager.Instance is null. Make sure AudioManager is in the scene.");
                 return;
+            }
+            
+            // Check if the sound exists in the database
+            var clipData = Unbound.Audio.AudioDatabase.Instance?.GetClipData(soundID);
+            if (clipData == null || clipData.clip == null)
+            {
+                Debug.LogWarning($"PlayerCombat: Sound '{soundID}' not found in AudioDatabase. Check that the audio file exists at the path specified in sfx.json");
+                return;
+            }
             
             AudioManager.Instance.PlaySFXOneShot(soundID, position);
         }

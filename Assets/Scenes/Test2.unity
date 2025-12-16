@@ -122079,103 +122079,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4797964718342738545, guid: 9b65cbb6cb79f49f2beaf0c91d685834, type: 3}
   m_PrefabInstance: {fileID: 1150312937}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1150742455
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1150742457}
-  - component: {fileID: 1150742456}
-  - component: {fileID: 1150742458}
-  - component: {fileID: 1150742459}
-  m_Layer: 0
-  m_Name: AudioManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1150742456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1150742455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1409f52d613aa51448d766a695f37b19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Audio.AudioManager
-  audioSettings:
-    masterVolume: 1
-    musicVolume: 1
-    sfxVolume: 1
-    ambientVolume: 1
-    uiVolume: 1
-    voiceVolume: 1
-    muteAll: 0
-    muteMusic: 0
-    muteSFX: 0
-    muteAmbient: 0
-    muteUI: 0
-    muteVoice: 0
-  loadSettingsOnAwake: 0
-  saveSettingsOnDestroy: 0
-  initialPoolSize: 10
-  maxPoolSize: 50
-  defaultMusicFadeDuration: 1
---- !u!4 &1150742457
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1150742455}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.13861, y: 24.80294, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1150742458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1150742455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cbd6214a3ed2754e9a83bebfd947f33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Audio.SFXController
-  sfxGroups:
-  - groupID: footsteps
-    clipIDs:
-    - sfx_footstep_general
-    selectionMode: 2
-    cooldown: 0
-  defaultCooldown: 0.4
---- !u!114 &1150742459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1150742455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38d8afa115ea2484e98ea165f9d1c20b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Unbound.Audio.AudioDatabase
-  audioDataPath: Data/Audio
-  loadOnAwake: 1
 --- !u!1001 &1151191245
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -131473,6 +131376,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1265817790}
   - component: {fileID: 1265817791}
+  - component: {fileID: 1265817792}
   m_Layer: 5
   m_Name: Slider (1)
   m_TagString: Untagged
@@ -131550,10 +131454,44 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1265817792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265817789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fdd892d552e647f8bba5e1273aceadc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unbound.UI.HPDisplay
+  hpText: {fileID: 0}
+  currentHpText: {fileID: 0}
+  maxHpText: {fileID: 0}
+  hpBarFill: {fileID: 812842643}
+  hpBarSlider: {fileID: 1265817791}
+  hpFormat: '{0} / {1}'
+  currentHpFormat: '{0}'
+  maxHpFormat: 'Max: {0}'
+  showAsPercentage: 0
+  animateHpBar: 1
+  animationSpeed: 5
+  enableDamageEffect: 1
+  damageFlashColor: {r: 1, g: 0.2, b: 0.2, a: 1}
+  flashDuration: 0.3
+  enableLowHealthWarning: 1
+  lowHealthThreshold: 0.3
+  lowHealthColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+  lowHealthPulseSpeed: 2
+  normalHpBarColor: {r: 0.8396226, g: 0.10693307, b: 0.15865225, a: 1}
+  midHpBarColor: {r: 0.6886792, g: 0.14618193, b: 0.16213775, a: 1}
+  lowHpBarColor: {r: 0.5849056, g: 0.08552865, b: 0.08552865, a: 1}
+  midHealthThreshold: 0.5
 --- !u!1001 &1265896622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -268512,6 +268450,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4797964718342738545, guid: 9b65cbb6cb79f49f2beaf0c91d685834, type: 3}
   m_PrefabInstance: {fileID: 2088028015}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2088397712
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3837610927230058829, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 31.58694
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 629.14307
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5234889058286177509, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a3634d08e025347f9bd5a4053c37fe15, type: 3}
 --- !u!1 &2088484384
 GameObject:
   m_ObjectHideFlags: 0
@@ -273777,6 +273772,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3285130341960280192, guid: 67865fc91b7374c03bfd2976011045f8, type: 3}
+      propertyPath: healthBarEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3285130341960280192, guid: 67865fc91b7374c03bfd2976011045f8, type: 3}
       propertyPath: healthBarContainer
       value: 
       objectReference: {fileID: 0}
@@ -274002,7 +274001,6 @@ SceneRoots:
   - {fileID: 1728879249}
   - {fileID: 1705161345}
   - {fileID: 1182420821}
-  - {fileID: 1150742457}
   - {fileID: 555716431}
   - {fileID: 1115455756}
   - {fileID: 1190623830}
@@ -274021,3 +274019,4 @@ SceneRoots:
   - {fileID: 1226274904}
   - {fileID: 1802713680}
   - {fileID: 63974445}
+  - {fileID: 2088397712}
