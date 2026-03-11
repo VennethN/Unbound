@@ -17,6 +17,7 @@ namespace Unbound.Dialogue
             UpdateQuest,
             PlayAnimation,
             TriggerEvent,
+            EnableGameObject,
             Custom
         }
 
@@ -39,6 +40,11 @@ namespace Unbound.Dialogue
 
         [Header("Event Effect")]
         public string eventName;
+
+        [Header("GameObject Effect")]
+        [Tooltip("Name or path of the GameObject to enable/disable (e.g., 'MyObject' or 'Parent/Child/MyObject')")]
+        public string gameObjectName;
+        public bool enableGameObject = true;
 
         [Header("Custom Effect")]
         public string customEffectType;
@@ -79,6 +85,10 @@ namespace Unbound.Dialogue
                     executor.TriggerEvent(eventName);
                     break;
 
+                case EffectType.EnableGameObject:
+                    executor.EnableGameObject(gameObjectName, enableGameObject);
+                    break;
+
                 case EffectType.Custom:
                     executor.ExecuteCustomEffect(customEffectType, customParameters);
                     break;
@@ -116,6 +126,9 @@ namespace Unbound.Dialogue
 
                 case EffectType.TriggerEvent:
                     return $"Trigger event '{eventName}'";
+
+                case EffectType.EnableGameObject:
+                    return $"{(enableGameObject ? "Enable" : "Disable")} GameObject '{gameObjectName}'";
 
                 case EffectType.Custom:
                     return $"Execute custom effect '{customEffectType}'";

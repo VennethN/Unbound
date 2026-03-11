@@ -91,12 +91,18 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "7",
       "conditions": [],
-      "effects": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "TheSpirit",
+          "enableGameObject": true
+        }
+      ],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
     },
@@ -123,7 +129,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "9",
@@ -155,7 +161,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "11",
@@ -187,7 +193,7 @@
       "portraitSprite": null,
       "portraitGif": null,
       "portraitSpritePath": "",
-      "portraitGifPath": "",
+      "portraitGifPath": "Data/Gifs/spirit",
       "animationTrigger": "",
       "choices": [],
       "nextNodeID": "13",
@@ -208,7 +214,13 @@
       "choices": [],
       "nextNodeID": "",
       "conditions": [],
-      "effects": [],
+      "effects": [
+        {
+          "effectType": 7,
+          "gameObjectName": "TheSpirit",
+          "enableGameObject": false
+        }
+      ],
       "autoAdvanceDelay": 0.0,
       "textSpeed": 100.0
     }

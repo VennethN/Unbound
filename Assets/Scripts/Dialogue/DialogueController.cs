@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Unbound.Inventory;
 
 namespace Unbound.Dialogue
@@ -481,6 +482,113 @@ namespace Unbound.Dialogue
         {
             // TODO: Integrate with event system
             Debug.Log($"Triggering event '{eventName}'");
+        }
+
+        public void EnableGameObject(string gameObjectName, bool enable)
+        {
+            if (string.IsNullOrEmpty(gameObjectName))
+            {
+                Debug.LogWarning("Cannot enable/disable GameObject: gameObjectName is null or empty");
+                return;
+            }
+
+            GameObject targetObject = null;
+
+            // First, try finding by path if it contains '/'
+            if (gameObjectName.Contains("/"))
+            {
+                string[] pathParts = gameObjectName.Split('/');
+                if (pathParts.Length > 0)
+                {
+                    // Find root object (searches entire hierarchy including inactive)
+                    GameObject root = FindGameObjectInScene(pathParts[0]);
+                    if (root != null)
+                    {
+                        Transform current = root.transform;
+                        for (int i = 1; i < pathParts.Length; i++)
+                        {
+                            current = FindChildTransform(current, pathParts[i]);
+                            if (current == null)
+                                break;
+                        }
+                        if (current != null)
+                            targetObject = current.gameObject;
+                    }
+                }
+            }
+            else
+            {
+                // Search entire scene hierarchy for the GameObject name
+                targetObject = FindGameObjectInScene(gameObjectName);
+            }
+
+            if (targetObject != null)
+            {
+                targetObject.SetActive(enable);
+                Debug.Log($"{(enable ? "Enabled" : "Disabled")} GameObject '{gameObjectName}'");
+            }
+            else
+            {
+                Debug.LogWarning($"GameObject '{gameObjectName}' not found. Cannot {(enable ? "enable" : "disable")}. " +
+                    $"Make sure the GameObject exists in the scene and the name matches exactly (case-sensitive).");
+            }
+        }
+
+        /// <summary>
+        /// Recursively searches the entire scene hierarchy for a GameObject by name (including inactive objects)
+        /// </summary>
+        private GameObject FindGameObjectInScene(string name)
+        {
+            // First try GameObject.Find (fast, but only searches active root objects)
+            GameObject found = GameObject.Find(name);
+            if (found != null)
+                return found;
+
+            // Search all root objects recursively (including inactive)
+            GameObject[] rootObjects = SceneManager.GetActiveScene().GetRootGameObjects();
+            foreach (GameObject root in rootObjects)
+            {
+                GameObject result = FindGameObjectRecursive(root.transform, name);
+                if (result != null)
+                    return result;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Recursively searches a transform hierarchy for a GameObject by name (including inactive objects)
+        /// </summary>
+        private GameObject FindGameObjectRecursive(Transform parent, string name)
+        {
+            // Check if this transform matches
+            if (parent.name == name)
+                return parent.gameObject;
+
+            // Search all children (including inactive)
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                Transform child = parent.GetChild(i);
+                GameObject result = FindGameObjectRecursive(child, name);
+                if (result != null)
+                    return result;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a child transform by name (searches all children including inactive)
+        /// </summary>
+        private Transform FindChildTransform(Transform parent, string name)
+        {
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                Transform child = parent.GetChild(i);
+                if (child.name == name)
+                    return child;
+            }
+            return null;
         }
 
         #endregion

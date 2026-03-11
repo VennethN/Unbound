@@ -9,6 +9,7 @@ namespace Unbound.UI
     public class HealthBar : MonoBehaviour
     {
         [Header("Health Bar Settings")]
+        [SerializeField] private bool healthBarEnabled = true; // Whether the health bar is enabled
         [SerializeField] private float showDuration = 3f; // How long to show health bar after taking damage
         [SerializeField] private float hideDelay = 2f; // Delay before hiding when health is full
         [SerializeField] private Vector2 offset = new Vector2(0f, 1f); // Offset from entity position
@@ -62,6 +63,19 @@ namespace Unbound.UI
             }
         }
         
+        public bool HealthBarEnabled
+        {
+            get => healthBarEnabled;
+            set
+            {
+                healthBarEnabled = value;
+                if (!healthBarEnabled)
+                {
+                    SetHealthBarVisible(false);
+                }
+            }
+        }
+        
         private void Awake()
         {
             InitializeHealthBar();
@@ -94,6 +108,13 @@ namespace Unbound.UI
         
         private void Update()
         {
+            // If health bar is disabled, hide it and skip updates
+            if (!healthBarEnabled)
+            {
+                SetHealthBarVisible(false);
+                return;
+            }
+            
             // Update position to follow entity
             UpdatePosition();
             
@@ -299,6 +320,9 @@ namespace Unbound.UI
         /// </summary>
         public void ShowHealthBar()
         {
+            if (!healthBarEnabled)
+                return;
+                
             _isVisible = true;
             _lastDamageTime = Time.time;
             SetHealthBarVisible(true);

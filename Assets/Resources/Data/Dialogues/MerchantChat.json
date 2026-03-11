@@ -1,0 +1,27 @@
+{
+  "dialogueID": "merchant2",
+  "displayName": "Merchant Chat",
+  "startNodeID": "start",
+  "startNodeConditions": [],
+  "nodes": [
+    {
+      "nodeID": "start",
+      "speakerID": "Merchant",
+      "dialogueTextKey": "Come find me another day and maybe i'll have something to sell!",
+      "portraitSprite": null,
+      "portraitGif": null,
+      "portraitSpritePath": "",
+      "portraitGifPath": "Data/Gifs/Merchant_talk",
+      "animationTrigger": "",
+      "choices": [],
+      "nextNodeID": "",
+      "conditions": [],
+      "effects": [],
+      "autoAdvanceDelay": 0.0,
+      "textSpeed": 100.0
+    }
+  ],
+  "localizationTable": "Dialogue"
+}
+
+

@@ -44,6 +44,11 @@ namespace Unbound.Dialogue
         /// Triggers a UnityEvent or custom event
         /// </summary>
         void TriggerEvent(string eventName);
+
+        /// <summary>
+        /// Enables or disables a GameObject by name/path
+        /// </summary>
+        void EnableGameObject(string gameObjectName, bool enable);
     }
 }
 
